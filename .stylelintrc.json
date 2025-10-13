@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/stylelintrc.json",
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-prettier-scss"
+  ],
+  "plugins": [
+    "stylelint-order"
+  ],
+  "rules": {
+    "order/properties-alphabetical-order": true,
+    "color-hex-case": "lower",
+    "selector-class-pattern": "^[a-z0-9\\-]+$",
+    "max-nesting-depth": 3
+  }
+}

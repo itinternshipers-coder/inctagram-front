@@ -1,6 +1,6 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from 'eslint-plugin-storybook';
+// For more info: https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 
+import storybook from 'eslint-plugin-storybook';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
@@ -13,8 +13,10 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
-  ...compat.extends('prettier'),
+  // Базовые конфиги Next.js + TypeScript + Prettier
+  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+
+  // Игнорируем служебные директории
   {
     ignores: [
       'node_modules/**',
@@ -24,7 +26,51 @@ const eslintConfig = [
       'next-env.d.ts',
     ],
   },
+
+  // Рекомендованные правила Storybook
   ...storybook.configs['flat/recommended'],
+
+  // Специальные исключения для Storybook файлов
+  {
+    files: ['src/stories/**/*'],
+    rules: {
+      'react/no-unescaped-entities': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'storybook/hierarchy-separator': 'off',
+    },
+  },
+
+  // Исключения и глобалы для тестов (Vitest, Playwright)
+  {
+    files: [
+      '**/*.test.{ts,tsx}',
+      '**/*.spec.{ts,tsx}',
+      '**/tests/**/*.{ts,tsx}',
+    ],
+    languageOptions: {
+      globals: {
+        // Vitest globals
+        vi: true,
+        describe: true,
+        it: true,
+        test: true,
+        expect: true,
+        beforeAll: true,
+        beforeEach: true,
+        afterAll: true,
+        afterEach: true,
+        // Playwright globals
+        page: true,
+        browser: true,
+        context: true,
+      },
+    },
+    rules: {
+      'react/react-in-jsx-scope': 'off',
+      'react/no-unescaped-entities': 'off',
+      'testing-library/no-render-in-setup': 'off',
+    },
+  },
 ];
 
 export default eslintConfig;

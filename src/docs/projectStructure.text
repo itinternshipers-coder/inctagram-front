@@ -1,0 +1,113 @@
+# 📁 Структура проекта (app внутри src)
+
+Этот документ описывает архитектуру проекта на **Next.js (App Router) + FSD**.
+
+## Основные принципы
+- `src/app` — маршрутизация (только layout и pages)
+- `entities` — бизнес-сущности (User, Post)
+- `features` — действия пользователя (like, auth, edit)
+- `widgets` — готовые блоки интерфейса
+- `pages` — страницы (собирают фичи и виджеты)
+- `shared` — переиспользуемые UI-компоненты и утилиты
+
+## Структура
+\`\`\`
+src/
+├── app/                                 # 🚦 Next.js App Router (только маршруты и layouts)
+│   ├── layout.tsx                       # 🌐 Корневой layout (HTML, body, Providers)
+│   ├── globals.css                      # 🎨 Глобальные стили
+│   ├── (public)/                        # 🌍 Публичные страницы
+│   │   ├── login/page.tsx               # Логин
+│   │   ├── register/page.tsx            # Регистрация
+│   │   ├── forgot-password/page.tsx     # Восстановление пароля
+│   │   └── layout.tsx                   # Layout без Header/Sidebar
+│   ├── (protected)/                     # 🔒 Защищённые маршруты
+│   │   ├── layout.tsx                   # Layout c Header + Sidebar
+│   │   ├── page.tsx                     # Главная лента
+│   │   ├── profile/
+│   │   │   ├── page.tsx                 # /profile → редирект на [userId]
+│   │   │   └── [userId]/
+│   │   │       ├── page.tsx             # Страница профиля
+│   │   │       ├── layout.tsx           # Layout профиля
+│   │   │       ├── loading.tsx          # Skeleton
+│   │   │       ├── error.tsx            # Ошибка
+│   │   │       └── not-found.tsx        # Профиль не найден
+│   │   ├── settings/
+│   │   │   ├── page.tsx                 # /settings → редирект на ?part=info
+│   │   │   ├── layout.tsx               # Общий layout для вкладок
+│   │   │   └── [part]/page.tsx          # Табы
+│   │   └── feed/page.tsx                # Главная лента
+│   ├── (modals)/                        # 💬 Модальные окна
+│   │   ├── post/[postId]/page.tsx       # Модалка поста
+│   │   └── profile/create/page.tsx      # Модалка создания
+│   └── api/                             # ⚙ API Routes
+│       ├── auth/[...nextauth]/route.ts  # NextAuth handler
+│       ├── posts/route.ts               # CRUD постов
+│       └── profile/route.ts             # CRUD профиля
+│
+│
+├── entities/                            # 🧩 Сущности
+│   ├── user/
+│   │   ├── model.ts
+│   │   ├── api/getUser.ts
+│   │   └── ui/UserAvatar.tsx
+│   ├── post/
+│   │   ├── model.ts
+│   │   ├── api/getPosts.ts
+│   │   ├── api/getPostById.ts
+│   │   ├── api/createPost.ts
+│   │   └── ui/PostCard.tsx
+│   └── comment/
+│       ├── model.ts
+│       └── ui/CommentList.tsx
+│
+├── features/                            # ⚙ Фичи
+│   ├── auth/ui/SignInForm.tsx
+│   ├── auth/ui/RegisterForm.tsx
+│   ├── auth/ui/LogoutConfirmModal.tsx
+│   ├── likePost/ui/LikeButton.tsx
+│   ├── profileEdit/ui/ProfileForm.tsx
+│   └── uploadPhoto/ui/UploadPhotoModal.tsx
+│
+├── widgets/                             # 🧱 Виджеты
+│   ├── layout/Layout.tsx
+│   ├── sidebar/Sidebar.tsx
+│   ├── header/Header.tsx
+│   ├── profile-tabs/ProfileTabs.tsx
+│   └── feed/FeedGrid.tsx
+│
+├── pages/
+│   ├── feed/ui.tsx
+│   ├── user-profile/ui.tsx
+│   ├── post-modal/ui.tsx
+│   └── settings/ui.tsx
+│
+├── shared/
+│   ├── ui/
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── Modal.tsx
+│   │   ├── Card.tsx
+│   │   └── index.ts
+│   │                                                                                      
+│   ├── api/http-client.ts
+│   ├── lib/utils.ts
+│   └── hooks/useAuth.ts
+│
+├── store/store.ts
+├──lib/auth/auth-options.ts
+└── docs/                                # 📚 Документация и визуальные деревья (ProjectStructure, Styleguide)
+    ├── ProjectStructureTree.stories.tsx
+    └── PROJECT_STRUCTURE_SRC_APP.mdx
+
+
+public/
+├── favicon.ico
+├── logo.svg
+├── images/
+│   ├── default-avatar.png
+│   └── bg-pattern.jpg
+└── icons/
+    ├── like.svg
+    └── comment.svg
+\`\`\`

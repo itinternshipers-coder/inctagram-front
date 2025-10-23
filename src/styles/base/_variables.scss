@@ -1,0 +1,92 @@
+// Colors from your design system
+:root {
+  // Accent colors
+  --accent-100: #73a5ff;
+  --accent-300: #4c8dff;
+  --accent-500: #397df6;
+  --accent-700: #2f68cc;
+  --accent-900: #234e99;
+
+  // Success colors
+  --success-100: #80ffbf;
+  --success-300: #22e584;
+  --success-500: #14cc70;
+  --success-700: #0f9954;
+  --success-900: #0a6638;
+
+  // Danger colors
+  --danger-100: #ff8099;
+  --danger-300: #f23d61;
+  --danger-500: #cc1439;
+  --danger-700: #990f2b;
+  --danger-900: #660a1d;
+
+  // Warning colors
+  --warning-100: #ffd073;
+  --warning-300: #e5ac39;
+  --warning-500: #d99000;
+  --warning-700: #996600;
+  --warning-900: #664400;
+
+  // Dark colors
+  --dark-100: #4c4c4c;
+  --dark-300: #333333;
+  --dark-400: #212121;
+  --dark-500: #171717;
+  --dark-700: #0d0d0d;
+  --dark-900: #000000;
+
+  // Light colors
+  --light-100: #ffffff;
+  --light-300: #f7fbff;
+  --light-500: #edf3fa;
+  --light-700: #d5dae0;
+  --light-900: #8d9094;
+
+  // Semantic tokens - СВЕТЛАЯ ТЕМА по умолчанию
+  --background: var(--light-100);
+  --foreground: var(--dark-500);
+  --primary: var(--accent-500);
+  --primary-foreground: var(--light-100);
+  --muted: var(--light-700);
+  --muted-foreground: var(--dark-300);
+  --border: var(--light-700);
+}
+
+// ТЁМНАЯ ТЕМА
+[data-theme='dark'] {
+  --background: var(--dark-700);
+  --foreground: var(--light-100);
+  --primary: var(--accent-500);
+  --primary-foreground: var(--light-100);
+  --muted: var(--dark-300);
+  --muted-foreground: var(--light-700);
+  --border: var(--dark-300);
+}
+
+// Font families
+:root {
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  // Font sizes from Figma
+  --font-size-12: 0.75rem; // 12px
+  --font-size-14: 0.875rem; // 14px
+  --font-size-16: 1rem; // 16px
+  --font-size-18: 1.125rem; // 18px
+  --font-size-22: 1.375rem; // 22px
+  --font-size-28: 1.75rem; // 28px
+
+  // Line heights from Figma
+  --line-height-100: 1; // 100%
+  --line-height-20: 1.25rem; // 20px
+  --line-height-24: 1.5rem; // 24px
+  --line-height-25: 1.5625rem; // 25px
+  --line-height-35: 2.1875rem; // 35px
+
+  // Font weights from Figma
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}

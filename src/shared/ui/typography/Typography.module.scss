@@ -1,0 +1,78 @@
+@import '@/styles/base/mixins';
+
+.typography {
+  color: var(--foreground);
+  font-family: var(--font-family-primary), sans-serif;
+  margin: 0;
+}
+
+/* Variants */
+
+.large {
+  @include text-size(xxl, l);
+  @include text-weight(600);
+}
+
+.h1 {
+  @include text-size(xxl, l);
+  @include text-weight(700);
+}
+
+.h2 {
+  @include text-size(xl, m);
+  @include text-weight(700);
+}
+
+.h3 {
+  @include text-size(l, m);
+  @include text-weight(600);
+}
+
+.regular_text_16 {
+  @include text-size(m, m);
+  @include text-weight(400);
+}
+
+.bold_text_16 {
+  @include text-size(m, m);
+  @include text-weight(700);
+}
+
+.regular_text_14 {
+  @include text-size(s, m);
+  @include text-weight(400);
+}
+
+.medium_text_14 {
+  @include text-size(s, m);
+  @include text-weight(500);
+}
+
+.bold_text_14 {
+  @include text-size(s, m);
+  @include text-weight(700);
+}
+
+.small_text {
+  @include text-size(xs, s);
+  @include text-weight(300);
+}
+
+.semi_bold_small_text {
+  @include text-size(xs, s);
+  @include text-weight(600);
+}
+
+/* Links */
+
+.regular_link {
+  @extend %link-base;
+  @include text-size(s, m);
+  @include text-weight(400);
+}
+
+.small_link {
+  @extend %link-base;
+  @include text-size(xs, s);
+  @include text-weight(300);
+}

@@ -1,0 +1,29 @@
+@import './base/reset';
+@import './base/variables';
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-family-primary), sans-serif;
+  line-height: 1.6;
+}
+
+// Тёмная тема по умолчанию
+body[data-theme='dark'] {
+  background-color: var(--dark-700);
+  color: var(--light-100);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-500);
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: var(--accent-500);
+  color: var(--light-100);
+}

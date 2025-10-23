@@ -1,0 +1,17 @@
+# === Enforce LF endings in repo ===
+* text=auto eol=lf
+
+# === Exclude binaries from normalization ===
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mp4 binary
+*.mov binary
+*.webp binary
+
+# === Keep scripts LF ===
+*.sh text eol=lf
+*.bash text eol=lf
+*.bat text eol=crlf

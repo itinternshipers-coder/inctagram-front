@@ -17,7 +17,18 @@
     "lint:js:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "lint:css": "stylelint '**/*.{css,scss}'",
     "lint:css:fix": "stylelint '**/*.{css,scss}' --fix",
-    "lint:fix": "pnpm lint:js:fix && pnpm lint:css:fix"
+    "lint:fix": "pnpm lint:js:fix && pnpm lint:css:fix",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,scss,md,html,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -46,6 +57,8 @@
     "eslint-config-next": "15.5.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-storybook": "9.1.10",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
     "playwright": "^1.56.0",
     "prettier": "^3.6.2",
     "sass": "^1.93.2",

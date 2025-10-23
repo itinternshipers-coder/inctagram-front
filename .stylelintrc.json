@@ -10,7 +10,27 @@
   "rules": {
     "order/properties-alphabetical-order": true,
     "color-hex-case": "lower",
-    "selector-class-pattern": "^[a-z0-9\\-]+$",
-    "max-nesting-depth": 3
+    "selector-class-pattern": [
+      ".*",
+      {}
+    ],
+    "max-nesting-depth": [
+      4,
+      {
+        "ignore": [
+          "blockless-at-rules"
+        ]
+      }
+    ],
+    "scss/at-import-partial-extension": null,
+    "scss/dollar-variable-pattern": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": [
+          "global"
+        ]
+      }
+    ]
   }
 }

@@ -1,9 +1,13 @@
 // import { redirect } from 'next/navigation'
 
+import { Typography } from '@/shared/ui/typography/Typography'
+
 export default async function RootPage() {
   return (
     <div>
-      <h1>Root page</h1>
+      <Typography as={'h1'} variant={'large'}>
+        Root page
+      </Typography>
     </div>
   )
   // const session = false //

@@ -1,1 +1,60 @@
-// Mixins will be added here when needed
+// Typography mixins
+
+@mixin text-size($size, $line-height) {
+  @if $size == xs {
+    font-size: var(--font-size-12);
+  }
+  @if $size == s {
+    font-size: var(--font-size-14);
+  }
+  @if $size == m {
+    font-size: var(--font-size-16);
+  }
+  @if $size == l {
+    font-size: var(--font-size-18);
+  }
+  @if $size == xl {
+    font-size: var(--font-size-22);
+  }
+  @if $size == xxl {
+    font-size: var(--font-size-28);
+  }
+  @if $line-height == s {
+    line-height: var(--line-height-100);
+  }
+  @if $line-height == m {
+    line-height: var(--line-height-24);
+  }
+  @if $line-height == l {
+    line-height: var(--line-height-35);
+  }
+}
+
+@mixin text-weight($weight) {
+  @if $weight == 300 {
+    font-weight: var(--font-weight-light);
+  }
+  @if $weight == 400 {
+    font-weight: var(--font-weight-regular);
+  }
+  @if $weight == 500 {
+    font-weight: var(--font-weight-medium);
+  }
+  @if $weight == 600 {
+    font-weight: var(--font-weight-semibold);
+  }
+  @if $weight == 700 {
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+// Link base styles
+%link-base {
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--accent-500);
+
+  &:hover {
+    color: var(--accent-700);
+  }
+}

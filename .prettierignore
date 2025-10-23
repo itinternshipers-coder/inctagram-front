@@ -5,3 +5,8 @@ dist/
 storybook-static/
 *.md
 *.json
+Dockerfile
+Jenkinsfile
+deployment.yaml
+preparingDeploy.sh
+nginx.conf

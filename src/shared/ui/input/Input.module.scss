@@ -1,30 +1,78 @@
-.wrapper {
+.input {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-.input {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 
-  &:focus {
-    border-color: #3b82f6; // синий оттенок
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  &__label {
+    color: var(--light-900);
+    font-size: var(--font-size-14);
   }
-}
-.inputError {
-  border-color: #e74c3c;
 
-  &:focus {
-    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+  &__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
   }
-}
-.error {
-  color: #e74c3c;
-  font-size: 12px;
+
+  &__field {
+    width: 100%;
+    padding: 6px 36px 6px 12px;
+    border: 1px solid var(--dark-100);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--light-900);
+    font-size: var(--font-size-16);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+    outline: none;
+
+    &:hover {
+      border-color: var(--accent-300);
+    }
+
+    &:focus {
+      border-color: var(--accent-500);
+    }
+
+    &:focus-visible {
+      outline: 1px solid var(--accent-500);
+    }
+
+    &_error {
+      border-color: var(--danger-500);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__toggle {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--light-900);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--accent-500);
+    }
+
+    &:focus {
+      outline: none;
+      color: var(--accent-500);
+    }
+  }
+
+  &__error {
+    font-size: var(--font-size-14);
+    color: var(--danger-500);
+  }
 }

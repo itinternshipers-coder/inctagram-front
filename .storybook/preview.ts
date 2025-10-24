@@ -1,4 +1,5 @@
-import type { Preview } from '@storybook/nextjs-vite';
+import type { Preview } from '@storybook/nextjs-vite'
+import '../src/styles/globals.scss'
 
 const preview: Preview = {
   parameters: {
@@ -16,6 +17,6 @@ const preview: Preview = {
       test: 'todo',
     },
   },
-};
+}
 
-export default preview;
+export default preview

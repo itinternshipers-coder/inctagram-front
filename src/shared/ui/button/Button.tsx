@@ -2,7 +2,7 @@
 
 import React, { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
 import clsx from 'clsx'
-import styles from './button.module.scss'
+import s from './button.module.scss'
 
 export type Props<T extends ElementType = 'button'> = {
   as?: T
@@ -18,13 +18,7 @@ export const Button = <T extends ElementType = 'button'>(props: Props<T>) => {
 
   const isLink = variant === 'link' && Component === 'a'
 
-  const classes = clsx(
-    styles.button,
-    styles[variant],
-    fullWidth && styles.fullWidth,
-    isLink && disabled && styles.linkDisabled,
-    className
-  )
+  const classes = clsx(s.button, s[variant], fullWidth && s.fullWidth, isLink && disabled && s.linkDisabled, className)
 
   const handleClick = (e: React.MouseEvent) => {
     if (disabled && isLink) e.preventDefault()

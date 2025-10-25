@@ -1,7 +1,7 @@
 'use client'
 
 import { TextareaHTMLAttributes } from 'react'
-import styles from './TextAreaBlock.module.scss'
+import s from './TextAreaBlock.module.scss'
 
 interface TextAreaBlockProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string
@@ -24,7 +24,7 @@ export default function TextAreaBlock({
   const textareaId = id || name || 'textarea'
 
   return (
-    <div className={`${styles.textAreaContainer} ${disabled ? styles.disabled : ''}`}>
+    <div className={`${s.textAreaContainer} ${disabled ? s.disabled : ''}`}>
       <label htmlFor={textareaId}>{label}</label>
       <textarea
         id={textareaId}
@@ -32,14 +32,14 @@ export default function TextAreaBlock({
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className={error ? styles.error : ''}
+        className={error ? s.error : ''}
         aria-invalid={error}
         aria-describedby={error ? `${textareaId}-error` : undefined}
         placeholder={placeholder}
         {...rest}
       />
       {error && errorMessage && (
-        <span id={`${textareaId}-error`} className={styles.errorText}>
+        <span id={`${textareaId}-error`} className={s.errorText}>
           {errorMessage}
         </span>
       )}

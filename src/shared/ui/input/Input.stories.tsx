@@ -1,4 +1,3 @@
-import React from 'react'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Input } from './Input'
 import '@/app/globals.scss'

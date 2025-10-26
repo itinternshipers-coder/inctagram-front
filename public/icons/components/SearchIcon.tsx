@@ -1,6 +1,6 @@
 import React from 'react'
 
-interface SearchIconProps extends React.SVGProps<SVGSVGElement> {
+type SearchIconProps = React.SVGProps<SVGSVGElement> & {
   size?: number
   color?: string
 }

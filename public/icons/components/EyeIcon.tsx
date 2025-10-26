@@ -1,6 +1,6 @@
 import React from 'react'
 
-interface EyeIconProps extends React.SVGProps<SVGSVGElement> {
+type EyeIconProps = React.SVGProps<SVGSVGElement> & {
   size?: number
   color?: string
 }

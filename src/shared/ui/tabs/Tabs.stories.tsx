@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import '../../../styles/base/_variables.scss'
 import Tabs from './Tabs'
 
 const meta = {

@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { fn } from 'storybook/test'
-import '../../../styles/base/_variables.scss'
 import TextAreaBlock from './TextAreaBlock'
 
 const meta = {

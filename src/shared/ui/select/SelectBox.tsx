@@ -6,6 +6,7 @@ import { ComponentPropsWithoutRef } from 'react'
 import { Typography } from '../typography/Typography'
 import { clsx } from 'clsx'
 import s from './selectBox.module.scss'
+import { ArrowBackOutlineIcon, ArrowIosDownOutlineIcon, ArrowIosUpIcon } from '@/shared/icons/svgComponents'
 
 type Option = {
   value: string
@@ -46,7 +47,7 @@ export const SelectBox = ({
         >
           <Select.Value placeholder={placeholder} />
           <Select.Icon>
-            <span className={s.arrow}>{open ? '▴' : '▾'}</span>
+            <span className={s.arrow}>{open ? <ArrowIosUpIcon /> : <ArrowIosDownOutlineIcon />}</span>
           </Select.Icon>
         </Select.Trigger>
 

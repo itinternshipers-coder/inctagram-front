@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import * as Select from '@radix-ui/react-select'
+import { ComponentPropsWithoutRef } from 'react'
 import { Typography } from '../typography/Typography'
 import { clsx } from 'clsx'
 import s from './selectBox.module.scss'
@@ -13,13 +14,11 @@ type Option = {
 }
 
 type Props = {
-  label?: string
   options: Option[]
-  defaultValue?: string
+  label?: string
   placeholder?: string
   width?: string
-  disabled?: boolean
-}
+} & ComponentPropsWithoutRef<typeof Select.Root>
 
 export const SelectBox = ({
   label = '',

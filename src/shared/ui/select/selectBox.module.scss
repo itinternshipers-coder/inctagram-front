@@ -1,4 +1,5 @@
 .wrapper {
+  margin: 5px;
   display: flex;
   flex-direction: column;
 }
@@ -7,7 +8,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  background-color: transparent;
+  background-color: var(--dark-900);
   border: 1px solid var(--dark-100);
   border-radius: 2px;
   padding: 6px 12px;
@@ -19,11 +20,16 @@
 
   &.active {
     border-color: var(--light-100);
+    background: var(--dark-500);
   }
 
   &:focus {
     outline: 2px solid var(--accent-500);
-    border-color: transparent; //
+    border-color: transparent;
+  }
+
+  &[data-placeholder] {
+    color: var(--light-900);
   }
 }
 
@@ -72,8 +78,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   margin-right: 8px;
 }
 
@@ -81,7 +87,6 @@
   border: 1px solid var(--dark-100);
   color: var(--dark-100);
   cursor: not-allowed;
-  pointer-events: none;
 }
 
 .block {

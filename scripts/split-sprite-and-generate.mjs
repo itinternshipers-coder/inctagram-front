@@ -25,6 +25,33 @@ const writeIndex = (dir) => {
   fs.writeFileSync(path.join(dir, 'index.ts'), exports)
 }
 
+// ==== Общий шаблон SVGR ====
+const template = (variables, { tpl }) => {
+  const { componentName, jsx } = variables
+
+  return tpl`
+import * as React from 'react'
+import clsx from 'clsx'
+
+export type IconProps = {
+  size?: number
+  color?: string
+  className?: string
+} & React.SVGProps<SVGSVGElement>
+
+const ${componentName} = ({
+  size = 24,
+  color,
+  className,
+  ...rest
+}: IconProps) => (
+  ${jsx}
+)
+
+export default ${componentName}
+`
+}
+
 // ==== Обработка спрайта ====
 async function processSprite(spritePath, spriteName) {
   const outDir = path.join(OUT_ROOT, spriteName)
@@ -60,23 +87,44 @@ async function processSprite(spritePath, spriteName) {
         prettier: true,
         icon: true,
         plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
-        template: ({ jsx }) => `
-import clsx from 'clsx'
-
-const ${componentName} = ({ size = 24, color, className, ...rest }) => (
-  ${jsx.replace(
-    '<svg',
-    '<svg width={size} height={size} className={clsx("icon", className)} style={{ color }} {...rest}'
-  )}
-)
-
-export default ${componentName}
-`,
+        template,
+        svgoConfig: {
+          plugins: [
+            {
+              name: 'preset-default',
+              params: {
+                overrides: {
+                  // Отключаем удаление атрибутов viewBox
+                  removeViewBox: false,
+                  // Отключаем слияние атрибутов
+                  mergePaths: false,
+                },
+              },
+            },
+            // Удаляем атрибуты width и height, чтобы они не конфликтовали с нашими пропсами
+            'removeDimensions',
+          ],
+        },
       },
       { componentName }
     )
 
-    fs.writeFileSync(path.join(outDir, `${componentName}.tsx`), componentCode)
+    // Убираем дублирующиеся атрибуты и добавляем наши пропсы
+    let enhancedCode = componentCode
+      // Убираем автоматически добавленные width и height из SVG
+      .replace(/width="[^"]*"/g, '')
+      .replace(/height="[^"]*"/g, '')
+      // Убираем лишние пробелы после удаления атрибутов
+      .replace(/\s{2,}/g, ' ')
+      // Добавляем наши атрибуты
+      .replace(
+        '<svg',
+        '<svg width={size} height={size} className={clsx("icon", className)} style={{ color }} {...rest}'
+      )
+      // Убираем ошибочный {...props} если он есть
+      .replace(/\{\s*\.\.\.props\s*\}/g, '')
+
+    fs.writeFileSync(path.join(outDir, `${componentName}.tsx`), enhancedCode)
   }
 
   writeIndex(outDir)
@@ -100,23 +148,34 @@ async function processSingleSvg(filePath) {
       prettier: true,
       icon: true,
       plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
-      template: ({ jsx }) => `
-import clsx from 'clsx'
-
-const ${componentName} = ({ size = 24, color, className, ...rest }) => (
-  ${jsx.replace(
-    '<svg',
-    '<svg width={size} height={size} className={clsx("icon", className)} style={{ color }} {...rest}'
-  )}
-)
-
-export default ${componentName}
-`,
+      template,
+      svgoConfig: {
+        plugins: [
+          {
+            name: 'preset-default',
+            params: {
+              overrides: {
+                removeViewBox: false,
+                mergePaths: false,
+              },
+            },
+          },
+          'removeDimensions',
+        ],
+      },
     },
     { componentName }
   )
 
-  fs.writeFileSync(path.join(outDir, `${componentName}.tsx`), componentCode)
+  // Убираем дублирующиеся атрибуты и добавляем наши пропсы
+  let enhancedCode = componentCode
+    .replace(/width="[^"]*"/g, '')
+    .replace(/height="[^"]*"/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace('<svg', '<svg width={size} height={size} className={clsx("icon", className)} style={{ color }} {...rest}')
+    .replace(/\{\s*\.\.\.props\s*\}/g, '')
+
+  fs.writeFileSync(path.join(outDir, `${componentName}.tsx`), enhancedCode)
 }
 
 // ==== Главный процесс ====

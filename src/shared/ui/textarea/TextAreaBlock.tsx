@@ -3,7 +3,7 @@
 import { TextareaHTMLAttributes } from 'react'
 import s from './TextAreaBlock.module.scss'
 
-interface TextAreaBlockProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+type TextAreaBlockProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label?: string
   error?: boolean
   errorMessage?: string

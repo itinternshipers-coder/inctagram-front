@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import s from './Tabs.module.scss'
 
-interface Tab {
+type Tab = {
   label: string
   content: React.ReactNode
   disabled?: boolean
 }
 
-interface TabsProps {
+type TabsProps = {
   tabs: Tab[]
   defaultActiveIndex?: number
 }

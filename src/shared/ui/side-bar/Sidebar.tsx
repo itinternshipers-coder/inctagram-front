@@ -1,75 +1,102 @@
 'use client'
 
 import Link from 'next/link'
-import s from './sidebar.module.scss'
-import { Icon } from '../icon/Icon'
 import { usePathname } from 'next/navigation'
+import {
+  BookmarkIcon,
+  BookmarkOutlineIcon,
+  HomeIcon,
+  HomeOutlineIcon,
+  LogOutOutlineIcon,
+  MessageCircleIcon,
+  MessageCircleOutlineIcon,
+  PersonIcon,
+  PersonOutlineIcon,
+  PlusSquareIcon,
+  PlusSquareOutlineIcon,
+  SearchOutlineIcon,
+  TrendingUpOutlineIcon,
+} from '@/shared/icons/svgComponents'
+import s from './Sidebar.module.scss'
+
+const ROUTES = {
+  feed: '/feed',
+  plus: '/plus',
+  profile: '/profile',
+  message: '/message',
+  search: '/search',
+  statistics: '/statistics',
+  favorites: '/favorites',
+  logout: '/logout',
+}
+
+const ACTIVE_COLOR = '#397DF6'
 
 const Sidebar: React.FC = () => {
   const pathname = usePathname()
-
-  const isActive = (href: string) => (pathname === href ? s.active : '')
+  const isActive = (href: string) => pathname === href
 
   return (
     <div className={s.sidebar}>
       <div className={s.mainSection}>
-        <Link href="/feed" className={`${s.sidebarItem} ${isActive('/feed')}`}>
+        <Link href={ROUTES.feed} className={s.sidebarItem}>
           <span className={s.iconWrapper}>
-            <Icon iconId="feed" width="24px" height="24px" />
+            {isActive(ROUTES.feed) ? <HomeIcon color={ACTIVE_COLOR} /> : <HomeOutlineIcon />}
           </span>
-          <span className={s.label}>Feed</span>
+          <span className={`${s.label} ${isActive(ROUTES.feed) ? s.active : ''}`}>Feed</span>
         </Link>
 
-        <Link href="/plus" className={`${s.sidebarItem} ${isActive('/plus')}`}>
+        <Link href={ROUTES.plus} className={s.sidebarItem}>
           <span className={s.iconWrapper}>
-            <Icon iconId="plus" width="24px" height="24px" />
+            {isActive(ROUTES.plus) ? <PlusSquareIcon color={ACTIVE_COLOR} /> : <PlusSquareOutlineIcon />}
           </span>
-          <span className={s.label}>Create</span>
+          <span className={`${s.label} ${isActive(ROUTES.plus) ? s.active : ''}`}>Create</span>
         </Link>
 
-        <Link href="/profile" className={`${s.sidebarItem} ${isActive('/profile')}`}>
+        <Link href={ROUTES.profile} className={s.sidebarItem}>
           <span className={s.iconWrapper}>
-            <Icon iconId="profile" width="24px" height="24px" />
+            {isActive(ROUTES.profile) ? <PersonIcon color={ACTIVE_COLOR} /> : <PersonOutlineIcon />}
           </span>
-          <span className={s.label}>My Profile</span>
+          <span className={`${s.label} ${isActive(ROUTES.profile) ? s.active : ''}`}>My Profile</span>
         </Link>
 
-        <Link href="/message" className={`${s.sidebarItem} ${isActive('/message')}`}>
+        <Link href={ROUTES.message} className={s.sidebarItem}>
           <span className={s.iconWrapper}>
-            <Icon iconId="message" width="24px" height="24px" />
+            {isActive(ROUTES.message) ? <MessageCircleIcon color={ACTIVE_COLOR} /> : <MessageCircleOutlineIcon />}
           </span>
-          <span className={s.label}>Messenger</span>
+          <span className={`${s.label} ${isActive(ROUTES.message) ? s.active : ''}`}>Messenger</span>
         </Link>
 
-        <Link href="/search" className={`${s.sidebarItem} ${isActive('/search')}`}>
+        <Link href={ROUTES.search} className={s.sidebarItem}>
           <span className={s.iconWrapper}>
-            <Icon iconId="search" width="24px" height="24px" />
+            {isActive(ROUTES.search) ? <SearchOutlineIcon color={ACTIVE_COLOR} /> : <SearchOutlineIcon />}
           </span>
-          <span className={s.label}>Search</span>
+          <span className={`${s.label} ${isActive(ROUTES.search) ? s.active : ''}`}>Search</span>
         </Link>
       </div>
 
       <div className={s.additionalSection}>
-        <Link href="/statistics" className={`${s.sidebarItem} ${isActive('/statistics')}`}>
+        <Link href={ROUTES.statistics} className={s.sidebarItem}>
           <span className={s.iconWrapper}>
-            <Icon iconId="statistics" width="24px" height="24px" />
+            {isActive(ROUTES.statistics) ? <TrendingUpOutlineIcon color={ACTIVE_COLOR} /> : <TrendingUpOutlineIcon />}
           </span>
-          <span className={s.label}>Statistics</span>
+          <span className={`${s.label} ${isActive(ROUTES.statistics) ? s.active : ''}`}>Statistics</span>
         </Link>
-        <Link href="/favorites" className={`${s.sidebarItem} ${isActive('/favorites')}`}>
+
+        <Link href={ROUTES.favorites} className={s.sidebarItem}>
           <span className={s.iconWrapper}>
-            <Icon iconId="favorites" width="24px" height="24px" />
+            {isActive(ROUTES.favorites) ? <BookmarkIcon color={ACTIVE_COLOR} /> : <BookmarkOutlineIcon />}
           </span>
-          <span className={s.label}>Favorites</span>
+          <span className={`${s.label} ${isActive(ROUTES.favorites) ? s.active : ''}`}>Favorites</span>
         </Link>
       </div>
 
       <div className={s.logoutSection}>
-        <Link href="/logout" className={`${s.sidebarItem} ${isActive('/logout')}`}>
+        <Link href={ROUTES.logout} className={s.sidebarItem}>
           <span className={s.iconWrapper}>
-            <Icon iconId="logout" width="24px" height="24px" />
+            {isActive(ROUTES.logout) ? <LogOutOutlineIcon color={ACTIVE_COLOR} /> : <LogOutOutlineIcon />}
           </span>
-          <span className={s.label}>Log Out</span>
+          <span className={`${s.label} ${isActive(ROUTES.logout) ? s.active : ''}`}>Log Out</span>
         </Link>
       </div>
     </div>

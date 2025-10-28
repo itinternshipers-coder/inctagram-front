@@ -1,6 +1,8 @@
 import * as React from 'react'
 import clsx from 'clsx'
+
 export type IconProps = { size?: number; color?: string; className?: string } & React.SVGProps<SVGSVGElement>
+
 const PlusSquareIcon = ({ size = 24, color, className, ...rest }: IconProps) => (
   <svg
     width={size}

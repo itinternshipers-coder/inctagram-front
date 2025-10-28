@@ -129,5 +129,5 @@ public/
     └── bg-pattern.jpg
 
 scripts/
-└── sprite-split-and-generate.mjs		# Вспомогательные скрипты (tools)
+└── sprite-split-and-generate.mjs		     # Вспомогательные скрипты (tools)
 \`\`\`

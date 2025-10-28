@@ -66,33 +66,3 @@ const PaginationPage = () => {
 }
 
 export default PaginationPage
-// (
-//   <div>
-//     <SuperPagination
-//       page={page}
-//       count={count}
-//       totalCount={dummyPosts.length}
-//       onChange={onChangePagination}
-//       options={options}
-//     />
-
-//     <div style={{ marginTop: "20px" }}>
-//       {dummyPosts
-//         .slice((page - 1) * count, page * count)
-//         .map((post) => (
-//           <div
-//             key={post.id}
-//             style={{
-//               border: "1px solid #ddd",
-//               padding: "10px",
-//               borderRadius: "8px",
-//               marginBottom: "8px",
-//             }}
-//           >
-//             <strong>{post.user}</strong>
-//             <p>{post.content}</p>
-//           </div>
-//         ))}
-//     </div>
-//   </div>
-// )

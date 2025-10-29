@@ -19,7 +19,8 @@
     "lint:css:fix": "stylelint '**/*.{css,scss}' --fix",
     "lint:fix": "pnpm lint:js:fix && pnpm lint:css:fix",
     "prepare": "husky install",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "icons:build": "node scripts/split-sprite-and-generate.mjs"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -32,6 +33,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-select": "^2.2.6",
     "@reduxjs/toolkit": "^2.9.0",
     "clsx": "^2.1.1",
     "next": "15.5.4",
@@ -48,17 +50,21 @@
     "@storybook/addon-docs": "9.1.10",
     "@storybook/addon-onboarding": "9.1.10",
     "@storybook/addon-vitest": "9.1.10",
-    "@storybook/nextjs-vite": "^9.1.15",
+    "@storybook/nextjs-vite": "9.1.15",
+    "@svgr/cli": "^8.1.0",
+    "@svgr/core": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/browser": "^3.2.4",
     "@vitest/coverage-v8": "^3.2.4",
+    "chokidar-cli": "^3.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-storybook": "9.1.10",
     "husky": "^9.1.7",
+    "jsdom": "^27.0.1",
     "lint-staged": "^16.2.6",
     "playwright": "^1.56.0",
     "prettier": "^3.6.2",

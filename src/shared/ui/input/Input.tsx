@@ -1,6 +1,6 @@
 'use client'
+import { EyeIcon, SearchOutlineIcon } from '@/shared/icons/svgComponents/icons'
 import { clsx } from 'clsx'
-import { EyeIcon, SearchIcon } from 'public/icons'
 import React, { forwardRef, useId, useState } from 'react'
 import styles from './Input.module.scss'
 
@@ -38,7 +38,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className={styles.input__wrapper}>
           {isSearch && (
             <span className={styles.input__icon} aria-hidden="true">
-              <SearchIcon />
+              <SearchOutlineIcon />
             </span>
           )}
 

@@ -3,7 +3,7 @@ import { Input } from './Input'
 import '@/app/globals.scss'
 
 const meta: Meta<typeof Input> = {
-  title: 'UI/Input',
+  title: 'Components/Input',
   component: Input,
   parameters: {
     layout: 'centered',

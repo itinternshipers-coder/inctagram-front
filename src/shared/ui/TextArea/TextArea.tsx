@@ -1,15 +1,15 @@
 'use client'
 
 import { TextareaHTMLAttributes } from 'react'
-import s from './TextAreaBlock.module.scss'
+import s from './TextArea.module.scss'
 
-type TextAreaBlockProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label?: string
   error?: boolean
   errorMessage?: string
 }
 
-export default function TextAreaBlock({
+export default function TextArea({
   label = 'Text area',
   disabled = false,
   error = false,
@@ -20,7 +20,7 @@ export default function TextAreaBlock({
   onChange,
   placeholder = 'Text area',
   ...rest
-}: TextAreaBlockProps) {
+}: TextAreaProps) {
   const textareaId = id || name || 'textarea'
 
   return (

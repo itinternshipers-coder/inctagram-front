@@ -34,6 +34,11 @@
     &.active {
       color: var(--primary);
 
+      &:hover {
+        background-color: color-mix(in srgb, var(--accent-900) 15%, transparent);
+        color: var(--primary);
+      }
+
       &::after {
         content: '';
         position: absolute;

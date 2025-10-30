@@ -1,6 +1,7 @@
 'use client'
 import { CheckmarkOutlineIcon } from '@/shared/icons/svgComponents'
 import RecaptchaLogoIcon from '@/shared/icons/svgComponents/icons/RecaptchaLogoIcon'
+import { clsx } from 'clsx'
 import Link from 'next/link'
 import { useState } from 'react'
 import s from './Recaptcha.module.scss'
@@ -77,50 +78,67 @@ export const Recaptcha = ({
     }
   }
 
-  return (
-    <div className={s.recaptcha}>
-      {status === 'expired' && <span className={s.recaptcha__expired}>{getErrorMessage()}</span>}
+  // Переменные для статусов
+  const isLoading = status === 'loading'
+  const isSuccess = status === 'success'
+  const isError = status === 'error'
+  const isExpired = status === 'expired'
+  const isIdle = status === 'idle'
 
-      <div className={s.recaptcha__main}>
-        <button
-          className={`${s.recaptcha__button} ${
-            status === 'success' ? s['recaptcha__button--checked'] : ''
-          } ${status === 'loading' ? s['recaptcha__button--loading'] : ''}`}
-          onClick={handleClick}
-          disabled={status === 'loading' || status === 'success' || disabled}
-          aria-label="I'm not a robot"
-          aria-pressed={status === 'success'}
-        >
-          {status === 'idle' && null}
-          {status === 'expired' && null}
-          {status === 'error' && null}
-          {status === 'loading' && <span className={s.recaptcha__loader} />}
-          {status === 'success' && (
-            <CheckmarkOutlineIcon size={24} color="#00a650" className={s.recaptcha__checkmark} />
-          )}
-        </button>
-        <span className={s.recaptcha__label}>I&apos;m not a robot</span>
-      </div>
-      <div className={s.recaptcha__branding}>
-        <div className={s.recaptcha__logo}>
-          <RecaptchaLogoIcon />
+  // Переменные для состояний
+  const isButtonDisabled = isLoading || isSuccess || disabled
+  const hasError = isError || isExpired
+  const errorMessage = getErrorMessage()
+  const showErrorMessage = isError && errorMessage
+  const showExpiredMessage = isExpired && errorMessage
+
+  // Классы
+  const wrapperClassName = clsx(s.wrapper, hasError && s.wrapper__error)
+  const buttonClassName = clsx(
+    s.recaptcha__button,
+    isSuccess && s['recaptcha__button--checked'],
+    isLoading && s['recaptcha__button--loading']
+  )
+
+  return (
+    <div className={wrapperClassName}>
+      <div className={s.recaptcha}>
+        {showExpiredMessage && <span className={s.recaptcha__expired}>{errorMessage}</span>}
+
+        <div className={s.recaptcha__main}>
+          <button
+            className={buttonClassName}
+            onClick={handleClick}
+            disabled={isButtonDisabled}
+            aria-label="I'm not a robot"
+            aria-pressed={isSuccess}
+          >
+            {isLoading && <span className={s.recaptcha__loader} />}
+            {isSuccess && <CheckmarkOutlineIcon size={24} color="#00a650" className={s.recaptcha__checkmark} />}
+          </button>
+          <span className={s.recaptcha__label}>I&apos;m not a robot</span>
         </div>
-        <div className={s.recaptcha__info}>
-          <span className={s.recaptcha__title}>reCAPTCHA</span>
-          <nav className={s.recaptcha__links}>
-            <Link className={s.recaptcha__link} href="/">
-              Privacy
-            </Link>
-            <span className={s.recaptcha__separator} aria-hidden="true">
-              {' - '}
-            </span>
-            <Link className={s.recaptcha__link} href="/">
-              Terms
-            </Link>
-          </nav>
+
+        <div className={s.recaptcha__branding}>
+          <div className={s.recaptcha__logo}>
+            <RecaptchaLogoIcon />
+          </div>
+          <div className={s.recaptcha__info}>
+            <span className={s.recaptcha__title}>reCAPTCHA</span>
+            <nav className={s.recaptcha__links}>
+              <Link className={s.recaptcha__link} href="/">
+                Privacy
+              </Link>
+              <span className={s.recaptcha__separator} aria-hidden="true"></span>
+              <Link className={s.recaptcha__link} href="/">
+                Terms
+              </Link>
+            </nav>
+          </div>
         </div>
       </div>
-      {status === 'error' && <span className={s.recaptcha__error}>{getErrorMessage()}</span>}
+
+      {showErrorMessage && <span className={s.recaptcha__error}>{errorMessage}</span>}
     </div>
   )
 }

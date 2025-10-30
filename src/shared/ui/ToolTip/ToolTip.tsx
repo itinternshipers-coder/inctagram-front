@@ -3,7 +3,7 @@
 import { OutlineBellIcon } from '@/shared/icons/svgComponents'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import * as React from 'react'
-import s from '@/shared/ui/tooltip/Tooltip.module.scss'
+import s from '@/shared/ui/ToolTip/ToolTip.module.scss'
 
 type Notification = {
   id: string

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 // import { Meta, StoryObj } from '@storybook/react'
-import Pagination from '@/shared/ui/super-pagination/Pagination'
+import Pagination from '@/shared/ui/SuperPagination/Pagination'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 // Мета-описание

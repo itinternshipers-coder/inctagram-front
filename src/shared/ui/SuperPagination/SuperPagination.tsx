@@ -1,6 +1,6 @@
-import SuperSelect from '../super-select/SuperSelect'
+import SuperSelect from '../SuperSelect/SuperSelect'
 import Pagination from './Pagination'
-import s from './pagination.module.scss'
+import s from './Pagination.module.scss'
 
 export type PropsOption = { id: number; value: number }
 
@@ -13,14 +13,14 @@ export type SuperPaginationPropsType = {
   options: PropsOption[]
 }
 
-const SuperPagination: React.FC<SuperPaginationPropsType> = ({ options, page, count, totalCount, onChange }) => {
+const SuperPagination = ({ options, page, count, totalCount, onChange }: SuperPaginationPropsType) => {
   const onChangeHandler = (newPage: number) => {
     onChange(newPage, count)
   }
 
-  const onChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCount = Number(event.target.value)
-    if (!newCount) return
+  // Обработка выбора нового количества элементов на странице
+  const onChangeSelect = (option: PropsOption) => {
+    const newCount = option.value
     const newLastPage = Math.max(1, Math.ceil(totalCount / newCount))
     const newPage = Math.min(page, newLastPage)
     onChange(newPage, newCount)
@@ -30,13 +30,13 @@ const SuperPagination: React.FC<SuperPaginationPropsType> = ({ options, page, co
     <div className={s.pageContainer}>
       <Pagination
         totalCount={totalCount}
-        itemsPerPage={count} //это количество элементов, которые показываются на одной странице.
+        itemsPerPage={count} // количество элементов на странице
         currentPage={page}
         onChange={onChangeHandler}
       />
       <div className={s.select}>
-        <span>show</span>
-        <SuperSelect value={count} options={options} onChange={onChangeSelect} />
+        <span>Show</span>
+        <SuperSelect value={count} options={options} onChangeOption={onChangeSelect} />
         <span>on page</span>
       </div>
     </div>

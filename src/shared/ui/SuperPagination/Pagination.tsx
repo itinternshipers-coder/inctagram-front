@@ -1,6 +1,7 @@
 'use client'
 import React, { useMemo } from 'react'
-import s from './pagination.module.scss'
+import s from './Pagination.module.scss'
+import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
 
 export type PaginationProps = {
   totalCount: number // общее количество элементов
@@ -10,13 +11,7 @@ export type PaginationProps = {
   siblingCount?: number // количество страниц, показываемых по бокам от активной
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-  totalCount,
-  itemsPerPage,
-  currentPage,
-  onChange,
-  siblingCount = 1,
-}) => {
+const Pagination = ({ totalCount, itemsPerPage, currentPage, onChange, siblingCount = 1 }: PaginationProps) => {
   // Общее количество страниц
   const totalPages = Math.max(1, Math.ceil(totalCount / itemsPerPage))
 
@@ -90,7 +85,7 @@ const Pagination: React.FC<PaginationProps> = ({
         disabled={safeCurrent === 1}
         aria-label="Предыдущая страница"
       >
-        ←
+        <ArrowIosBackOutlineIcon size={15} />
       </button>
 
       {/* Список страниц */}
@@ -113,14 +108,13 @@ const Pagination: React.FC<PaginationProps> = ({
         )}
       </div>
 
-      {/* Кнопка "Вперёд" */}
       <button
         className={s.navButton}
         onClick={() => goTo(safeCurrent + 1)}
         disabled={safeCurrent === totalPages}
         aria-label="Следующая страница"
       >
-        →
+        <ArrowIosForwardOutlineIcon size={15} />
       </button>
     </div>
   )

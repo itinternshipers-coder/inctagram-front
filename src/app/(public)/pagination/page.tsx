@@ -1,11 +1,13 @@
 'use client'
 
-import SuperPagination from '@/shared/ui/super-pagination/SuperPagination'
+import SuperPagination from '@/shared/ui/SuperPagination/SuperPagination'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const PaginationPage = () => {
   const options = [
+    { id: 1, value: 1 },
+    { id: 5, value: 5 },
     { id: 10, value: 10 },
     { id: 20, value: 20 },
     { id: 30, value: 30 },
@@ -46,6 +48,13 @@ const PaginationPage = () => {
 
   return (
     <div>
+      {dummyPosts.slice((page - 1) * count, page * count).map((post) => (
+        <div key={post.id}>
+          <strong>{post.user}</strong>
+          <p>{post.content}</p>
+        </div>
+      ))}
+
       <SuperPagination
         page={page}
         count={count}
@@ -53,46 +62,8 @@ const PaginationPage = () => {
         onChange={onChangePagination}
         options={options}
       />
-      <div>
-        {dummyPosts.slice((page - 1) * count, page * count).map((post) => (
-          <div key={post.id}>
-            <strong>{post.user}</strong>
-            <p>{post.content}</p>
-          </div>
-        ))}
-      </div>
     </div>
   )
 }
 
 export default PaginationPage
-// (
-//   <div>
-//     <SuperPagination
-//       page={page}
-//       count={count}
-//       totalCount={dummyPosts.length}
-//       onChange={onChangePagination}
-//       options={options}
-//     />
-
-//     <div style={{ marginTop: "20px" }}>
-//       {dummyPosts
-//         .slice((page - 1) * count, page * count)
-//         .map((post) => (
-//           <div
-//             key={post.id}
-//             style={{
-//               border: "1px solid #ddd",
-//               padding: "10px",
-//               borderRadius: "8px",
-//               marginBottom: "8px",
-//             }}
-//           >
-//             <strong>{post.user}</strong>
-//             <p>{post.content}</p>
-//           </div>
-//         ))}
-//     </div>
-//   </div>
-// )

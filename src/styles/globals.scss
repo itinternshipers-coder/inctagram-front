@@ -12,6 +12,11 @@ body {
   line-height: 1.6;
 }
 
+[data-theme='dark'] {
+  background-color: var(--dark-700);
+  color: var(--light-100);
+}
+
 // Тёмная тема по умолчанию
 body[data-theme='dark'] {
   background-color: var(--dark-700);

@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/nextjs-vite'
 import '../src/styles/globals.scss'
+import React from 'react'
 
 const preview: Preview = {
   parameters: {
@@ -9,14 +10,29 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
-
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
       test: 'todo',
     },
+    backgrounds: {
+      default: 'dark',
+      values: [
+        { name: 'dark', value: 'var(--dark-700)' },
+        { name: 'light', value: 'var(--light-100)' },
+      ],
+    },
   },
+  decorators: [
+    (Story) => {
+      return React.createElement(
+        'div',
+        {
+          'data-theme': 'dark',
+          style: { padding: '20px', minHeight: '100vh' },
+        },
+        React.createElement(Story)
+      )
+    },
+  ],
 }
 
 export default preview

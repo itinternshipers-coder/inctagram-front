@@ -13,26 +13,40 @@ const preview: Preview = {
     a11y: {
       test: 'todo',
     },
-    backgrounds: {
-      default: 'dark',
-      values: [
-        { name: 'dark', value: 'var(--dark-700)' },
-        { name: 'light', value: 'var(--light-100)' },
-      ],
-    },
   },
   decorators: [
-    (Story) => {
+    (Story, context) => {
+      const theme = context.globals.theme || 'dark'
+
+      // Применяем тему к body
+      if (typeof document !== 'undefined') {
+        document.body.setAttribute('data-theme', theme)
+      }
+
       return React.createElement(
         'div',
         {
-          'data-theme': 'dark',
           style: { padding: '20px', minHeight: '100vh' },
         },
         React.createElement(Story)
       )
     },
   ],
+  globalTypes: {
+    theme: {
+      name: 'Theme',
+      description: 'Global theme for components',
+      initialValue: 'dark',
+      toolbar: {
+        icon: 'circlehollow',
+        items: [
+          { value: 'light', title: 'Light', icon: 'sun' },
+          { value: 'dark', title: 'Dark', icon: 'moon' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
 }
 
 export default preview

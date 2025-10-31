@@ -13,6 +13,13 @@ const preview: Preview = {
     a11y: {
       test: 'todo',
     },
+    backgrounds: {
+      default: 'dark',
+      values: [
+        { name: 'dark', value: 'var(--dark-700)' },
+        { name: 'light', value: 'var(--light-100)' },
+      ],
+    },
   },
   decorators: [
     (Story, context) => {

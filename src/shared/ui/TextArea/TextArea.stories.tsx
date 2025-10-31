@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { fn } from 'storybook/test'
-import TextAreaBlock from './TextAreaBlock'
+import TextArea from './TextArea'
 
 const meta = {
-  title: 'Forms/TextAreaBlock',
-  component: TextAreaBlock,
+  title: 'Components/TextArea',
+  component: TextArea,
   tags: ['autodocs'],
   argTypes: {
     label: { control: 'text' },
@@ -15,7 +15,7 @@ const meta = {
     value: { control: 'text' },
     onChange: { action: 'changed' },
   },
-} satisfies Meta<typeof TextAreaBlock>
+} satisfies Meta<typeof TextArea>
 
 export default meta
 

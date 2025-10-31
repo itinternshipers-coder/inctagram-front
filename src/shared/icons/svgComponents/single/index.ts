@@ -1,2 +1,8 @@
+export { default as FacebookLogoIcon } from './FacebookLogoIcon'
 export { default as FlagRussiaIcon } from './FlagRussiaIcon'
 export { default as FlagUnitedKingdomIcon } from './FlagUnitedKingdomIcon'
+export { default as PaidIcon } from './PaidIcon'
+export { default as PaypalLogoIcon } from './PaypalLogoIcon'
+export { default as RecaptchaLogoIcon } from './RecaptchaLogoIcon'
+export { default as StripeLogoIcon } from './StripeLogoIcon'
+export { default as TestIcon } from './TestIcon'

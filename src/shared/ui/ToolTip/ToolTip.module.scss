@@ -1,0 +1,181 @@
+.trigger {
+  position: relative;
+  display: flex;
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    color: var(--dark-100);
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 7px;
+  right: 6px;
+  background: var(--danger-500);
+  color: var(--light-100);
+  font-size: var(--font-size-12);
+  font-weight: var(--font-weight-semibold);
+  padding: 2px 4px;
+  border-radius: 50%;
+  min-width: 13px;
+  height: 15px;
+  text-align: center;
+  line-height: var(--line-height-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  background: var(--dark-300);
+  border-radius: 12px;
+  width: 355px;
+  max-width: 355px;
+  overflow: hidden;
+  z-index: 1000;
+  animation-duration: 0.2s;
+  animation-timing-function: ease-out;
+}
+
+.arrow {
+  fill: var(--dark-300);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
+
+.notificationsContainer {
+  display: flex;
+  flex-direction: column;
+  background: var(--dark-300);
+  margin: 12px 4px 12px 12px;
+}
+
+.header {
+  margin: 4px 4px 12px 4px;
+
+  .title {
+    margin: 0;
+    font-size: var(--font-size-16);
+    font-weight: var(--font-weight-semibold);
+    color: var(--light-100);
+  }
+}
+
+.notificationsList {
+  max-width: 331px;
+  max-height: 300px;
+  margin: 0 4px 4px 4px;
+  overflow-y: auto;
+  background: var(--dark-300);
+}
+
+.notification {
+  padding-top: 12px;
+  margin-right: 8px;
+  padding-bottom: 13px;
+  border-top: 1px solid var(--dark-100);
+  transition: background-color 0.2s ease;
+}
+
+.notificationHeader {
+  display: flex;
+}
+
+.notificationTitle {
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-semibold);
+  color: var(--light-100);
+}
+
+.newBadge {
+  color: var(--primary);
+  font-size: var(--font-size-12);
+  font-weight: var(--font-weight-light);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.notificationMessage {
+  font-size: var(--font-size-14);
+  color: var(--light-100);
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.notificationTime {
+  font-size: var(--font-size-12);
+  color: var(--light-900);
+  line-height: var(--line-height-100);
+  display: block;
+}
+
+// Анимации
+.content[data-state='delayed-open'][data-side='top'] {
+  animation-name: slideDownAndFade;
+}
+
+.content[data-state='delayed-open'][data-side='right'] {
+  animation-name: slideLeftAndFade;
+}
+
+.content[data-state='delayed-open'][data-side='bottom'] {
+  animation-name: slideUpAndFade;
+}
+
+.content[data-state='delayed-open'][data-side='left'] {
+  animation-name: slideRightAndFade;
+}
+
+@keyframes slideUpAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideRightAndFade {
+  from {
+    opacity: 0;
+    transform: translateX(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDownAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeftAndFade {
+  from {
+    opacity: 0;
+    transform: translateX(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

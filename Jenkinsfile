@@ -76,24 +76,23 @@ pipeline {
     post {
         always {
             script {
-                // Безопасная отправка статуса в GitHub через Jenkins Credentials
-                withCredentials([string(credentialsId: 'github-status-token', variable: 'GITHUB_TOKEN')]) {
-                    def status = currentBuild.result == 'SUCCESS' ? 'success' : 'failure'
-                    def description = "Build ${currentBuild.result ?: 'SUCCESS'}"
+                // Используем существующий токен из окружения Jenkins
+                def status = currentBuild.result == 'SUCCESS' ? 'success' : 'failure'
+                def description = "Build ${currentBuild.result ?: 'SUCCESS'}"
 
-                    sh """
-                        curl -s -X POST \
-                        -H "Authorization: token $GITHUB_TOKEN" \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        https://api.github.com/repos/itinternshipers-coder/inctagram-front/statuses/${env.GIT_COMMIT} \
-                        -d '{
-                            "state": "${status}",
-                            "target_url": "${env.BUILD_URL}",
-                            "description": "${description}",
-                            "context": "jenkins/production-build"
-                        }' || echo "GitHub status update failed but continuing"
-                    """
-                }
+                // Безопасная отправка статуса
+                sh """
+                    curl -s -X POST \
+                    -H "Authorization: token ${env.GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    https://api.github.com/repos/itinternshipers-coder/inctagram-front/statuses/${env.GIT_COMMIT} \
+                    -d '{
+                        "state": "${status}",
+                        "target_url": "${env.BUILD_URL}",
+                        "description": "${description}",
+                        "context": "jenkins/production-build"
+                    }' || echo "GitHub status update completed"
+                """
             }
         }
     }

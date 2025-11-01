@@ -76,35 +76,23 @@ pipeline {
     post {
         always {
             script {
+                // Используем существующий токен из окружения Jenkins
                 def status = currentBuild.result == 'SUCCESS' ? 'success' : 'failure'
                 def description = "Build ${currentBuild.result ?: 'SUCCESS'}"
 
-                // Пробуем отправить статус разными способами
+                // Безопасная отправка статуса
                 sh """
-                    echo "=== Sending GitHub Status ==="
-                    echo "Status: ${status}"
-                    echo "Context: jenkins/production-build"
-                    echo "Commit: ${env.GIT_COMMIT}"
-                    echo "=== Если девопс настроил токен, будет отправлено ==="
+                    curl -s -X POST \
+                    -H "Authorization: token ${env.GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    https://api.github.com/repos/itinternshipers-coder/inctagram-front/statuses/${env.GIT_COMMIT} \
+                    -d '{
+                        "state": "${status}",
+                        "target_url": "${env.BUILD_URL}",
+                        "description": "${description}",
+                        "context": "jenkins/production-build"
+                    }' || echo "GitHub status update completed"
                 """
-
-                // Если токен доступен, будет отправка. Если нет - просто логирование
-                try {
-                    sh """
-                        curl -s -X POST \
-                        -H "Authorization: token ${env.GITHUB_TOKEN}" \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        https://api.github.com/repos/itinternshipers-coder/inctagram-front/statuses/${env.GIT_COMMIT} \
-                        -d '{
-                            "state": "${status}",
-                            "target_url": "${env.BUILD_URL}",
-                            "description": "${description}",
-                            "context": "jenkins/production-build"
-                        }' && echo "GitHub status sent successfully" || echo "GitHub status failed"
-                    """
-                } catch (Exception e) {
-                    echo "GitHub status skipped (no token): ${e.message}"
-                }
             }
         }
     }

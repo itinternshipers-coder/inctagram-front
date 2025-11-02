@@ -1,0 +1,19 @@
+@import '@/styles/base/mixins';
+
+.content {
+  background: var(--light-100);
+  color: var(--dark-900);
+  border-radius: 4px;
+  border: 1px solid var(--light-900);
+  padding: 8px;
+  box-shadow: none;
+  max-width: 280px;
+
+  @include text-size(m, m);
+  @include text-weight(500);
+}
+
+.tooltipContent {
+  color: inherit; // Наследует цвет от .content
+  margin: 4px;
+}

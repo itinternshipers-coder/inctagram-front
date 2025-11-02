@@ -1,0 +1,156 @@
+@import '@/styles/base/mixins';
+
+.trigger {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--danger-500);
+  color: var(--light-100);
+  @include text-size(xs, s);
+  @include text-weight(600);
+  border-radius: 50%;
+  padding: 0 4px;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0;
+  width: 320px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  color: var(--foreground);
+}
+
+.header {
+  padding: 12px 12px 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  @include text-size(m, m);
+  @include text-weight(600);
+  color: var(--foreground);
+  margin: 0;
+}
+
+.clearBtn {
+  @include text-size(xs, s);
+  @include text-weight(400);
+  color: var(--accent-500);
+  cursor: pointer;
+  background: none;
+  border: none;
+
+  &:hover {
+    color: var(--accent-700);
+  }
+}
+
+.notificationsListWrapper {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0 12px;
+}
+
+.notification {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.notificationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.notificationTitle {
+  @include text-size(s, m);
+  @include text-weight(500);
+  color: var(--foreground);
+  flex: 1;
+  margin-right: 8px;
+}
+
+.newBadge {
+  @include text-size(xs, s);
+  @include text-weight(600);
+  color: var(--success-500);
+  flex-shrink: 0;
+}
+
+.notificationMessage {
+  @include text-size(s, m);
+  @include text-weight(400);
+  color: var(--muted-foreground);
+  margin: 4px 0;
+}
+
+.notificationTime {
+  @include text-size(xs, s);
+  @include text-weight(400);
+  color: var(--muted-foreground);
+}
+
+.footer {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.viewAll {
+  @include text-size(s, m);
+  @include text-weight(500);
+  background: none;
+  border: none;
+  color: var(--accent-500);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--accent-700);
+  }
+}
+
+.arrow {
+  fill: var(--background);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

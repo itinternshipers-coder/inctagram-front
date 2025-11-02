@@ -1,53 +1,34 @@
 'use client'
 
-import { OutlineBellIcon } from '@/shared/icons/svgComponents'
-import s from '@/shared/ui/ToolTip/ToolTip.module.scss'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import clsx from 'clsx'
-import * as React from 'react'
+import s from './ToolTip.module.scss'
+import React from 'react'
 
 type ToolTipProps = {
-  unreadCount?: number
-  openDelay?: number
-  closeDelay?: number
+  text: React.ReactNode
+  children: React.ReactNode
   position?: 'top' | 'right' | 'bottom' | 'left'
   sideOffset?: number
+  openDelay?: number
   className?: string
-  content?: React.ReactNode
-  children?: React.ReactNode
 }
 
 export default function ToolTip({
-  unreadCount = 0,
+  text,
   children,
-  content,
-  openDelay = 200,
-  closeDelay = 200,
-  position = 'bottom',
-  sideOffset = 5,
+  position = 'top',
+  sideOffset = 10,
+  openDelay = 300,
   className,
 }: ToolTipProps) {
   return (
-    <Tooltip.Provider delayDuration={openDelay} skipDelayDuration={closeDelay}>
+    <Tooltip.Provider delayDuration={openDelay}>
       <Tooltip.Root>
-        <Tooltip.Trigger>
-          {children || (
-            <button className={s.trigger}>
-              <OutlineBellIcon />
-              {unreadCount > 0 && <span className={s.badge}>{unreadCount}</span>}
-            </button>
-          )}
-        </Tooltip.Trigger>
-
+        <Tooltip.Trigger asChild>{children}</Tooltip.Trigger>
         <Tooltip.Portal>
-          <Tooltip.Content className={clsx(s.content, className)} side={position} sideOffset={sideOffset} align="end">
-            <div className={s.notificationsContainer}>
-              <div className={s.header}>
-                <h3 className={s.title}>Уведомления</h3>
-              </div>
-              {content}
-            </div>
-            <Tooltip.Arrow className={s.arrow} />
+          <Tooltip.Content side={position} sideOffset={sideOffset} className={clsx(s.content, className)}>
+            <div className={s.tooltipContent}>{text}</div>
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>

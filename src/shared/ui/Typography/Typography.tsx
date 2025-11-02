@@ -4,6 +4,10 @@ import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
 import { clsx } from 'clsx'
 import s from './Typography.module.scss'
 
+// Typography - это для основного контента вашего приложения (статьи, профили, карточки, формы).
+// Правило: Если компонент сам определяет внешний вид текста (размер, цвет, отступы) - не используйте Typography.
+// Если текст является частью контента - используйте Typography.
+
 export type TypographyProps<T extends ElementType> = {
   as?: T
   children?: ReactNode

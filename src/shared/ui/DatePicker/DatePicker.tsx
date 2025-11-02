@@ -51,7 +51,6 @@ export const DatePicker = ({
 
   const handleSelect = (val: Date | DateRange | undefined) => {
     onChange?.(val)
-    // if (mode === "single") setOpen(false);
   }
 
   const formatValue = (v: Date | DateRange | undefined) => {
@@ -78,6 +77,9 @@ export const DatePicker = ({
     selected: s.selected,
     today: s.today,
     disabled: s.disabled,
+    outside: s.otherMonth,
+    button_next: s.next,
+    button_previous: s.previous,
   }
 
   return (
@@ -110,21 +112,31 @@ export const DatePicker = ({
             <DayPicker
               mode="range"
               required={false}
+              showOutsideDays
               selected={value as DateRange | undefined}
               onSelect={(val) => handleSelect(val as DateRange | undefined)}
               weekStartsOn={1}
               modifiers={modifiers}
               modifiersClassNames={modifiersClassNames}
+              classNames={{
+                button_next: s.next,
+                button_previous: s.previous,
+              }}
             />
           ) : (
             <DayPicker
               mode="single"
               required={false}
+              showOutsideDays
               selected={value as Date | undefined}
               onSelect={(val) => handleSelect(val as Date | undefined)}
               weekStartsOn={1}
               modifiers={modifiers}
               modifiersClassNames={modifiersClassNames}
+              classNames={{
+                button_next: s.next,
+                button_previous: s.previous,
+              }}
             />
           )}
         </div>

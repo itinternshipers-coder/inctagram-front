@@ -4,7 +4,6 @@ import { Meta, StoryFn } from '@storybook/nextjs-vite'
 import { DatePicker, Props as DatePickerProps } from './DatePicker'
 import { DateRange } from 'react-day-picker'
 import { startOfMonth, endOfMonth } from 'date-fns'
-import { Typography } from '../typography/Typography' // путь от DatePicker.stories.tsx до Typography
 
 export default {
   title: 'Components/DatePicker',

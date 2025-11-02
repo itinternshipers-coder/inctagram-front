@@ -69,8 +69,6 @@
 
 .rangeEnd {
   background-color: var(--accent-900);
-  border-top-right-radius: 50%;
-  border-bottom-right-radius: 50%;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -80,14 +78,18 @@
   border-radius: 0;
 }
 
-.today {
-  border: none;
-  color: var(--accent-900);
-}
-
 .weekend {
   color: var(--danger-300);
   font-weight: 600;
+}
+
+.otherMonth {
+  color: var(--light-900);
+}
+
+.today {
+  border: none;
+  color: var(--accent-900);
 }
 
 .inputWrapper.disabled .input {
@@ -103,4 +105,22 @@
 .errorText {
   color: var(--danger-500);
   font-size: 12px;
+}
+
+.next,
+.previous {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--dark-100);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+}
+
+.next svg,
+.previous svg {
+  fill: var(--light-100);
+  width: 16px;
+  height: 16px;
 }

@@ -38,7 +38,7 @@ const preview: Preview = {
       description: 'Global theme for components',
       initialValue: 'dark',
       toolbar: {
-        icon: 'circlehollow',
+        icon: 'moon',
         items: [
           { value: 'light', title: 'Light', icon: 'sun' },
           { value: 'dark', title: 'Dark', icon: 'moon' },

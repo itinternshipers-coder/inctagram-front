@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { DayPicker, type DateRange } from 'react-day-picker'
 import { format } from 'date-fns'
-import { CalendarIcon } from '@/shared/icons/svgComponents'
+import { CalendarIcon, CalendarOutlineIcon } from '@/shared/icons/svgComponents'
 import 'react-day-picker/dist/style.css'
-import styles from './DatePicker.module.scss'
+import s from './DatePicker.module.scss'
 
 export type DatePickerMode = 'single' | 'range'
 
@@ -71,37 +71,41 @@ export const DatePicker = ({
   }
 
   const modifiersClassNames = {
-    weekend: styles.weekend,
-    range_start: styles.rangeStart,
-    range_end: styles.rangeEnd,
-    range_middle: styles.rangeMiddle,
-    selected: styles.selected,
-    today: styles.today,
-    disabled: styles.disabled,
+    weekend: s.weekend,
+    range_start: s.rangeStart,
+    range_end: s.rangeEnd,
+    range_middle: s.rangeMiddle,
+    selected: s.selected,
+    today: s.today,
+    disabled: s.disabled,
   }
 
   return (
-    <div ref={wrapperRef} className={`${styles.wrapper} ${className ?? ''}`}>
-      {label && <label className={styles.label}>{label}</label>}
+    <div ref={wrapperRef} className={`${s.wrapper} ${className ?? ''}`}>
+      {label && <span className={s.label}>{label}</span>}
 
-      <div className={`${styles.inputWrapper} ${error ? styles.error : ''} ${disabled ? styles.disabled : ''}`}>
+      <div className={`${s.inputWrapper} ${error ? s.error : ''} ${disabled ? s.disabled : ''}`}>
         <input
           readOnly
           disabled={disabled}
           placeholder={placeholder}
           value={formatValue(value)}
-          className={styles.input}
+          className={s.input}
           onClick={() => setOpen((prev) => !prev)}
         />
-        <span className={styles.icon}>
-          <CalendarIcon color={error ? '#ef4444' : undefined} />
+        <span className={s.icon}>
+          {open ? (
+            <CalendarIcon color={error ? '#cc1439' : undefined} />
+          ) : (
+            <CalendarOutlineIcon color={error ? '#cc1439 ' : undefined} />
+          )}
         </span>
       </div>
 
-      {error && <p className={styles.errorText}>{error}</p>}
+      {error && <p className={s.errorText}>{error}</p>}
 
       {open && !disabled && (
-        <div className={styles.calendarWrapper}>
+        <div className={s.calendarWrapper}>
           {isRange ? (
             <DayPicker
               mode="range"

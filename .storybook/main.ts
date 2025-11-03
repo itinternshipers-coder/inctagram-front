@@ -1,6 +1,29 @@
+// import type { StorybookConfig } from '@storybook/nextjs-vite'
+
+// const config: StorybookConfig = {
+//   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+//   addons: [
+//     '@chromatic-com/storybook',
+//     '@storybook/addon-docs',
+//     '@storybook/addon-onboarding',
+//     '@storybook/addon-a11y',
+//     '@storybook/addon-vitest',
+//   ],
+//   framework: {
+//     name: '@storybook/nextjs-vite',
+//     options: {},
+//   },
+//   staticDirs: ['../public'],
+// }
+// export default config
+
 import type { StorybookConfig } from '@storybook/nextjs-vite'
-import tsconfigPaths from 'vite-tsconfig-paths'
-import path from 'path'
+import { mergeConfig } from 'vite'
+import * as path from 'path'
+
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -15,22 +38,16 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs-vite',
     options: {},
   },
-  staticDirs: [path.join(__dirname, '..', 'public')],
-  async viteFinal(config) {
-    config.plugins = [...(config.plugins ?? []), tsconfigPaths()]
+  staticDirs: ['../public'],
 
-    // Добавляем резолвер для SCSS
-    if (config.resolve) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        '@/styles': path.resolve(__dirname, '../src/styles'),
-        '@/shared': path.resolve(__dirname, '../src/shared'),
-        '@': path.resolve(__dirname, '../src'),
-      }
-    }
-
-    return config
+  async viteFinal(config, { configType }) {
+    return mergeConfig(config, {
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '../src'),
+        },
+      },
+    })
   },
 }
-
 export default config

@@ -1,0 +1,109 @@
+@import '../../../styles/base/mixins';
+
+@mixin sidebar-base($justify: space-around) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 240px;
+  background-color: var(--dark-900);
+  border-right: 1px solid var(--dark-300);
+  display: flex;
+  flex-direction: column;
+  justify-content: $justify;
+  align-items: center;
+}
+
+.sidebar {
+  // Для обычного пользователя
+  @include sidebar-base(space-around);
+
+  //Админ
+  &.admin {
+    @include sidebar-base(flex-start);
+  }
+
+  .sidebarItem {
+    @include text-size(s, m);
+    @include text-weight(500);
+
+    display: inline-grid; // 👈 вместо display: grid
+    grid-template-columns: 40px 1fr;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--light-100);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &.active {
+      color: var(--primary);
+
+      &:hover {
+        background-color: var(--dark-400);
+      }
+
+      .iconWrapper svg {
+        stroke: var(--primary);
+        fill: var(--primary);
+      }
+
+      .label {
+        color: var(--primary);
+      }
+    }
+
+    .iconWrapper {
+      svg {
+        stroke: currentColor;
+        fill: currentColor;
+        transition: all 0.2s ease-in-out;
+      }
+    }
+
+    .label {
+      @include text-size(m, m);
+      @include text-weight(500);
+      white-space: nowrap;
+
+      &.active {
+        color: var(--primary);
+      }
+    }
+  }
+
+  .mainSection {
+    padding-top: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .additionalSection {
+    padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .logoutSection {
+    padding-top: 80px;
+  }
+}
+
+.sidebarItem.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  color: var(--dark-100);
+  cursor: not-allowed;
+}
+
+.sidebarItem:focus-visible {
+  border-color: var(--primary);
+}

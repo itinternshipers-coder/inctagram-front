@@ -1,4 +1,3 @@
-// DatePicker.stories.tsx
 import React, { useState } from 'react'
 import { Meta, StoryFn } from '@storybook/nextjs-vite'
 import { DatePicker, Props as DatePickerProps } from './DatePicker'
@@ -26,19 +25,10 @@ const Template: StoryFn<DatePickerProps> = (args) => {
   return (
     <div style={{ padding: '2rem', background: '#121212' }}>
       <DatePicker {...args} value={value} onChange={setValue} />
-      <div style={{ marginTop: '1rem', color: '#fff' }}>
-        Selected:{' '}
-        {value
-          ? args.mode === 'range' && 'from' in value
-            ? `${value.from ? value.from.toLocaleDateString() : ''} - ${value.to ? value.to.toLocaleDateString() : ''}`
-            : (value as Date).toLocaleDateString()
-          : 'None'}
-      </div>
     </div>
   )
 }
 
-// Истории
 export const Single = Template.bind({})
 Single.args = {
   mode: 'single',
@@ -55,17 +45,17 @@ Range.args = {
 
 export const Disabled = Template.bind({})
 Disabled.args = {
-  mode: 'range',
+  mode: 'single',
   label: 'Date',
-  placeholder: 'Pick a range',
+  placeholder: 'Pick a date',
   disabled: true,
 }
 
 export const Error = Template.bind({})
 Error.args = {
-  mode: 'single',
+  mode: 'range',
   label: 'Date',
-  placeholder: 'Pick a date',
+  placeholder: 'Pick a range',
   error: 'Error, select current month or last month',
 }
 
@@ -73,16 +63,7 @@ export const ThisMonthOnly = Template.bind({})
 ThisMonthOnly.args = {
   mode: 'single',
   label: 'Date',
-  placeholder: 'Только этот месяц',
-  minDate: startOfMonth(new Date()),
-  maxDate: endOfMonth(new Date()),
-}
-
-export const RangeThisMonth = Template.bind({})
-RangeThisMonth.args = {
-  mode: 'range',
-  label: 'Date range',
-  placeholder: 'Только этот месяц',
+  placeholder: 'Pick a date',
   minDate: startOfMonth(new Date()),
   maxDate: endOfMonth(new Date()),
 }

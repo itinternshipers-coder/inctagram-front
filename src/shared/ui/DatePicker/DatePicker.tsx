@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import { CalendarIcon, CalendarOutlineIcon } from '@/shared/icons/svgComponents'
 import 'react-day-picker/dist/style.css'
 import s from './DatePicker.module.scss'
+import clsx from 'clsx'
 
 export type DatePickerMode = 'single' | 'range'
 
@@ -38,7 +39,6 @@ export const DatePicker = ({
 }: Props) => {
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
-
   const isRange = mode === 'range'
 
   useEffect(() => {
@@ -49,9 +49,7 @@ export const DatePicker = ({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSelect = (val: Date | DateRange | undefined) => {
-    onChange?.(val)
-  }
+  const handleSelect = (val: Date | DateRange | undefined) => onChange?.(val)
 
   const formatValue = (v: Date | DateRange | undefined) => {
     if (!v) return ''
@@ -65,7 +63,7 @@ export const DatePicker = ({
   }
 
   const modifiers = {
-    disabled: [(date: Date) => (minDate ? date < minDate : false), (date: Date) => (maxDate ? date > maxDate : false)],
+    disabled: [(date: Date) => !!minDate && date < minDate, (date: Date) => !!maxDate && date > maxDate],
     weekend: (date: Date) => [0, 6].includes(date.getDay()),
   }
 
@@ -78,15 +76,28 @@ export const DatePicker = ({
     today: s.today,
     disabled: s.disabled,
     outside: s.otherMonth,
-    button_next: s.next,
-    button_previous: s.previous,
   }
+
+  const commonProps = {
+    required: false,
+    showOutsideDays: true,
+    weekStartsOn: 1,
+    modifiers,
+    modifiersClassNames,
+    classNames: {
+      month: s.month,
+      button_next: s.next,
+      button_previous: s.previous,
+      weekday: s.weekday,
+      week: s.week,
+    },
+  } as const
 
   return (
     <div ref={wrapperRef} className={`${s.wrapper} ${className ?? ''}`}>
       {label && <span className={s.label}>{label}</span>}
 
-      <div className={`${s.inputWrapper} ${error ? s.error : ''} ${disabled ? s.disabled : ''}`}>
+      <div className={clsx(s.inputWrapper, { [s.error]: error, [s.disabled]: disabled })}>
         <input
           readOnly
           disabled={disabled}
@@ -99,7 +110,7 @@ export const DatePicker = ({
           {open ? (
             <CalendarIcon color={error ? '#cc1439' : undefined} />
           ) : (
-            <CalendarOutlineIcon color={error ? '#cc1439 ' : undefined} />
+            <CalendarOutlineIcon color={error ? '#cc1439' : undefined} />
           )}
         </span>
       </div>
@@ -110,33 +121,17 @@ export const DatePicker = ({
         <div className={s.calendarWrapper}>
           {isRange ? (
             <DayPicker
+              {...commonProps}
               mode="range"
-              required={false}
-              showOutsideDays
               selected={value as DateRange | undefined}
               onSelect={(val) => handleSelect(val as DateRange | undefined)}
-              weekStartsOn={1}
-              modifiers={modifiers}
-              modifiersClassNames={modifiersClassNames}
-              classNames={{
-                button_next: s.next,
-                button_previous: s.previous,
-              }}
             />
           ) : (
             <DayPicker
+              {...commonProps}
               mode="single"
-              required={false}
-              showOutsideDays
               selected={value as Date | undefined}
               onSelect={(val) => handleSelect(val as Date | undefined)}
-              weekStartsOn={1}
-              modifiers={modifiers}
-              modifiersClassNames={modifiersClassNames}
-              classNames={{
-                button_next: s.next,
-                button_previous: s.previous,
-              }}
             />
           )}
         </div>

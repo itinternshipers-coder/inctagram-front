@@ -5,10 +5,10 @@ import * as Select from '@radix-ui/react-select'
 import { ComponentPropsWithoutRef } from 'react'
 import { Typography } from '../typography/Typography'
 import { clsx } from 'clsx'
-import s from './selectBox.module.scss'
+import s from './SelectBox.module.scss'
 import { ArrowBackOutlineIcon, ArrowIosDownOutlineIcon, ArrowIosUpIcon } from '@/shared/icons/svgComponents'
 
-type Option = {
+export type Option = {
   value: string
   label: string
   icon?: React.ReactNode
@@ -18,7 +18,10 @@ type Props = {
   options: Option[]
   label?: string
   placeholder?: string
-  width?: string
+  minWidth?: string // c width на minWidth
+  height?: string
+
+  onValueChange?: (value: string) => void
 } & ComponentPropsWithoutRef<typeof Select.Root>
 
 export const SelectBox = ({
@@ -26,28 +29,48 @@ export const SelectBox = ({
   options,
   defaultValue,
   placeholder = 'Select-box',
-  width = '210px',
+  minWidth = '210px',
+  height = '60px', // нужная высота
+
   disabled,
+  onValueChange,
+  value,
 }: Props) => {
   const [open, setOpen] = React.useState(false)
 
   return (
-    <div className={s.wrapper} style={{ width }}>
+    <div
+      className={s.wrapper}
+      style={{ minWidth }} // применяем проп
+    >
       {label && (
         <Typography variant="regular_text_14" style={{ color: 'var(--light-900)' }}>
           {label}
         </Typography>
       )}
 
-      <Select.Root defaultValue={defaultValue || undefined} open={open} onOpenChange={(isOpen) => setOpen(isOpen)}>
+      <Select.Root
+        defaultValue={defaultValue || undefined}
+        open={open}
+        onOpenChange={(isOpen) => setOpen(isOpen)}
+        onValueChange={onValueChange}
+        value={value}
+      >
         <Select.Trigger
           className={clsx(s.trigger, open ? s.active : '', disabled ? s.disabled : '')}
           aria-label={placeholder}
           disabled={disabled}
+          style={{ height }} // применяем проп
         >
           <Select.Value placeholder={placeholder} />
           <Select.Icon>
-            <span className={s.arrow}>{open ? <ArrowIosUpIcon /> : <ArrowIosDownOutlineIcon />}</span>
+            <span className={s.arrow}>
+              {open ? (
+                <ArrowIosUpIcon width={'16px'} height={'16px'} />
+              ) : (
+                <ArrowIosDownOutlineIcon width={'16px'} height={'16px'} />
+              )}
+            </span>
           </Select.Icon>
         </Select.Trigger>
 

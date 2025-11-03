@@ -76,7 +76,13 @@ const Pagination = ({ totalCount, itemsPerPage, currentPage, onChange, siblingCo
     onChange(page)
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'ArrowLeft') goTo(safeCurrent - 1)
+    if (e.key === 'ArrowRight') goTo(safeCurrent + 1)
+  }
+
   return (
+    // <div className={s.pagination}>
     <div className={s.pagination}>
       {/* Кнопка "Назад" */}
       <button
@@ -98,8 +104,12 @@ const Pagination = ({ totalCount, itemsPerPage, currentPage, onChange, siblingCo
           ) : (
             <button
               key={item}
+              className={s.pageButton + (item === safeCurrent ? ` ${s.active}` : '')}
               onClick={() => goTo(item)}
-              className={`${s.pageButton} ${item === safeCurrent ? s.active : ''}`}
+              onKeyDown={(e) => {
+                if (e.key === 'ArrowLeft') goTo(safeCurrent - 1)
+                if (e.key === 'ArrowRight') goTo(safeCurrent + 1)
+              }}
               aria-current={item === safeCurrent ? 'page' : undefined}
             >
               {item}

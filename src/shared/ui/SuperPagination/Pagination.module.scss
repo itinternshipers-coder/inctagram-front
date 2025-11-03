@@ -23,13 +23,12 @@
 
       &:hover {
         border-color: var(--primary);
-        color: var(--primary);
+        color: var(--foreground);
       }
 
       &.active {
         background: var(--light-100);
         color: var(--dark-900);
-        border-color: var(--primary);
       }
     }
 
@@ -75,4 +74,10 @@
     color: var(--muted-foreground);
     font-size: var(--font-size-14);
   }
+}
+
+.selectWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

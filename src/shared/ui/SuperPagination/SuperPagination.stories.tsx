@@ -1,67 +1,75 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { useState } from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import SuperPagination from './SuperPagination'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { Option } from '../SelectBox/SelectBox'
+
+const options: Option[] = [
+  { label: '10', value: '10' },
+  { label: '20', value: '20' },
+  { label: '30', value: '30' },
+  { label: '50', value: '50' },
+  { label: '100', value: '100' },
+]
 
 const meta: Meta<typeof SuperPagination> = {
-  title: 'UI/SuperPagination',
+  title: 'Components/SuperPagination',
   component: SuperPagination,
+  argTypes: {
+    page: { control: 'number' },
+    count: { control: 'number' },
+    totalCount: { control: 'number' },
+    onChange: { action: 'onChange fired' },
+  },
 }
 
 export default meta
 type Story = StoryObj<typeof SuperPagination>
 
-const options = [
-  { id: 1, value: 1 },
-  { id: 5, value: 5 },
-  { id: 10, value: 10 },
-  { id: 20, value: 20 },
-  { id: 30, value: 30 },
-  { id: 50, value: 50 },
-  { id: 100, value: 100 },
-]
+const SuperPaginationWrapper = ({
+  initialPage = 1,
+  initialCount = 10,
+  totalCount = 42,
+}: {
+  initialPage?: number
+  initialCount?: number
+  totalCount?: number
+}) => {
+  const [page, setPage] = useState(initialPage)
+  const [count, setCount] = useState(initialCount)
 
-// 🔹 Компонент-обёртка для Storybook, где есть реальные данные
-const PaginationExample = () => {
-  const totalItems = 50
-  const dummyItems = Array.from({ length: totalItems }, (_, i) => ({
-    id: i + 1,
-    title: `Элемент №${i + 1}`,
-  }))
-
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(10)
-
-  const onChange = (newPage: number, newCount: number) => {
+  const handleChange = (newPage: number, newCount: number) => {
     setPage(newPage)
     setCount(newCount)
   }
 
-  const start = (page - 1) * count
-  const end = start + count
-  const visibleItems = dummyItems.slice(start, end)
-
-  return (
-    <div style={{ width: 400, margin: '0 auto', textAlign: 'center' }}>
-      <div
-        style={{
-          border: '1px solid #333',
-          padding: '10px',
-          borderRadius: '4px',
-          marginBottom: '10px',
-          backgroundColor: '#1a1a1a',
-          color: 'white',
-        }}
-      >
-        {visibleItems.map((item) => (
-          <div key={item.id}>{item.title}</div>
-        ))}
-      </div>
-
-      <SuperPagination page={page} count={count} totalCount={totalItems} onChange={onChange} options={options} />
-    </div>
-  )
+  return <SuperPagination page={page} count={count} totalCount={totalCount} onChange={handleChange} options={options} />
 }
 
 export const Default: Story = {
-  render: () => <PaginationExample />,
+  name: 'Default',
+  render: () => <SuperPaginationWrapper totalCount={5500} initialCount={100} />,
+}
+
+export const Active: Story = {
+  name: 'Active',
+  render: () => <SuperPaginationWrapper totalCount={5500} initialCount={100} initialPage={7} />,
+}
+export const Hover: Story = {
+  name: 'Hover',
+  render: () => (
+    <div style={{ padding: '20px' }}>
+      <SuperPaginationWrapper totalCount={5500} initialCount={100} />
+    </div>
+  ),
+}
+
+export const Focus: Story = {
+  name: 'Tab',
+  render: () => (
+    <div style={{ padding: '20px' }}>
+      <SuperPaginationWrapper totalCount={5500} initialCount={100} initialPage={3} />
+    </div>
+  ),
 }

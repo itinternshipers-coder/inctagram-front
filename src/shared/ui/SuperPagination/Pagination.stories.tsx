@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
-// import { Meta, StoryObj } from '@storybook/react'
+import { useState } from 'react'
 import Pagination from '@/shared/ui/SuperPagination/Pagination'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
-// Мета-описание
 const meta: Meta<typeof Pagination> = {
   title: 'Components/Pagination',
   component: Pagination,
@@ -12,49 +10,52 @@ const meta: Meta<typeof Pagination> = {
 export default meta
 type Story = StoryObj<typeof Pagination>
 
-// Моковый массив данных для демонстрации
-const mockItems = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  user: `User ${i + 1}`,
-  content: `Это контент поста номер ${i + 1}`,
-}))
-
 export const Default: Story = {
   render: () => {
     const [page, setPage] = useState(1)
-    const itemsPerPage = 5
+    return <Pagination totalCount={55} itemsPerPage={1} currentPage={page} onChange={setPage} siblingCount={1} />
+  },
+}
 
-    // Берём элементы текущей страницы
-    const currentItems = mockItems.slice((page - 1) * itemsPerPage, page * itemsPerPage)
+export const Active: Story = {
+  render: () => {
+    const [page, setPage] = useState(7)
+    return <Pagination totalCount={55} itemsPerPage={1} currentPage={page} onChange={setPage} siblingCount={1} />
+  },
+}
 
+export const Hover: Story = {
+  render: () => {
+    const [page, setPage] = useState(1)
     return (
-      <div>
-        {/* Пагинация */}
-        <Pagination
-          totalCount={mockItems.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={page}
-          onChange={setPage}
-          siblingCount={1}
-        />
-
-        {/* Список элементов на текущей странице */}
-        <div style={{ marginTop: '20px' }}>
-          {currentItems.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                border: '1px solid #ddd',
-                padding: '10px',
-                borderRadius: '8px',
-                marginBottom: '8px',
-              }}
-            >
-              <strong>{item.user}</strong>
-              <p>{item.content}</p>
-            </div>
-          ))}
-        </div>
+      <div style={{ display: 'inline-block', padding: '20px' }}>
+        <Pagination totalCount={55} itemsPerPage={1} currentPage={page} onChange={setPage} siblingCount={1} />
+        <style>{`
+          .pagination button:first-child {
+            background-color: #e0e0e0;
+            border: 1px solid #999;
+          }
+        `}</style>{' '}
+      </div>
+    )
+  },
+}
+export const Tab: Story = {
+  render: () => {
+    const [page, setPage] = useState(1)
+    return (
+      <div style={{ display: 'inline-block', padding: '20px' }}>
+        <Pagination totalCount={55} itemsPerPage={1} currentPage={page} onChange={setPage} siblingCount={1} />
+        <style>{`
+          /* Имитация Focus состояния (как будто нажали Tab) */
+          .pagination .pages .pageButton:first-child {
+            /* Обычно фокус обозначается рамкой (outline) */
+            outline: 2px solid var(--focus-color, #007bff);
+            outline-offset: 2px;
+          }
+          /* Если вы используете специальные стили для :focus-visible,
+             их нужно имитировать здесь */
+        `}</style>
       </div>
     )
   },

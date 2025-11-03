@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 import './globals.scss'
-import PaginationPage from './(public)/pagination/page'
+import Sidebar from '@/shared/ui/Sidebar/Sidebar'
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={inter.variable} data-theme="dark">
       <body data-theme="dark">
         {children}
-        <PaginationPage />
+        <Sidebar role="user" />
       </body>
     </html>
   )

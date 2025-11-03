@@ -10,6 +10,7 @@ type SidebarLinkItemProps = {
   isActive: boolean
   disabled: boolean
   onClick: () => void
+  className?: string
 }
 
 const SidebarLinkItem = ({
@@ -20,8 +21,8 @@ const SidebarLinkItem = ({
   isActive,
   disabled,
   onClick,
+  className = '',
 }: SidebarLinkItemProps) => {
-  //обработчик, который отменяет переход, если disabled = true
   const handleClick = (e: React.MouseEvent) => {
     if (disabled) {
       e.preventDefault() //отменяет переход по ссылке
@@ -36,7 +37,7 @@ const SidebarLinkItem = ({
   return (
     <Link
       href={href}
-      className={`${s.sidebarItem} ${isActive ? s.active : ''} ${disabled ? s.disabled : ''}`}
+      className={`${className} ${s.sidebarItem} ${isActive ? s.active : ''} ${disabled ? 'disabled' : ''}`}
       onClick={handleClick}
     >
       <span className={s.iconWrapper}>{isActive ? ActiveIcon : InactiveIcon}</span>

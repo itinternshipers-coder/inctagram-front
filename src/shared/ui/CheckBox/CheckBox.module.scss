@@ -86,8 +86,8 @@
 
 .Label {
   color: var(--light-100);
-  font-size: 15px;
-  line-height: 1;
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-100);
 }
 
 .LabelDisabled {

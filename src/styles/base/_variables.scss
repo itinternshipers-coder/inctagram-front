@@ -42,8 +42,10 @@
   --light-500: #edf3fa;
   --light-700: #d5dae0;
   --light-900: #8d9094;
+}
 
-  // Semantic tokens - СВЕТЛАЯ ТЕМА по умолчанию
+// Semantic tokens - СВЕТЛАЯ ТЕМА по умолчанию
+[data-theme='light'] {
   --background: var(--light-100);
   --foreground: var(--dark-500);
   --primary: var(--accent-500);

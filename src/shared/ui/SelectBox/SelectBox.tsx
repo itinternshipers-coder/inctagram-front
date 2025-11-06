@@ -1,12 +1,12 @@
 'use client'
 
-import * as React from 'react'
+import { ArrowIosDownOutlineIcon, ArrowIosUpIcon } from '@/shared/icons/svgComponents'
 import * as Select from '@radix-ui/react-select'
+import { clsx } from 'clsx'
+import * as React from 'react'
 import { ComponentPropsWithoutRef } from 'react'
 import { Typography } from '../typography/Typography'
-import { clsx } from 'clsx'
-import s from './selectBox.module.scss'
-import { ArrowBackOutlineIcon, ArrowIosDownOutlineIcon, ArrowIosUpIcon } from '@/shared/icons/svgComponents'
+import s from './SelectBox.module.scss'
 
 type Option = {
   value: string

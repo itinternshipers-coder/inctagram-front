@@ -4,7 +4,7 @@ import React from 'react'
 import ToolTip from './ToolTip'
 
 const meta: Meta<typeof ToolTip> = {
-  title: 'UI/ToolTip',
+  title: 'Components/ToolTip',
   component: ToolTip,
   parameters: {
     layout: 'centered',

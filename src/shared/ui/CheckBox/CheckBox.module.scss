@@ -47,9 +47,8 @@
   align-items: center;
   line-height: var(--line-height-100);
   justify-content: center;
-  border: 2px solid var(--dark-900);
+  border: 2px solid var(--light-100);
   cursor: pointer;
-  //background-color: transparent;
 
   &[data-state='checked'] {
     background-color: var(--light-500);

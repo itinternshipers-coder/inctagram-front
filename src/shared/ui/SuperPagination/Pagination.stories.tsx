@@ -13,7 +13,7 @@ type Story = StoryObj<typeof Pagination>
 export const Default: Story = {
   render: () => {
     const [page, setPage] = useState(1)
-    return <Pagination totalCount={55} itemsPerPage={1} currentPage={page} onChange={setPage} siblingCount={1} />
+    return <Pagination totalCount={55} itemsPerPage={5} currentPage={page} onChange={setPage} siblingCount={1} />
   },
 }
 

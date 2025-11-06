@@ -41,7 +41,7 @@ export const SelectBox = ({
   return (
     <div
       className={s.wrapper}
-      style={{ minWidth }} // применяем проп
+      // style={{ minWidth }} // применяем проп
     >
       {label && (
         <Typography variant="regular_text_14" style={{ color: 'var(--light-900)' }}>
@@ -66,9 +66,11 @@ export const SelectBox = ({
           <Select.Icon>
             <span className={s.arrow}>
               {open ? (
-                <ArrowIosUpIcon width={'16px'} height={'16px'} />
+                // <ArrowIosUpIcon width={'16px'} height={'16px'} /> // вот тут
+                <ArrowIosUpIcon /> // вот тут
               ) : (
-                <ArrowIosDownOutlineIcon width={'16px'} height={'16px'} />
+                // <ArrowIosDownOutlineIcon width={'16px'} height={'16px'} /> // вот тут
+                <ArrowIosDownOutlineIcon /> // вот тут
               )}
             </span>
           </Select.Icon>

@@ -23,13 +23,7 @@ const preview: Preview = {
         document.body.setAttribute('data-theme', theme)
       }
 
-      return React.createElement(
-        'div',
-        {
-          style: { padding: '20px', minHeight: '100vh' },
-        },
-        React.createElement(Story)
-      )
+      return React.createElement('div', { style: { padding: '20px', minHeight: '100vh' } }, React.createElement(Story))
     },
   ],
   globalTypes: {

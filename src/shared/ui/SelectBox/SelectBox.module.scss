@@ -7,11 +7,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--dark-900);
+  background-color: var(--background);
   border: 1px solid var(--dark-100);
   border-radius: 2px;
   padding: 6px 12px;
-  color: var(--light-100);
+  color: var(--foreground);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -19,16 +19,21 @@
 
   &.active {
     border-color: var(--light-100);
-    background: var(--dark-500);
+    background: var(--background);
   }
 
   &:focus {
     outline: 2px solid var(--accent-500);
+    outline-offset: 0;
     border-color: transparent;
   }
 
   &[data-placeholder] {
     color: var(--light-900);
+  }
+
+  &.disabled {
+    color: var(--dark-100);
   }
 }
 
@@ -40,7 +45,7 @@
 
 .content {
   width: 100%;
-  background-color: var(--dark-500);
+  background-color: var(--background);
   border: 1px solid var(--dark-100);
   border-radius: 0 0 2px 2px;
   overflow: hidden;
@@ -56,7 +61,7 @@
 .item {
   display: flex;
   align-items: center;
-  color: var(--light-100);
+  color: var(--foreground);
   height: 36px;
   padding: 6px 12px;
   font-size: 14px;
@@ -72,6 +77,14 @@
   }
 }
 
+.item:focus,
+.item:focus-visible,
+.item[data-highlighted]:focus,
+.item[data-highlighted]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 .icon {
   display: inline-flex;
   align-items: center;
@@ -83,7 +96,6 @@
 
 .disabled {
   border: 1px solid var(--dark-100);
-  color: var(--dark-100);
   cursor: not-allowed;
 }
 

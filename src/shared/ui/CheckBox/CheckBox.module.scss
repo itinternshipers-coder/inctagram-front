@@ -1,0 +1,94 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  column-gap: 11px;
+  cursor: pointer;
+  position: relative;
+
+  // Общая окружность для всех состояний
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 9px;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: transparent;
+    z-index: -1;
+    transition: all 0.2s ease;
+  }
+
+  // Hover
+  &:has(.Root:hover)::before {
+    background-color: var(--dark-300);
+    opacity: 0.5;
+  }
+
+  // Когда checkbox в focus состоянии
+  &:has(.Root:focus)::before {
+    background-color: var(--dark-500);
+    opacity: 0.5;
+  }
+
+  // Когда checkbox активен (нажат)
+  &:has(.Root:active)::before {
+    background-color: var(--dark-100);
+    opacity: 0.5;
+  }
+}
+
+.Root {
+  display: flex;
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  align-items: center;
+  line-height: var(--line-height-100);
+  justify-content: center;
+  border: 2px solid var(--light-100);
+  cursor: pointer;
+
+  &[data-state='checked'] {
+    background-color: var(--light-500);
+    border-color: transparent; // Прозрачная рамка при checked
+  }
+
+  &[data-state='unchecked']:disabled {
+    background-color: transparent; // Переопределяет прозрачным
+    border-color: var(--light-900); // Видимая рамка
+  }
+
+  &:active,
+  &:hover,
+  &:focus {
+    border-color: var(--light-500);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    border-color: var(--light-900);
+    background-color: var(--dark-100);
+  }
+}
+
+.Indicator {
+  color: var(--dark-900);
+  line-height: var(--line-height-100);
+
+  .Root:disabled & {
+    cursor: not-allowed;
+    color: var(--light-700);
+  }
+}
+
+.Label {
+  color: var(--light-100);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-100);
+}
+
+.LabelDisabled {
+  color: var(--light-900);
+}

@@ -22,11 +22,7 @@ export default {
 const Template: StoryFn<DatePickerProps> = (args) => {
   const [value, setValue] = useState<Date | DateRange | undefined>()
 
-  return (
-    <div style={{ padding: '2rem', background: '#121212' }}>
-      <DatePicker {...args} value={value} onChange={setValue} />
-    </div>
-  )
+  return <DatePicker {...args} value={value} onChange={setValue} />
 }
 
 export const Single = Template.bind({})

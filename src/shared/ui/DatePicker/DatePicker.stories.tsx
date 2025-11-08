@@ -63,3 +63,11 @@ ThisMonthOnly.args = {
   minDate: startOfMonth(new Date()),
   maxDate: endOfMonth(new Date()),
 }
+
+export const FullWidth = Template.bind({})
+FullWidth.args = {
+  mode: 'single',
+  label: 'Date',
+  fullWidth: true,
+  placeholder: 'Pick a date',
+}

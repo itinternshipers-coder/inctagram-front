@@ -14,7 +14,7 @@
 
 .inputWrapper {
   position: relative;
-  max-width: 255px;
+  width: 320px;
 
   &.error .input {
     border-color: var(--danger-500);
@@ -25,6 +25,14 @@
     border-color: var(--dark-300);
     color: var(--light-900);
     cursor: not-allowed;
+  }
+
+  &.fullWidth {
+    width: 100%;
+
+    .input {
+      width: 100%;
+    }
   }
 }
 
@@ -62,6 +70,7 @@
   color: var(--foreground);
   border-radius: 2px;
   padding: 12px;
+
   width: 320px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
@@ -151,7 +160,6 @@
 
 .week {
   line-height: 24px;
-  width: 252px;
   font-size: 16px;
   font-weight: 400;
 }

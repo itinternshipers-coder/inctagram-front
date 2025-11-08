@@ -18,7 +18,7 @@
   user-select: none;
 
   &.active {
-    border-color: var(--light-100);
+    border-color: var(--border);
     background: var(--background);
   }
 
@@ -53,7 +53,7 @@
   min-width: var(--radix-select-trigger-width);
 
   &.active {
-    border-color: var(--light-100);
+    border-color: var(--border);
     color: var(--light-100);
   }
 }

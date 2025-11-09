@@ -6,9 +6,9 @@
 .trigger {
   align-items: center;
   background-color: var(--background);
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--border);
   border-radius: 2px;
-  color: var(--light-100);
+  color: var(--foreground);
   cursor: pointer;
   display: inline-flex;
   font-size: 14px;
@@ -73,7 +73,7 @@
   &:hover,
   &[data-highlighted] {
     background: var(--dark-300);
-    color: var(--accent-500);
+    color: var(--light-100);
   }
 }
 

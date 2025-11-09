@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+. "$(dirname "$0")/_/husky.sh"
 
+echo "🔧 Запускаем pre-commit проверки..."
 pnpm exec lint-staged

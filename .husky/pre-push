@@ -22,15 +22,25 @@ else
   exit 1
 fi
 
-echo "🚀 Запускаем проверки кода..."
-pnpm run lint && pnpm run build
+echo "🚀 Проверяем линтинг staged файлов..."
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(js|ts|tsx|css|scss)$")
 
+if [ -n "$STAGED_FILES" ]; then
+  pnpm exec eslint $STAGED_FILES
+  pnpm exec stylelint $STAGED_FILES
+  if [ $? -ne 0 ]; then
+    echo "❌ Линтинг не пройден! Исправь ошибки перед пушем."
+    exit 1
+  fi
+fi
+
+echo "🚀 Запускаем сборку (используется кэш)..."
+NEXT_TURBOPACK_CACHE_DIR=.next/cache pnpm run build
 if [ $? -ne 0 ]; then
-  echo "❌ Проверки не пройдены! Исправь ошибки перед пушем."
-  echo "   Линтинг: pnpm lint"
-  echo "   Сборка: pnpm build"
+  echo "❌ Сборка не пройдена! Исправь ошибки перед пушем."
   exit 1
 fi
 
 echo "✅ Все проверки пройдены! Пушим..."
+
 

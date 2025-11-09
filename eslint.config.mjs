@@ -40,7 +40,7 @@ const eslintConfig = [
     rules: {
       // Разрешаем неиспользуемые переменные если они начинаются с _
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',

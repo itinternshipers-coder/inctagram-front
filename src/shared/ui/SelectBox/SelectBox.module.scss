@@ -5,8 +5,8 @@
 
 .trigger {
   align-items: center;
-  background-color: var(--dark-900);
-  border: 1px solid var(--dark-100);
+  background-color: var(--background);
+  border: 1px solid var(--foreground);
   border-radius: 2px;
   color: var(--light-100);
   cursor: pointer;
@@ -18,17 +18,22 @@
   user-select: none;
 
   &.active {
-    background: var(--dark-500);
-    border-color: var(--light-100);
+    background: var(--background);
+    border-color: var(--border);
   }
 
   &:focus {
     border-color: transparent;
+    outline-offset: 0;
     outline: 2px solid var(--accent-500);
   }
 
   &[data-placeholder] {
     color: var(--light-900);
+  }
+
+  &.disabled {
+    color: var(--dark-100);
   }
 }
 
@@ -40,7 +45,7 @@
 
 .content {
   animation: fadeIn 0.15s ease;
-  background-color: var(--dark-500);
+  background-color: var(--background);
   border: 1px solid var(--dark-100);
   border-radius: 0 0 2px 2px;
   min-width: var(--radix-select-trigger-width);
@@ -48,7 +53,7 @@
   width: 100%;
 
   &.active {
-    border-color: var(--light-100);
+    border-color: var(--border);
     color: var(--light-100);
   }
 }
@@ -56,7 +61,7 @@
 .item {
   align-items: center;
   border: none;
-  color: var(--light-100);
+  color: var(--foreground);
   cursor: pointer;
   display: flex;
   font-size: 14px;
@@ -72,6 +77,14 @@
   }
 }
 
+.item:focus,
+.item:focus-visible,
+.item[data-highlighted]:focus,
+.item[data-highlighted]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 .icon {
   align-items: center;
   display: inline-flex;
@@ -83,7 +96,6 @@
 
 .disabled {
   border: 1px solid var(--dark-100);
-  color: var(--dark-100);
   cursor: not-allowed;
 }
 

@@ -1,4 +1,4 @@
-import { RadioGroup } from '@/shared/ui/radioGroup/RadioGroup'
+import { RadioGroup } from '@/shared/ui/RadioGroup/RadioGroup'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
 

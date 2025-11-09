@@ -15,7 +15,7 @@
     "build-storybook": "storybook build",
     "lint:js": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:js:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "lint:css": "stylelint '**/*.{css,scss}'",
+    "lint:css": "stylelint 'src/**/*.{css,scss}'",
     "lint:css:fix": "stylelint '**/*.{css,scss}' --fix",
     "lint:fix": "pnpm lint:js:fix && pnpm lint:css:fix",
     "prepare": "husky install",

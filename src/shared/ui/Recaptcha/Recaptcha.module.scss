@@ -1,44 +1,44 @@
 .wrapper {
-  display: inline-block;
   border: 1px solid var(--light-100);
+  display: inline-block;
 
   &__error {
-    border: 1px solid #ff0000;
+    border: 1px solid #f00;
   }
 }
 
 .recaptcha {
+  align-items: center;
+  background: var(--dark-500);
+  color: var(--light-100);
   display: flex;
+  justify-content: space-between;
+  max-height: 80px;
+  padding-block: 12px;
+  padding-inline: 20px;
   position: relative;
   width: 300px;
-  justify-content: space-between;
-  padding-inline: 20px;
-  padding-block: 12px;
-  max-height: 80px;
-  background: var(--dark-500);
-  align-items: center;
-  color: var(--light-100);
 
   &__main {
-    display: flex;
     align-items: center;
+    display: flex;
     gap: 13px;
   }
 
   &__button {
-    display: flex;
     align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    position: relative;
     background: white;
     cursor: pointer;
+    display: flex;
+    height: 20px;
+    justify-content: center;
+    position: relative;
     transition: all 0.3s ease;
+    width: 20px;
 
-    &:not(&--checked):not(&--loading) {
+    &:not(&--checked, &--loading) {
       &:hover {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgb(255 255 255 / 5%);
         border-color: var(--light-100);
       }
 
@@ -48,9 +48,9 @@
     }
 
     &--loading {
-      cursor: wait;
-      border-color: #4d8df4;
       background: transparent;
+      border-color: #4d8df4;
+      cursor: wait;
     }
 
     &--checked {
@@ -82,15 +82,15 @@
 
   &__info {
     display: flex;
-    line-height: 0.625rem;
     flex-direction: column;
     font-weight: var(--font-weight-medium);
     gap: 2px;
+    line-height: 0.625rem;
   }
 
   &__title {
-    font-size: 0.5rem;
     color: var(--light-100);
+    font-size: 0.5rem;
   }
 
   &__links {
@@ -100,12 +100,12 @@
 
   &__link {
     color: var(--light-100);
-    text-decoration: none;
     opacity: 0.7;
+    text-decoration: none;
 
     &:hover {
-      text-decoration: underline;
       opacity: 1;
+      text-decoration: underline;
     }
   }
 
@@ -116,12 +116,12 @@
   }
 
   &__loader {
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(77, 141, 244, 0.2);
-    border-top-color: #4d8df4;
-    border-radius: 50%;
     animation: spin 1s linear infinite;
+    border: 3px solid rgb(77 141 244 / 20%);
+    border-radius: 50%;
+    border-top-color: #4d8df4;
+    height: 20px;
+    width: 20px;
   }
 
   &__checkmark {
@@ -129,20 +129,20 @@
   }
 
   &__error {
+    color: #f00;
     display: block;
-    margin-top: 8px;
     font-size: var(--font-size-12);
-    color: #ff0000;
+    margin-top: 8px;
   }
 
   &__expired {
-    position: absolute;
-    width: 70%;
-    line-height: 10px;
-    font-weight: var(--font-weight-regular);
-    top: 0;
+    color: #f00;
     font-size: 0.625rem;
-    color: #ff0000;
+    font-weight: var(--font-weight-regular);
+    line-height: 10px;
+    position: absolute;
+    top: 0;
+    width: 70%;
   }
 }
 
@@ -157,9 +157,11 @@
     opacity: 0;
     transform: scale(0);
   }
+
   50% {
     transform: scale(1.2);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);

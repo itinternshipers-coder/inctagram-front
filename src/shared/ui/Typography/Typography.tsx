@@ -2,7 +2,7 @@
 
 import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
 import { clsx } from 'clsx'
-import s from '@/shared/ui/typography/Typography.module.scss'
+import s from './Typography.module.scss'
 
 export type TypographyProps<T extends ElementType> = {
   as?: T

@@ -1,4 +1,4 @@
-@import '@/styles/base/mixins';
+@use "@/styles/base/mixins" as *;
 
 .typography {
   color: var(--foreground);

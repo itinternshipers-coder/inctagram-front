@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# ----------------------------------------
+# Pre-push hook: проверка ветки, линтинг, сборка
+# ----------------------------------------
+
 echo "🔍 Проверяем актуальность ветки..."
 
 git fetch origin
@@ -23,21 +27,36 @@ else
 fi
 
 echo "🚀 Проверяем линтинг staged файлов..."
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(js|ts|tsx|css|scss)$")
+
+# Получаем все staged файлы с нужными расширениями
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(js|jsx|ts|tsx|css|scss)$")
 
 if [ -n "$STAGED_FILES" ]; then
-  pnpm exec eslint $STAGED_FILES
-  pnpm exec stylelint $STAGED_FILES
+  echo "⚡ Файлы для линта: $STAGED_FILES"
+
+  # ESLint
+  pnpm exec eslint $STAGED_FILES --fix
   if [ $? -ne 0 ]; then
-    echo "❌ Линтинг не пройден! Исправь ошибки перед пушем."
+    echo "❌ ESLint завершился с ошибками!"
     exit 1
   fi
+
+  # Stylelint
+  pnpm exec stylelint $STAGED_FILES --fix
+  if [ $? -ne 0 ]; then
+    echo "❌ Stylelint завершился с ошибками!"
+    exit 1
+  fi
+else
+  echo "ℹ️ Нет staged файлов для линта, пропускаем."
 fi
 
-echo "🚀 Запускаем сборку (используется кэш)..."
-NEXT_TURBOPACK_CACHE_DIR=.next/cache pnpm run build
+echo "🚀 Сборка проекта с кэшированием..."
+
+# Сохраняем кэш сборки для ускорения
+pnpm exec next build --turbo --no-lint --cache .next/cache
 if [ $? -ne 0 ]; then
-  echo "❌ Сборка не пройдена! Исправь ошибки перед пушем."
+  echo "❌ Сборка завершилась с ошибками!"
   exit 1
 fi
 

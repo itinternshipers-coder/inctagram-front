@@ -18,7 +18,8 @@ type Props = {
   options: Option[]
   label?: string
   placeholder?: string
-  minWidth?: string // c width на minWidth
+  width?: string
+  minWidth?: string
   height?: string
 
   onValueChange?: (value: string) => void
@@ -29,8 +30,8 @@ export const SelectBox = ({
   options,
   defaultValue,
   placeholder = 'Select-box',
-  minWidth = '210px',
-  height = '60px', // нужная высота
+  width,
+  height = '36px',
 
   disabled,
   onValueChange,
@@ -39,10 +40,7 @@ export const SelectBox = ({
   const [open, setOpen] = React.useState(false)
 
   return (
-    <div
-      className={s.wrapper}
-      // style={{ minWidth }} // применяем проп
-    >
+    <div className={s.wrapper} style={{ width }}>
       {label && (
         <Typography variant="regular_text_14" style={{ color: 'var(--light-900)' }}>
           {label}
@@ -60,19 +58,11 @@ export const SelectBox = ({
           className={clsx(s.trigger, open ? s.active : '', disabled ? s.disabled : '')}
           aria-label={placeholder}
           disabled={disabled}
-          style={{ height }} // применяем проп
+          style={{ height }}
         >
           <Select.Value placeholder={placeholder} />
           <Select.Icon>
-            <span className={s.arrow}>
-              {open ? (
-                // <ArrowIosUpIcon width={'16px'} height={'16px'} /> // вот тут
-                <ArrowIosUpIcon /> // вот тут
-              ) : (
-                // <ArrowIosDownOutlineIcon width={'16px'} height={'16px'} /> // вот тут
-                <ArrowIosDownOutlineIcon /> // вот тут
-              )}
-            </span>
+            <span className={s.arrow}>{open ? <ArrowIosUpIcon /> : <ArrowIosDownOutlineIcon />}</span>
           </Select.Icon>
         </Select.Trigger>
 

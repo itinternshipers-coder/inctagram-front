@@ -2,6 +2,7 @@
   color: var(--light-100);
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .label {
@@ -12,7 +13,7 @@
 }
 
 .inputWrapper {
-  max-width: 255px;
+  width: 320px;
   position: relative;
 
   &.error .input {
@@ -25,13 +26,21 @@
     color: var(--light-900);
     cursor: not-allowed;
   }
+
+  &.fullWidth {
+    width: 100%;
+
+    .input {
+      width: 100%;
+    }
+  }
 }
 
 .input {
-  background: var(--dark-500);
+  background: var(--background);
   border: 1px solid var(--dark-300);
   border-radius: 2px;
-  color: var(--light-100);
+  color: var(--foreground);
   padding: 8px 36px 8px 12px;
   width: 100%;
 
@@ -49,14 +58,20 @@
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
+  color: var(--foreground);
 }
 
 .calendarWrapper {
-  background: var(--dark-500);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 9999;
+  background: var(--background);
+  color: var(--foreground);
   border-radius: 2px;
-  margin-top: 8px;
   padding: 12px;
   width: 320px;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 40%);
 }
 
 .selected,
@@ -96,6 +111,10 @@
 .today {
   border: none;
   color: var(--accent-900);
+}
+
+.today.selected {
+  color: var(--light-100);
 }
 
 .disabled {
@@ -140,5 +159,4 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  width: 252px;
 }

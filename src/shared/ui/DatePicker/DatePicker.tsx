@@ -21,6 +21,7 @@ export type Props = {
   format?: string
   minDate?: Date
   maxDate?: Date
+  fullWidth?: boolean
   className?: string
 }
 
@@ -35,6 +36,7 @@ export const DatePicker = ({
   format: dateFormat = 'dd/MM/yyyy',
   minDate,
   maxDate,
+  fullWidth,
   className,
 }: Props) => {
   const [open, setOpen] = useState(false)
@@ -97,7 +99,7 @@ export const DatePicker = ({
     <div ref={wrapperRef} className={`${s.wrapper} ${className ?? ''}`}>
       {label && <span className={s.label}>{label}</span>}
 
-      <div className={clsx(s.inputWrapper, { [s.error]: error, [s.disabled]: disabled })}>
+      <div className={clsx(s.inputWrapper, { [s.error]: error, [s.disabled]: disabled, [s.fullWidth]: fullWidth })}>
         <input
           readOnly
           disabled={disabled}

@@ -15,6 +15,7 @@
     background-color: var(--dark-500);
     border: 1px solid var(--dark-100);
     border-radius: 2px;
+    box-sizing: border-box;
     color: var(--light-100);
     font-family: var(--font-family-primary);
     font-size: var(--font-size-16);
@@ -26,7 +27,6 @@
     padding: 12px;
     resize: none;
     width: 100%;
-    box-sizing: border-box;
 
     &::placeholder {
       color: var(--light-900);

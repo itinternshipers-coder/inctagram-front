@@ -25,19 +25,19 @@
   --warning-100: #ffd073;
   --warning-300: #e5ac39;
   --warning-500: #d99000;
-  --warning-700: #996600;
-  --warning-900: #664400;
+  --warning-700: #960;
+  --warning-900: #640;
 
   // Dark colors
   --dark-100: #4c4c4c;
-  --dark-300: #333333;
+  --dark-300: #333;
   --dark-400: #212121;
   --dark-500: #171717;
   --dark-700: #0d0d0d;
-  --dark-900: #000000;
+  --dark-900: #000;
 
   // Light colors
-  --light-100: #ffffff;
+  --light-100: #fff;
   --light-300: #f7fbff;
   --light-500: #edf3fa;
   --light-700: #d5dae0;
@@ -45,7 +45,7 @@
 }
 
 // Semantic tokens - СВЕТЛАЯ ТЕМА по умолчанию
-[data-theme='light'] {
+[data-theme="light"] {
   --background: var(--light-100);
   --foreground: var(--dark-500);
   --primary: var(--accent-500);
@@ -56,7 +56,7 @@
 }
 
 // ТЁМНАЯ ТЕМА
-[data-theme='dark'] {
+[data-theme="dark"] {
   --background: var(--dark-700);
   --foreground: var(--light-100);
   --primary: var(--accent-500);
@@ -68,7 +68,7 @@
 
 // Font families
 :root {
-  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-primary: "Inter", -apple-system, blinkmacsystemfont, sans-serif;
 
   // Font sizes from Figma
   --font-size-12: 0.75rem; // 12px

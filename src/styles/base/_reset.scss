@@ -15,14 +15,14 @@ body {
 
 html {
   line-height: 1.5;
-  -webkit-text-size-adjust: 100%;
   tab-size: 4;
+  text-size-adjust: 100%;
 }
 
 body {
-  line-height: inherit;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: inherit;
 }
 
 img,
@@ -31,17 +31,17 @@ video,
 canvas,
 svg {
   display: block;
-  max-width: 100%;
   height: auto;
+  max-width: 100%;
 }
 
 input,
 button,
 textarea,
 select {
-  font: inherit;
-  border: none;
   background: none;
+  border: none;
+  font: inherit;
   outline: none;
 }
 
@@ -71,7 +71,7 @@ table {
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

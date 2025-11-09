@@ -1,16 +1,16 @@
 .button {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-weight: var(--font-weight-bold);
-  width: 182px;
-  height: 36px;
-  padding: 6px 24px;
   border-radius: 2px;
-  outline: 2px solid transparent;
-  outline-offset: 0;
   color: var(--light-100);
   cursor: pointer;
+  display: inline-flex;
+  font-weight: var(--font-weight-bold);
+  height: 36px;
+  justify-content: center;
+  outline: 2px solid transparent;
+  outline-offset: 0;
+  padding: 6px 24px;
+  width: 182px;
 
   &:disabled {
     cursor: not-allowed;
@@ -80,8 +80,8 @@
   }
 
   &:focus-visible {
-    outline-color: var(--accent-700);
     border-color: transparent;
+    outline-color: var(--accent-700);
   }
 
   &:disabled {
@@ -112,6 +112,6 @@
 }
 
 .linkDisabled {
-  pointer-events: none;
   color: var(--accent-900);
+  pointer-events: none;
 }

@@ -1,21 +1,19 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
 
 echo "🔍 Проверяем актуальность ветки..."
 
 git fetch origin
 
-# Проверяем, что ветка содержит актуальный develop
 if git merge-base --is-ancestor origin/develop HEAD; then
   echo "✅ Ветка актуальна относительно develop"
 else
   echo "❌ Твоя ветка отстает от develop!"
   echo ""
   echo "Выбери способ обновления:"
-  echo "🔄 1. REBASE (рекомендуется) - чистая история"
+  echo "🔄 1. REBASE (рекомендуется)"
   echo "   git fetch && git rebase origin/develop"
   echo ""
-  echo "🔀 2. MERGE (проще) - простое слияние"
+  echo "🔀 2. MERGE (проще)"
   echo "   git fetch && git merge origin/develop"
   echo ""
   echo "📋 3. Я уже обновил ветку вручную"
@@ -25,13 +23,14 @@ else
 fi
 
 echo "🚀 Запускаем проверки кода..."
-pnpm exec lint && pnpm run build
+pnpm lint && pnpm build
 
 if [ $? -ne 0 ]; then
   echo "❌ Проверки не пройдены! Исправь ошибки перед пушем."
-  echo "   Линтинг: npm run lint"
-  echo "   Сборка: npm run build"
+  echo "   Линтинг: pnpm lint"
+  echo "   Сборка: pnpm build"
   exit 1
 fi
 
 echo "✅ Все проверки пройдены! Пушим..."
+

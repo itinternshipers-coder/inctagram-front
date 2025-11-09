@@ -2,6 +2,7 @@
 import { OutlineBellIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import { SelectBox } from '@/shared/ui/SelectBox/SelectBox'
+import ToolTip from '@/shared/ui/ToolTip/ToolTip'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { SelectOption } from '@/widgets/header/SelectOptionsList'
 
@@ -22,15 +23,10 @@ export const Header = ({ isLoginIn, onLoginAction, onSignupAction }: HeaderProps
       <div>
         {isLoginIn ? (
           <div className={s.authorized_notifications}>
-            <>
+            <ToolTip text={''}>
               <OutlineBellIcon />
-              {/*// временное решение*/}
-            </>
-            <div>
-              <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
-            </div>
-            {/*<ToolTip text={''} children={<OutlineBellIcon />} />*/}
-            {/*// ругается на children в который передаю иконку. Не проходит коммит*/}
+            </ToolTip>
+            <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
           </div>
         ) : (
           <div className={s.unauthorized_notifications}>

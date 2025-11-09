@@ -1,5 +1,5 @@
-@use './base/reset';
-@use './base/variables';
+@use "./base/reset" as *;
+@use "./base/variables" as *;
 
 html {
   color-scheme: light dark;

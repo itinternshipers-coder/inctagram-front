@@ -22,30 +22,33 @@ else
   exit 1
 fi
 
-echo "🚀 Pre-push проверки линта (только staged файлы)..."
+echo "🚀 Запускаем проверки с кэшированием..."
 
-# Получаем список staged файлов
-STAGED_JS=$(git diff --name-only --cached | grep -E '\.ts$|\.tsx$|\.js$|\.jsx$')
-STAGED_CSS=$(git diff --name-only --cached | grep -E '\.css$|\.scss$')
+# 1. ESLint с кэшированием (проверяет только измененные файлы)
+echo "📝 Проверяем линтинг (с кэшем)..."
+pnpm eslint . --ext .js,.jsx,.ts,.tsx --cache --cache-location node_modules/.cache/eslint/
 
-# ESLint для staged JS/TS файлов
-if [ -n "$STAGED_JS" ]; then
-  echo "📝 Проверяем ESLint для staged файлов..."
-  pnpm eslint $STAGED_JS
-  if [ $? -ne 0 ]; then
-    echo "❌ ESLint ошибки! Исправь перед пушем."
-    exit 1
-  fi
+if [ $? -ne 0 ]; then
+  echo "❌ Линтинг не пройден! Исправь ошибки."
+  exit 1
 fi
 
-# Stylelint для staged CSS/SCSS файлов
-if [ -n "$STAGED_CSS" ]; then
-  echo "🎨 Проверяем Stylelint для staged файлов..."
-  pnpm stylelint $STAGED_CSS
-  if [ $? -ne 0 ]; then
-    echo "❌ Stylelint ошибки! Исправь перед пушем."
-    exit 1
-  fi
+# 2. Stylelint с кэшированием
+echo "🎨 Проверяем стили..."
+pnpm stylelint "**/*.{css,scss}" --cache --cache-location node_modules/.cache/stylelint/
+
+if [ $? -ne 0 ]; then
+  echo "❌ Проверка стилей не пройдена!"
+  exit 1
+fi
+
+# 3. Next.js сборка (автоматически использует кэш Turbopack)
+echo "🏗️  Проверяем сборку..."
+pnpm run build
+
+if [ $? -ne 0 ]; then
+  echo "❌ Сборка не прошла! Исправь ошибки."
+  exit 1
 fi
 
 echo "✅ Все проверки пройдены! Пушим..."

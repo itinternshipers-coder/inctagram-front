@@ -1,5 +1,3 @@
-import Link from 'next/link'
-
 export default function ForgotPasswordPage() {
   return (
     <div className="auth-page">

@@ -22,59 +22,59 @@ $transition-easing: ease;
   }
 
   &__label {
-    display: block;
     color: var(--light-900);
+    cursor: pointer;
+    display: block;
     font-size: var(--font-size-14);
     font-weight: 500;
     line-height: 1.4;
     transition: color $transition-duration $transition-easing;
-    cursor: pointer;
   }
 
   &__wrapper {
-    position: relative;
-    display: flex;
     align-items: center;
+    display: flex;
+    position: relative;
   }
 
   &__icon {
-    position: absolute;
-    left: 12px;
-    display: flex;
     align-items: center;
-    justify-content: center;
     color: var(--light-900);
+    display: flex;
+    justify-content: center;
+    left: 12px;
     pointer-events: none;
+    position: absolute;
     transition: color $transition-duration $transition-easing;
 
     svg {
-      width: 20px;
+      fill: currentcolor;
       height: 20px;
-      fill: currentColor;
+      width: 20px;
     }
   }
 
   &__field {
-    width: 100%;
-    padding: 6px 12px;
+    background-color: transparent;
     border: 1px solid var(--dark-100);
     border-radius: 2px;
-    background-color: transparent;
     color: var(--light-100);
     font-family: inherit;
     font-size: var(--font-size-16);
     line-height: 1.5;
+    outline: 1px solid transparent;
+    padding: 6px 12px;
     transition:
       border-color $transition-duration $transition-easing,
       outline-color $transition-duration $transition-easing;
-    outline: 1px solid transparent;
+    width: 100%;
 
     &::placeholder {
       color: var(--dark-300);
       opacity: 1;
     }
 
-    &:hover:not(:disabled):not(:focus) {
+    &:hover:not(:disabled, :focus) {
       border-color: var(--accent-300);
     }
 
@@ -111,24 +111,24 @@ $transition-easing: ease;
   }
 
   &__toggle {
-    position: absolute;
-    right: 8px;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 4px;
     background: none;
     border: none;
     color: var(--light-900);
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 4px;
+    position: absolute;
+    right: 8px;
     transition: color $transition-duration $transition-easing;
     user-select: none;
 
     svg {
-      width: 20px;
+      fill: currentcolor;
       height: 20px;
-      fill: currentColor;
       pointer-events: none;
+      width: 20px;
     }
 
     &:hover:not(:disabled) {
@@ -136,9 +136,9 @@ $transition-easing: ease;
     }
 
     &:focus-visible {
+      border-radius: 2px;
       outline: 2px solid var(--accent-500);
       outline-offset: 2px;
-      border-radius: 2px;
     }
 
     &:active:not(:disabled) {
@@ -154,10 +154,10 @@ $transition-easing: ease;
   }
 
   &__error {
-    display: block;
-    margin-top: 2px;
     color: var(--danger-500);
+    display: block;
     font-size: var(--font-size-14);
     line-height: 1.4;
+    margin-top: 2px;
   }
 }

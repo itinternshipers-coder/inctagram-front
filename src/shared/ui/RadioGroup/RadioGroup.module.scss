@@ -1,30 +1,30 @@
 @mixin circle-background {
   &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
     background-color: var(--dark-100);
     border: 2px solid var(--dark-100);
+    border-radius: 50%;
+    content: "";
+    height: 34px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 34px;
     z-index: -1;
   }
 }
 @mixin circle-background-focus {
   &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
     background-color: var(--dark-500);
     border: 2px solid var(--dark-500);
+    border-radius: 50%;
+    content: "";
+    height: 34px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 34px;
     z-index: -1;
   }
 }
@@ -35,15 +35,15 @@
 }
 
 .radioLabel {
-  display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
+  display: flex;
+  gap: 8px;
   transition: all 0.2s ease;
 
   &.disabled {
-    cursor: not-allowed;
     color: var(--dark-100);
+    cursor: not-allowed;
   }
 
   &:hover:not(.disabled),
@@ -55,9 +55,9 @@
 }
 
 .radioInput {
-  position: absolute;
   opacity: 0;
   pointer-events: none;
+  position: absolute;
 
   &:focus-visible + .radioCircle,
   &:focus + .radioCircle {
@@ -66,18 +66,18 @@
 }
 
 .radioCircle {
-  position: relative;
-  width: 20px;
-  height: 20px;
   border: 2px solid var(--light-100);
   border-radius: 50%;
-  transition: all 0.2s ease;
   flex-shrink: 0;
+  height: 20px;
   padding: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+  width: 20px;
 
   &.checked {
-    border-color: var(--light-100);
     background-color: transparent;
+    border-color: var(--light-100);
 
     &.disabled {
       border-color: var(--dark-100);
@@ -90,15 +90,15 @@
 }
 
 .radioInner {
+  background-color: var(--light-100);
+  border-radius: 50%;
+  height: 10px;
+  left: 50%;
   position: absolute;
   top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%) scale(0);
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--light-100);
   transition: transform 0.2s ease;
+  width: 10px;
 
   .checked & {
     transform: translate(-50%, -50%) scale(1);

@@ -1,6 +1,6 @@
 // import { redirect } from 'next/navigation'
 
-import { Typography } from '@/shared/ui/typography/Typography'
+import { Typography } from '@/shared/ui/Typography/Typography'
 
 export default async function RootPage() {
   return (

@@ -45,7 +45,9 @@
 }
 
 // Semantic tokens - СВЕТЛАЯ ТЕМА по умолчанию
-[data-theme="light"] {
+[data-theme="light"],
+body[data-theme="light"] {
+  --background-element: var(--light-300);
   --background: var(--light-100);
   --foreground: var(--dark-500);
   --primary: var(--accent-500);
@@ -56,7 +58,9 @@
 }
 
 // ТЁМНАЯ ТЕМА
-[data-theme="dark"] {
+[data-theme="dark"],
+body[data-theme="dark"] {
+  --background-element: var(--dark-500);
   --background: var(--dark-700);
   --foreground: var(--light-100);
   --primary: var(--accent-500);

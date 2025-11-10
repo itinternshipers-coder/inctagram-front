@@ -6,7 +6,7 @@ import CheckmarkOutlineIcon from '../../icons/svgComponents/icons/CheckmarkOutli
 import s from './CheckBox.module.scss'
 
 type CheckBoxProps = {
-  checked?: boolean
+  checked: boolean
   disabled?: boolean
   name?: string
   onCheckedChange?: (checked: boolean) => void

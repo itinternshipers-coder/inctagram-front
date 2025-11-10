@@ -41,7 +41,7 @@
 
 .Root {
   align-items: center;
-  border: 2px solid var(--light-100);
+  border: 2px solid var(--foreground);
   border-radius: 2px;
   cursor: pointer;
   display: flex;
@@ -51,19 +51,19 @@
   width: 18px;
 
   &[data-state="checked"] {
-    background-color: var(--light-500);
+    background-color: var(--foreground);
     border-color: transparent; // Прозрачная рамка при checked
   }
 
   &[data-state="unchecked"]:disabled {
     background-color: transparent; // Переопределяет прозрачным
-    border-color: var(--light-900); // Видимая рамка
+    border-color: var(--light-900);
   }
 
   &:active,
   &:hover,
   &:focus {
-    border-color: var(--light-500);
+    border-color: var(--foreground);
   }
 
   &:disabled {
@@ -74,7 +74,7 @@
 }
 
 .Indicator {
-  color: var(--dark-900);
+  color: var(--background);
   line-height: var(--line-height-100);
 
   .Root:disabled & {
@@ -84,11 +84,13 @@
 }
 
 .Label {
-  color: var(--light-100);
+  color: var(--foreground);
   font-size: var(--font-size-14);
   line-height: var(--line-height-100);
 }
 
 .LabelDisabled {
   color: var(--light-900);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-100);
 }

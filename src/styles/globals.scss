@@ -1,5 +1,5 @@
-@use "./base/reset" as *;
-@use "./base/variables" as *;
+@import './base/reset';
+@import './base/variables';
 
 html {
   color-scheme: light dark;
@@ -10,6 +10,12 @@ body {
   color: var(--foreground);
   font-family: var(--font-family-primary), sans-serif;
   line-height: 1.6;
+}
+
+// Тёмная тема по умолчанию
+body[data-theme='dark'] {
+  background-color: var(--dark-700);
+  color: var(--light-100);
 }
 
 :focus-visible {

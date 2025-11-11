@@ -50,9 +50,9 @@
 
 // Link base styles
 %link-base {
-  color: var(--accent-500);
-  cursor: pointer;
   text-decoration: underline;
+  cursor: pointer;
+  color: var(--accent-500);
 
   &:hover {
     color: var(--accent-700);

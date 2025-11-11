@@ -8,13 +8,8 @@
     "stylelint-order"
   ],
   "rules": {
-    "order/properties-alphabetical-order": null,
-    "no-descending-specificity": null,
-    "no-empty-source": null,
-    "no-duplicate-selectors": null,
-    "font-family-no-missing-generic-family-keyword": null,
-    "property-no-vendor-prefix": null,
-    "value-keyword-case": null,
+    "order/properties-alphabetical-order": true,
+    "color-hex-case": "lower",
     "selector-class-pattern": [
       ".*",
       {}
@@ -29,7 +24,6 @@
     ],
     "scss/at-import-partial-extension": null,
     "scss/dollar-variable-pattern": null,
-    "scss/double-slash-comment-whitespace-inside": null,
     "selector-pseudo-class-no-unknown": [
       true,
       {
@@ -38,16 +32,5 @@
         ]
       }
     ]
-  },
-  "ignoreFiles": [
-    "node_modules",
-    ".next",
-    "out",
-    "dist",
-    "*.min.css",
-    "*.min.scss",
-    "storybook-static",
-    "coverage"
-  ]
+  }
 }
-

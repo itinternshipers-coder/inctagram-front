@@ -1,6 +1,4 @@
-import type { StorybookConfig } from '@storybook/nextjs-vite'
-import tsconfigPaths from 'vite-tsconfig-paths'
-import path from 'path'
+import type { StorybookConfig } from '@storybook/nextjs-vite';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -15,22 +13,6 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs-vite',
     options: {},
   },
-  staticDirs: [path.join(__dirname, '..', 'public')],
-  async viteFinal(config) {
-    config.plugins = [...(config.plugins ?? []), tsconfigPaths()]
-
-    // Добавляем резолвер для SCSS
-    if (config.resolve) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        '@/styles': path.resolve(__dirname, '../src/styles'),
-        '@/shared': path.resolve(__dirname, '../src/shared'),
-        '@': path.resolve(__dirname, '../src'),
-      }
-    }
-
-    return config
-  },
-}
-
-export default config
+  staticDirs: ['..\\public'],
+};
+export default config;

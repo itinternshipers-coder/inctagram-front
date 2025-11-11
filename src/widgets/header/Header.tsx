@@ -5,6 +5,7 @@ import { SelectBox } from '@/shared/ui/SelectBox/SelectBox'
 import ToolTip from '@/shared/ui/ToolTip/ToolTip'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { SelectOption } from '@/widgets/header/SelectOptionsList'
+import Link from 'next/link'
 
 import s from './Header.module.scss'
 
@@ -17,9 +18,11 @@ type HeaderProps = {
 export const Header = ({ isLoginIn, onLoginAction, onSignupAction }: HeaderProps) => {
   return (
     <div className={s.container}>
-      <Typography as={'div'} variant={'large'} className={s.logo}>
-        Inctagram
-      </Typography>
+      <Link href="/">
+        <Typography as={'div'} variant={'large'}>
+          Inctagram
+        </Typography>
+      </Link>
       <div>
         {isLoginIn ? (
           <div className={s.authorized_notifications}>

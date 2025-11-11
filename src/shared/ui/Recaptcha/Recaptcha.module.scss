@@ -1,0 +1,169 @@
+.wrapper {
+  border: 1px solid var(--light-100);
+  display: inline-block;
+
+  &__error {
+    border: 1px solid #f00;
+  }
+}
+
+.recaptcha {
+  align-items: center;
+  background: var(--dark-500);
+  color: var(--light-100);
+  display: flex;
+  justify-content: space-between;
+  max-height: 80px;
+  padding-block: 12px;
+  padding-inline: 20px;
+  position: relative;
+  width: 300px;
+
+  &__main {
+    align-items: center;
+    display: flex;
+    gap: 13px;
+  }
+
+  &__button {
+    align-items: center;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    height: 20px;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    width: 20px;
+
+    &:not(&--checked, &--loading) {
+      &:hover {
+        background: rgb(255 255 255 / 5%);
+        border-color: var(--light-100);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
+    &--loading {
+      background: transparent;
+      border-color: #4d8df4;
+      cursor: wait;
+    }
+
+    &--checked {
+      background: transparent;
+      cursor: default;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+
+  &__label {
+    font-size: var(--font-size-12);
+    user-select: none;
+  }
+
+  &__branding {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  &__logo {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    font-weight: var(--font-weight-medium);
+    gap: 2px;
+    line-height: 0.625rem;
+  }
+
+  &__title {
+    color: var(--light-100);
+    font-size: 0.5rem;
+  }
+
+  &__links {
+    font-size: 0.375rem;
+    white-space: nowrap;
+  }
+
+  &__link {
+    color: var(--light-100);
+    opacity: 0.7;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+  }
+
+  &__separator {
+    color: var(--light-100);
+    opacity: 0.7;
+    padding: 0 2px;
+  }
+
+  &__loader {
+    animation: spin 1s linear infinite;
+    border: 3px solid rgb(77 141 244 / 20%);
+    border-radius: 50%;
+    border-top-color: #4d8df4;
+    height: 20px;
+    width: 20px;
+  }
+
+  &__checkmark {
+    animation: checkmark-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  &__error {
+    color: #f00;
+    display: block;
+    font-size: var(--font-size-12);
+    margin-top: 8px;
+  }
+
+  &__expired {
+    color: #f00;
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-regular);
+    line-height: 10px;
+    position: absolute;
+    top: 0;
+    width: 70%;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes checkmark-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

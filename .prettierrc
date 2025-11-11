@@ -4,10 +4,17 @@
   "trailingComma": "es5",
   "printWidth": 120,
   "tabWidth": 2,
-  "importOrder": [],
-  "importOrderSeparation": false,
   "useTabs": false,
   "bracketSpacing": true,
   "arrowParens": "always",
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": "*.scss",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
 }
+

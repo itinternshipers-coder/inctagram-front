@@ -1,0 +1,120 @@
+@mixin circle-background {
+  &::after {
+    background-color: var(--dark-100);
+    border: 2px solid var(--dark-100);
+    border-radius: 50%;
+    content: "";
+    height: 34px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 34px;
+    z-index: -1;
+  }
+}
+@mixin circle-background-focus {
+  &::after {
+    background-color: var(--dark-500);
+    border: 2px solid var(--dark-500);
+    border-radius: 50%;
+    content: "";
+    height: 34px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 34px;
+    z-index: -1;
+  }
+}
+
+.radioGroup {
+  display: flex;
+  gap: 44px;
+}
+
+.radioLabel {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  transition: all 0.2s ease;
+
+  &.disabled {
+    color: var(--dark-100);
+    cursor: not-allowed;
+  }
+
+  &:hover:not(.disabled),
+  &.active {
+    .radioCircle {
+      @include circle-background;
+    }
+  }
+}
+
+.radioInput {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+
+  &:focus-visible + .radioCircle,
+  &:focus + .radioCircle {
+    @include circle-background-focus;
+  }
+}
+
+.radioCircle {
+  border: 2px solid var(--light-100);
+  border-radius: 50%;
+  flex-shrink: 0;
+  height: 20px;
+  padding: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+  width: 20px;
+
+  &.checked {
+    background-color: transparent;
+    border-color: var(--light-100);
+
+    &.disabled {
+      border-color: var(--dark-100);
+    }
+  }
+
+  &.disabled {
+    border-color: var(--dark-100);
+  }
+}
+
+.radioInner {
+  background-color: var(--light-100);
+  border-radius: 50%;
+  height: 10px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s ease;
+  width: 10px;
+
+  .checked & {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .disabled & {
+    background-color: var(--dark-100);
+  }
+}
+
+.radioText {
+  color: var(--light-100);
+  font-size: var(--font-size-14);
+  transition: color 0.2s ease;
+
+  .disabled & {
+    color: var(--dark-100);
+  }
+}

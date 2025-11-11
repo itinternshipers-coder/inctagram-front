@@ -1,0 +1,83 @@
+.pagination {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 20px 0;
+
+  .pages {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+
+    .pageButton {
+      background: var(--background);
+      border: 1px solid transparent;
+      border-radius: 2px;
+      color: var(--foreground);
+      cursor: pointer;
+      font-size: var(--font-size-14);
+      height: 24px;
+      transition: all 0.2s ease;
+      width: 24px;
+
+      &:hover {
+        border-color: var(--primary);
+        color: var(--foreground);
+      }
+
+      &.active {
+        background: var(--light-100);
+        color: var(--dark-900);
+      }
+    }
+
+    .dots {
+      color: var(--muted-foreground);
+      font-weight: var(--font-weight-semibold);
+      padding: 0 4px;
+    }
+  }
+
+  .navButton {
+    background: none;
+    border: none;
+    color: var(--foreground);
+    cursor: pointer;
+    font-size: var(--font-size-16);
+    padding: 6px 10px;
+    transition: color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      color: var(--primary);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.3;
+    }
+  }
+}
+
+.pageContainer {
+  color: var(--foreground);
+  display: flex;
+  gap: 24px;
+}
+
+.select {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+
+  span {
+    color: var(--muted-foreground);
+    font-size: var(--font-size-14);
+  }
+}
+
+.selectWrapper {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}

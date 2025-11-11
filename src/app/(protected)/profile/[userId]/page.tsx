@@ -2,12 +2,12 @@
 
 type ProfilePageProps = {
   params: { userId: string }
-  searchParams: { postId?: string; action?: string }
+  searchParams: { _postId?: string; _action?: string }
 }
 
 export default function ProfilePage({ params, searchParams }: ProfilePageProps) {
   const { userId } = params
-  const { postId, action } = searchParams
+  const { _postId, _action } = searchParams
 
   return (
     <div>

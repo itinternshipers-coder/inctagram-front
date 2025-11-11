@@ -76,7 +76,7 @@ const SidebarMock = ({ role }: { role: 'user' | 'admin' }) => {
 }
 
 const meta: Meta<typeof SidebarMock> = {
-  title: 'Components/Sidebar',
+  title: 'Widgets/Sidebar',
   component: SidebarMock,
   parameters: {
     layout: 'centered',

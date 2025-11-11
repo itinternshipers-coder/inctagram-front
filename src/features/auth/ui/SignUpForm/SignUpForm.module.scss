@@ -1,0 +1,32 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  width: 368px;
+  padding: 24px;
+}
+
+.socialSignUp {
+  display: flex;
+  gap: 60px;
+}
+
+.registrationForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.agreementBlock {
+  display: flex;
+}
+
+.typography {
+  display: flex;
+  gap: 3px;
+}
+
+.link {
+  color: var(--accent-500);
+}

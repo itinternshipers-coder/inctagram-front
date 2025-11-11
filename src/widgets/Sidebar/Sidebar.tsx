@@ -22,7 +22,7 @@ import {
   TrendingUpOutlineIcon,
 } from '@/shared/icons/svgComponents'
 import SidebarLinkItem from './SidebarLinkItem'
-import '../../../styles/base/_mixins.scss'
+import '@/styles/base/_mixins.scss'
 import s from './Sidebar.module.scss'
 
 type SidebarProps = {

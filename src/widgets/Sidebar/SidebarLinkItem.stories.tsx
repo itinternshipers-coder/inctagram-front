@@ -21,7 +21,7 @@ import {
 } from '@/shared/icons/svgComponents'
 
 const meta: Meta<typeof SidebarLinkItem> = {
-  title: 'Components/SidebarLinkItem',
+  title: 'Widgets/SidebarLinkItem',
   component: SidebarLinkItem,
   parameters: { layout: 'centered' },
 }

@@ -20,7 +20,7 @@ const preview: Preview = {
 
       // Применяем тему к body
       if (typeof document !== 'undefined') {
-        document.body.setAttribute('data-theme', theme)
+        document.documentElement.setAttribute('data-theme', theme)
       }
 
       return React.createElement('div', { style: { padding: '20px', minHeight: '100vh' } }, React.createElement(Story))

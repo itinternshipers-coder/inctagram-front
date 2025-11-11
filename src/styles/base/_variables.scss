@@ -55,6 +55,7 @@ body[data-theme="light"] {
   --muted: var(--light-700);
   --muted-foreground: var(--dark-300);
   --border: var(--light-700);
+  --hover: var(--dark-100);
 }
 
 // ТЁМНАЯ ТЕМА
@@ -68,6 +69,7 @@ body[data-theme="dark"] {
   --muted: var(--dark-300);
   --muted-foreground: var(--light-700);
   --border: var(--dark-300);
+  --hover: var(--light-900);
 }
 
 // Font families

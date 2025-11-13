@@ -14,7 +14,7 @@ type LoginRequest = {
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://your-api-domain.com/api/v1/auth/',
+    baseUrl: `${process.env.NEXT_PUBLIC_BASE_API_URL}`,
     // здесь можно добавить подготовку headers
   }),
   endpoints: (builder) => ({

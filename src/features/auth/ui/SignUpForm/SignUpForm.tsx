@@ -55,7 +55,7 @@ export const SignUpForm = () => {
             <GoogleIcon height={'36px'} width={'36px'} />
           </Button>
           <Button href={''} as={Link} variant="link" disabled={isSubmitting}>
-            <GithubIcon height={'36px'} width={'36px'} color="white" />
+            <GithubIcon height={'36px'} width={'36px'} className={s.githubIcon} />
           </Button>
         </div>
 

@@ -1,7 +1,9 @@
 'use client'
 import { OutlineBellIcon } from '@/shared/icons/svgComponents'
+import { useTheme } from '@/shared/providers/ThemeProvider'
 import { Button } from '@/shared/ui/Button/Button'
 import { SelectBox } from '@/shared/ui/SelectBox/SelectBox'
+import { ThemeSwitch } from '@/shared/ui/ThemeSwitch/ThemeSwitch'
 import ToolTip from '@/shared/ui/ToolTip/ToolTip'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { SelectOption } from '@/widgets/header/SelectOptionsList'
@@ -11,18 +13,14 @@ import s from './Header.module.scss'
 
 type HeaderProps = {
   isLoginIn: boolean
-  onLoginAction?: () => void
-  onSignupAction?: () => void
 }
 
-export const Header = ({ isLoginIn, onLoginAction, onSignupAction }: HeaderProps) => {
+export const Header = ({ isLoginIn }: HeaderProps) => {
   return (
-    <div className={s.container}>
-      <Link href="/">
-        <Typography as={'div'} variant={'large'}>
-          Inctagram
-        </Typography>
-      </Link>
+    <header className={s.container}>
+      <Typography as={Link} href={'/'} variant={'large'}>
+        Inctagram
+      </Typography>
       <div>
         {isLoginIn ? (
           <div className={s.authorized_notifications}>
@@ -30,21 +28,23 @@ export const Header = ({ isLoginIn, onLoginAction, onSignupAction }: HeaderProps
               <OutlineBellIcon />
             </ToolTip>
             <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
+            <ThemeSwitch className={s.themeSwitch} />
           </div>
         ) : (
           <div className={s.unauthorized_notifications}>
             <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
             <div className={s.button}>
-              <Button as={'button'} variant={'link'} onClick={onLoginAction}>
+              <Button as={Link} href={'/login'} variant={'link'}>
                 Log in
               </Button>
-              <Button as={'button'} variant={'primary'} onClick={onSignupAction}>
+              <Button as={Link} href={'/sign-up'} variant={'primary'}>
                 Sign up
               </Button>
             </div>
+            <ThemeSwitch className={s.themeSwitch} />
           </div>
         )}
       </div>
-    </div>
+    </header>
   )
 }

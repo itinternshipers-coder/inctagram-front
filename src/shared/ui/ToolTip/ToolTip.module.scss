@@ -1,4 +1,4 @@
-@import "@/styles/base/mixins";
+@use "@/styles/base/mixins";
 
 .content {
   background: var(--light-100);
@@ -9,8 +9,8 @@
   max-width: 280px;
   padding: 8px;
 
-  @include text-size(m, m);
-  @include text-weight(500);
+  @include mixins.text-size(m, m);
+  @include mixins.text-weight(500);
 }
 
 .tooltipContent {

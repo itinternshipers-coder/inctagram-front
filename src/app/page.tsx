@@ -1,7 +1,6 @@
 // import { redirect } from 'next/navigation'
 
 import { Typography } from '@/shared/ui/Typography/Typography'
-import { Header } from '@/widgets/header/Header'
 
 export default async function RootPage() {
   return (

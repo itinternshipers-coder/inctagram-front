@@ -80,6 +80,7 @@ export const Top: Story = {
     text: 'Тултип сверху (top)',
     position: 'top',
     children: <Button variant="primary">Top Position</Button>,
+    sideOffset: 0,
   },
   decorators: [
     (Story) => (

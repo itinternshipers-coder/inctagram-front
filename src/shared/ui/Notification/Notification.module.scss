@@ -1,26 +1,33 @@
-/* Notification.module.scss */
+@use "@/styles/base/mixins" as *;
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.85);
 }
 
 .content {
+  z-index: 100000000;
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  border-radius: 16px;
-  width: 360px;
-  padding: 24px;
+  top: 45%;
+  left: 45%;
+  transform: translate(-55%, -55%);
+
+  width: 378px;
+  min-height: 228px;
+
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  gap: 30px;
+
   animation: fadeIn 0.2s ease;
+
+  background-color: var(--dark-300);
+  color: var(--foreground);
+
+  border-radius: 2px;
+  border: 1px solid var(--dark-100);
 }
 
 @keyframes fadeIn {
@@ -38,45 +45,54 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  padding: 11px 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: -24px;
+    right: -24px;
+    bottom: 0;
+    height: 1px;
+    background-color: var(--dark-100);
+  }
 }
 
 .title {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.message {
-  font-size: 16px;
-  color: #555;
+  @include text-weight(700);
+  color: var(--foreground);
 }
 
 .closeBtn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
+  width: 30px;
+  height: 30px;
+  color: var(--muted-foreground);
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.message {
+  @include text-size(m, m);
+  color: var(--foreground);
 }
 
 .actionBtn {
-  margin-top: 8px;
-  padding: 12px;
-  border-radius: 10px;
+  background-color: var(--primary);
+  width: 96px;
+  height: 36px;
+  border-radius: 2px;
   border: none;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-}
 
-/* Типы нотификаций */
+  @include text-size(m, m);
+  @include text-weight(600);
+  color: var(--primary-foreground);
 
-.success {
-  border-top: 6px solid #4caf50;
-}
-
-.error {
-  border-top: 6px solid #e53935;
-}
-
-.info {
-  border-top: 6px solid #1e88e5;
+  margin-left: auto;
+  &:hover {
+    background-color: var(--accent-700);
+  }
 }

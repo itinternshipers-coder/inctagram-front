@@ -1,10 +1,10 @@
-import { Button } from '@/shared/ui/button/Button'
+import { Button } from '@/shared/ui/Button/Button'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import React from 'react'
 import ToolTip from './ToolTip'
 
 const meta: Meta<typeof ToolTip> = {
-  title: 'UI/ToolTip',
+  title: 'Components/ToolTip',
   component: ToolTip,
   parameters: {
     layout: 'centered',

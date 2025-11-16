@@ -1,7 +1,6 @@
 'use client'
-import { OutlineBellIcon } from '@/shared/icons/svgComponents'
-import { useTheme } from '@/shared/providers/ThemeProvider'
 import { Button } from '@/shared/ui/Button/Button'
+import { NotificationBell } from '@/shared/ui/NotificationBell/NotificationBell'
 import { SelectBox } from '@/shared/ui/SelectBox/SelectBox'
 import { ThemeSwitch } from '@/shared/ui/ThemeSwitch/ThemeSwitch'
 import ToolTip from '@/shared/ui/ToolTip/ToolTip'
@@ -24,8 +23,8 @@ export const Header = ({ isLoginIn }: HeaderProps) => {
       <div>
         {isLoginIn ? (
           <div className={s.authorized_notifications}>
-            <ToolTip text={''}>
-              <OutlineBellIcon />
+            <ToolTip text={'dasdas'}>
+              <NotificationBell count={3} /> {/*count хардкор пока*/}
             </ToolTip>
             <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
             <ThemeSwitch className={s.themeSwitch} />

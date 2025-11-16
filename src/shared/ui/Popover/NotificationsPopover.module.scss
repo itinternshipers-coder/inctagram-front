@@ -1,0 +1,97 @@
+// NotificationsPopover.module.scss (обновляем стили)
+// Убираем стили для .trigger и .badge
+.content {
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 12px;
+  width: 320px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.notificationsListWrapper {
+  max-height: 260px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: #4fd1c5;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.8;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.notification {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notificationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.newBadge {
+  color: #4fd1c5;
+  font-size: 12px;
+}
+
+.notificationMessage {
+  margin: 4px 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.notificationTime {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.footer {
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.viewAll {
+  background: none;
+  border: none;
+  color: #4fd1c5;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

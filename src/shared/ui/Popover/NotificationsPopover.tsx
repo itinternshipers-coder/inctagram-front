@@ -9,8 +9,9 @@ import React from 'react'
 type NotificationsPopoverProps = {
   unreadCount?: number
   content: React.ReactNode
-  children: React.ReactNode // делаем children обязательным
+  children: React.ReactNode
   side?: 'top' | 'right' | 'bottom' | 'left'
+  align?: 'start' | 'center' | 'end'
   sideOffset?: number
   className?: string
 }
@@ -19,6 +20,7 @@ export default function NotificationsPopover({
   content,
   children,
   side = 'bottom',
+  align = 'end',
   sideOffset = 8,
   className,
 }: NotificationsPopoverProps) {
@@ -26,16 +28,14 @@ export default function NotificationsPopover({
     <Popover.Root>
       <Popover.Trigger asChild>{children}</Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content className={clsx(s.content, className)} side={side} sideOffset={sideOffset} align="end">
+        <Popover.Content className={clsx(s.content, className)} side={side} sideOffset={sideOffset} align={align}>
           <div className={s.header}>
             <h3 className={s.title}>Уведомления</h3>
             <button className={s.clearBtn}>Очистить всё</button>
           </div>
 
-          <Scrollbar className={s.notificationsListWrapper}>{content}</Scrollbar>
-
-          <div className={s.footer}>
-            <button className={s.viewAll}>Посмотреть все</button>
+          <div className={s.notificationsListWrapper}>
+            <Scrollbar>{content}</Scrollbar>
           </div>
 
           <Popover.Arrow className={s.arrow} />

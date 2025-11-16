@@ -1,0 +1,46 @@
+.notificationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.notification {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 0;
+  outline: none;
+}
+
+.notification:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.notificationHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.newBadge {
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+.message {
+  color: var(--foreground);
+  line-height: 1.4;
+}
+
+.date {
+  color: var(--dark-100);
+}

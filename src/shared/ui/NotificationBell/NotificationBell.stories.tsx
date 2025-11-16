@@ -1,5 +1,4 @@
 import { NotificationBell } from '@/shared/ui/NotificationBell/NotificationBell'
-import ToolTip from '@/shared/ui/ToolTip/ToolTip'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import React from 'react'
 

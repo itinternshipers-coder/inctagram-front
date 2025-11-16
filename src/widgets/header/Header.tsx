@@ -1,9 +1,10 @@
 'use client'
 import { Button } from '@/shared/ui/Button/Button'
 import { NotificationBell } from '@/shared/ui/NotificationBell/NotificationBell'
+import NotificationList from '@/shared/ui/Popover/NotificationList'
+import NotificationsPopover from '@/shared/ui/Popover/NotificationsPopover'
 import { SelectBox } from '@/shared/ui/SelectBox/SelectBox'
 import { ThemeSwitch } from '@/shared/ui/ThemeSwitch/ThemeSwitch'
-import ToolTip from '@/shared/ui/ToolTip/ToolTip'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { SelectOption } from '@/widgets/header/SelectOptionsList'
 import Link from 'next/link'
@@ -23,9 +24,9 @@ export const Header = ({ isLoginIn }: HeaderProps) => {
       <div>
         {isLoginIn ? (
           <div className={s.authorized_notifications}>
-            <ToolTip text={'dasdas'}>
-              <NotificationBell count={3} /> {/*count хардкор пока*/}
-            </ToolTip>
+            <NotificationsPopover content={<NotificationList />}>
+              <NotificationBell count={3} />
+            </NotificationsPopover>
             <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
             <ThemeSwitch className={s.themeSwitch} />
           </div>

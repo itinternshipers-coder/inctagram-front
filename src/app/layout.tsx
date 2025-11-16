@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={inter.variable}>
       <body>
         <ThemeProvider>
-          <Header isLoginIn={false} />
+          <Header isLoginIn={true} />
           {children}
         </ThemeProvider>
       </body>

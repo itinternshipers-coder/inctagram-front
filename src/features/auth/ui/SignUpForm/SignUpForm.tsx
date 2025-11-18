@@ -38,9 +38,9 @@ export const SignUpForm = () => {
   const handleAgreementChange = agreementField.onChange
 
   const onSubmit = async (data: SignUpFormData) => {
-    console.log('Данные пользователя:', data)
-
     try {
+      const { agreement, passwordConfirm, ...signUpData } = data
+      console.log(signUpData)
       reset()
     } catch (error) {}
   }
@@ -89,11 +89,11 @@ export const SignUpForm = () => {
 
           <Typography variant="small_text" as="span" className={s.typography}>
             I agree to the
-            <Typography variant="small_link" className={s.link}>
+            <Typography variant="small_link" as={Link} href={''} className={s.link}>
               Terms of Service
             </Typography>
             and
-            <Typography variant="small_link" className={s.link}>
+            <Typography variant="small_link" as={Link} href={''} className={s.link}>
               Privacy Policy
             </Typography>
           </Typography>

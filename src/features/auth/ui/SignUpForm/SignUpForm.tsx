@@ -12,6 +12,14 @@ import { useController, useForm } from 'react-hook-form'
 import s from './SignUpForm.module.scss'
 import { SignUpFormData, signUpSchema } from './validation'
 
+type SignUpErrorResponse = {
+  message: string
+  errorsMessages: {
+    field: string
+    message: string
+  }[]
+}
+
 export const SignUpForm = () => {
   const {
     register,
@@ -40,9 +48,35 @@ export const SignUpForm = () => {
   const onSubmit = async (data: SignUpFormData) => {
     try {
       const { agreement, passwordConfirm, ...signUpData } = data
-      console.log(signUpData)
+
+      const response = await fetch('https://gateway.traineegramm.ru/api/v1/auth/sign-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(signUpData),
+      })
+
+      const responseData: SignUpErrorResponse = await response.json()
+
+      if (!response.ok) {
+        if (responseData.message === 'Username is already taken') {
+          setError('username', { message: 'This username is already taken' })
+        } else if (responseData.message === 'User with this email already exists') {
+          setError('email', { message: 'This email is already taken' })
+        } else if (responseData.errorsMessages && responseData.errorsMessages.length > 0) {
+          responseData.errorsMessages.forEach((error) => {
+            setError(error.field as keyof SignUpFormData, { message: error.message })
+          })
+        } else {
+          setError('root', { message: responseData.message || 'Registration failed' })
+        }
+        return
+      }
+
       reset()
-    } catch (error) {}
+      // router.push('/verify-email')
+    } catch (error) {
+      setError('root', { message: 'Network error' })
+    }
   }
 
   return (

@@ -12,9 +12,17 @@ export type NotificationProps = {
   title: string
   message: string
   buttonText?: string
+  onAction?: () => void
 }
 
-export const Notification = ({ open, onOpenChange, title, message, buttonText = 'OK' }: NotificationProps) => {
+export const Notification = ({
+  open,
+  onOpenChange,
+  title,
+  message,
+  buttonText = 'OK',
+  onAction,
+}: NotificationProps) => {
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -32,7 +40,9 @@ export const Notification = ({ open, onOpenChange, title, message, buttonText = 
           <Dialog.Description className={styles.message}>{message}</Dialog.Description>
 
           <Dialog.Close asChild>
-            <button className={styles.actionBtn}>{buttonText}</button>
+            <button className={styles.actionBtn} onClick={onAction}>
+              {buttonText}
+            </button>
           </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>

@@ -9,17 +9,15 @@
 .content {
   z-index: 100000000;
   position: fixed;
-  top: 45%;
-  left: 45%;
-  transform: translate(-55%, -55%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   width: 378px;
   min-height: 228px;
-
   padding: 0 24px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
 
   animation: fadeIn 0.2s ease;
 
@@ -28,17 +26,6 @@
 
   border-radius: 2px;
   border: 1px solid var(--dark-100);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -48%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
 }
 
 .header {
@@ -68,10 +55,19 @@
   width: 30px;
   height: 30px;
   color: var(--muted-foreground);
+  cursor: pointer;
 
   &:hover {
     opacity: 0.7;
   }
+}
+
+.messageContent {
+  flex-grow: 1;
+  padding-top: 20px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .message {
@@ -79,20 +75,46 @@
   color: var(--foreground);
 }
 
-.actionBtn {
-  background-color: var(--primary);
-  width: 96px;
-  height: 36px;
-  border-radius: 2px;
-  border: none;
-  cursor: pointer;
+.actionsContainer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
 
-  @include text-size(m, m);
-  @include text-weight(600);
-  color: var(--primary-foreground);
+.checkboxAndActionsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
 
-  margin-left: auto;
-  &:hover {
-    background-color: var(--accent-700);
-  }
+.actionsContainerSingle {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+
+.checkboxWrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+.primary {
+  background-color: var(--accent-500);
+  color: var(--light-50);
+  border: 1px solid var(--accent-500);
+}
+
+.secondary {
+  background-color: transparent;
+  color: var(--accent-500) !important;
+  border: 1px solid var(--accent-500) !important;
 }

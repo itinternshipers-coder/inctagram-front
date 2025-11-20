@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { PasswordSchema } from './field-schemas'
+import { PasswordSchema } from 'src/features/auth/lib/schemas/field-schemas'
 
 export const PasswordRecoveryConfirmSchema = z
   .object({

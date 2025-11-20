@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { EmailSchema, RecaptchaSchema } from './field-schemas'
+import { EmailSchema, RecaptchaSchema } from 'src/features/auth/lib/schemas/field-schemas'
 
 export const PasswordRecoverySchema = z.object({
   email: EmailSchema,

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { EmailSchema, PasswordSchema } from './field-schemas'
+import { EmailSchema, PasswordSchema } from 'src/features/auth/lib/schemas/field-schemas'
 
 export const LoginSchema = z.object({
   email: EmailSchema,

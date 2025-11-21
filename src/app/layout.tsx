@@ -1,6 +1,6 @@
 'use client'
 
-import { StoreProvider } from '@/providers/StoreProvider'
+import { StoreProvider } from '@/shared/providers/StoreProvider'
 import { ThemeProvider } from '@/shared/providers/ThemeProvider'
 import { Header } from '@/widgets/header/Header'
 import { Inter } from 'next/font/google'

@@ -11,6 +11,8 @@ import Link from 'next/link'
 import { useController, useForm } from 'react-hook-form'
 import s from './SignUpForm.module.scss'
 import { SignUpFormData, signUpSchema } from './validation'
+import { Modal } from '@/shared/ui/Modal/Modal'
+import { useState } from 'react'
 
 type SignUpErrorResponse = {
   message: string
@@ -42,6 +44,9 @@ export const SignUpForm = () => {
     defaultValue: false,
   })
 
+  const [showAgreementModal, setShowAgreementModal] = useState(true)
+  const [emailForModal, setEmailForModal] = useState('')
+
   const agreementValue = agreementField.value
   const handleAgreementChange = agreementField.onChange
 
@@ -71,7 +76,8 @@ export const SignUpForm = () => {
         }
         return
       }
-
+      setShowAgreementModal(true)
+      setEmailForModal(signUpData.email)
       reset()
       // router.push('/verify-email')
     } catch (error) {
@@ -80,70 +86,80 @@ export const SignUpForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Card className={s.card}>
-        <Typography variant="h3">Sign Up</Typography>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Card className={s.card}>
+          <Typography variant="h3">Sign Up</Typography>
 
-        <div className={s.socialSignUp}>
-          <Button href={''} as={Link} variant="link" disabled={isSubmitting}>
-            <GoogleIcon height={'36px'} width={'36px'} />
-          </Button>
-          <Button href={''} as={Link} variant="link" disabled={isSubmitting}>
-            <GithubIcon height={'36px'} width={'36px'} className={s.githubIcon} />
-          </Button>
-        </div>
+          <div className={s.socialSignUp}>
+            <Button href={''} as={Link} variant="link" disabled={isSubmitting}>
+              <GoogleIcon height={'36px'} width={'36px'} />
+            </Button>
+            <Button href={''} as={Link} variant="link" disabled={isSubmitting}>
+              <GithubIcon height={'36px'} width={'36px'} className={s.githubIcon} />
+            </Button>
+          </div>
 
-        <div className={s.registrationForm}>
-          <Input label="Username" placeholder="userName" {...register('username')} error={errors.username?.message} />
-          <Input
-            label="Email"
-            type="email"
-            placeholder="userName@gmail.com"
-            {...register('email')}
-            error={errors.email?.message}
-          />
-          <Input
-            label="Password"
-            type="password"
-            placeholder="*****************"
-            {...register('password')}
-            error={errors.password?.message}
-          />
-          <Input
-            label="Password confirmation"
-            type="password"
-            placeholder="*****************"
-            {...register('passwordConfirm')}
-            error={errors.passwordConfirm?.message}
-          />
-        </div>
+          <div className={s.registrationForm}>
+            <Input label="Username" placeholder="userName" {...register('username')} error={errors.username?.message} />
+            <Input
+              label="Email"
+              type="email"
+              placeholder="userName@gmail.com"
+              {...register('email')}
+              error={errors.email?.message}
+            />
+            <Input
+              label="Password"
+              type="password"
+              placeholder="*****************"
+              {...register('password')}
+              error={errors.password?.message}
+            />
+            <Input
+              label="Password confirmation"
+              type="password"
+              placeholder="*****************"
+              {...register('passwordConfirm')}
+              error={errors.passwordConfirm?.message}
+            />
+          </div>
 
-        <div className={s.agreementBlock}>
-          <CheckBox checked={agreementValue} onCheckedChange={handleAgreementChange} />
+          <div className={s.agreementBlock}>
+            <CheckBox checked={agreementValue} onCheckedChange={handleAgreementChange} />
 
-          <Typography variant="small_text" as="span" className={s.typography}>
-            I agree to the
-            <Typography variant="small_link" as={Link} href={'/terms-of-service'} className={s.link}>
-              Terms of Service
+            <Typography variant="small_text" as="span" className={s.typography}>
+              I agree to the
+              <Typography variant="small_link" as={Link} href={'/terms-of-service'} className={s.link}>
+                Terms of Service
+              </Typography>
+              and
+              <Typography variant="small_link" as={Link} href={'/privacy-policy'} className={s.link}>
+                Privacy Policy
+              </Typography>
             </Typography>
-            and
-            <Typography variant="small_link" as={Link} href={'/privacy-policy'} className={s.link}>
-              Privacy Policy
-            </Typography>
-          </Typography>
-        </div>
+          </div>
 
-        <Button variant="primary" fullWidth={true} type="submit" disabled={!isValid || isSubmitting}>
-          Sign Up
-        </Button>
-
-        <Typography variant="regular_text_16">Do you have an account?</Typography>
-        <div>
-          <Button href={'/login'} as={Link} variant="link">
-            Sign In
+          <Button variant="primary" fullWidth={true} type="submit" disabled={!isValid || isSubmitting}>
+            Sign Up
           </Button>
-        </div>
-      </Card>
-    </form>
+
+          <Typography variant="regular_text_16">Do you have an account?</Typography>
+          <div>
+            <Button href={'/login'} as={Link} variant="link">
+              Sign In
+            </Button>
+          </div>
+        </Card>
+      </form>
+      <Modal
+        open={showAgreementModal}
+        onOpenChange={setShowAgreementModal}
+        title="Email sent"
+        message={`We have sent a link to confirm your email to ${emailForModal}`}
+        buttonText="OK"
+        isCancelPrimary={false}
+      />
+    </>
   )
 }

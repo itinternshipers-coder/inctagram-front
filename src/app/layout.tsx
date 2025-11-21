@@ -1,5 +1,6 @@
 'use client'
 
+import { StoreProvider } from '@/shared/providers/StoreProvider'
 import { ThemeProvider } from '@/shared/providers/ThemeProvider'
 import { Header } from '@/widgets/header/Header'
 import { Inter } from 'next/font/google'
@@ -16,10 +17,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <ThemeProvider>
-          <Header isLoginIn={true} />
-          {children}
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider>
+            <Header isLoginIn={true} />
+            <main>{children}</main>
+          </ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   )

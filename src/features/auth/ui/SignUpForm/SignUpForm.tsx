@@ -7,20 +7,14 @@ import { CheckBox } from '@/shared/ui/CheckBox/CheckBox'
 import { Input } from '@/shared/ui/Input/Input'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Link from 'next/link'
 import { useController, useForm } from 'react-hook-form'
-import s from './SignUpForm.module.scss'
 import { SignUpFormData, signUpSchema } from './validation'
 import { Modal } from '@/shared/ui/Modal/Modal'
 import { useState } from 'react'
-
-type SignUpErrorResponse = {
-  message: string
-  errorsMessages: {
-    field: string
-    message: string
-  }[]
-}
+import { ErrorResponse } from '@/shared/api/types'
+import { useSignupMutation } from '../../api/auth-api'
+import Link from 'next/link'
+import s from './SignUpForm.module.scss'
 
 export const SignUpForm = () => {
   const {
@@ -44,8 +38,10 @@ export const SignUpForm = () => {
     defaultValue: false,
   })
 
-  const [showAgreementModal, setShowAgreementModal] = useState(true)
+  const [showAgreementModal, setShowAgreementModal] = useState(false)
   const [emailForModal, setEmailForModal] = useState('')
+
+  const [signup, { isLoading }] = useSignupMutation()
 
   const agreementValue = agreementField.value
   const handleAgreementChange = agreementField.onChange
@@ -53,35 +49,28 @@ export const SignUpForm = () => {
   const onSubmit = async (data: SignUpFormData) => {
     try {
       const { agreement, passwordConfirm, ...signUpData } = data
+      await signup(signUpData).unwrap()
 
-      const response = await fetch('https://gateway.traineegramm.ru/api/v1/auth/sign-up', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(signUpData),
-      })
-
-      const responseData: SignUpErrorResponse = await response.json()
-
-      if (!response.ok) {
+      setShowAgreementModal(true)
+      setEmailForModal(signUpData.email)
+      reset()
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'data' in error) {
+        const responseData = error.data as ErrorResponse
         if (responseData.message === 'Username is already taken') {
           setError('username', { message: 'This username is already taken' })
         } else if (responseData.message === 'User with this email already exists') {
           setError('email', { message: 'This email is already taken' })
         } else if (responseData.errorsMessages && responseData.errorsMessages.length > 0) {
-          responseData.errorsMessages.forEach((error) => {
-            setError(error.field as keyof SignUpFormData, { message: error.message })
+          responseData.errorsMessages.forEach((err) => {
+            setError(err.field as keyof SignUpFormData, { message: err.message })
           })
         } else {
           setError('root', { message: responseData.message || 'Registration failed' })
         }
-        return
+      } else {
+        setError('root', { message: 'Network error' })
       }
-      setShowAgreementModal(true)
-      setEmailForModal(signUpData.email)
-      reset()
-      // router.push('/verify-email')
-    } catch (error) {
-      setError('root', { message: 'Network error' })
     }
   }
 

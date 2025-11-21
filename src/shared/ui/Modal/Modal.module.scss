@@ -1,0 +1,120 @@
+@use "@/styles/base/mixins" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.content {
+  z-index: 100000000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 378px;
+  min-height: 228px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+
+  animation: fadeIn 0.2s ease;
+
+  background-color: var(--dark-300);
+  color: var(--foreground);
+
+  border-radius: 2px;
+  border: 1px solid var(--dark-100);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 11px 0;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: -24px;
+    right: -24px;
+    bottom: 0;
+    height: 1px;
+    background-color: var(--dark-100);
+  }
+}
+
+.title {
+  @include text-weight(700);
+  color: var(--foreground);
+}
+
+.closeBtn {
+  width: 30px;
+  height: 30px;
+  color: var(--muted-foreground);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.messageContent {
+  flex-grow: 1;
+  padding-top: 20px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  @include text-size(m, m);
+  color: var(--foreground);
+}
+
+.actionsContainer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+
+.checkboxAndActionsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+
+.actionsContainerSingle {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+
+.checkboxWrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+.primary {
+  background-color: var(--accent-500);
+  color: var(--light-50);
+  border: 1px solid var(--accent-500);
+}
+
+.secondary {
+  background-color: transparent;
+  color: var(--accent-500) !important;
+  border: 1px solid var(--accent-500) !important;
+}

@@ -1,4 +1,4 @@
-@import "@/styles/base/mixins";
+@use "@/styles/base/mixins";
 
 @mixin sidebar-base($justify: space-around) {
   align-items: center;
@@ -24,8 +24,8 @@
   }
 
   .sidebarItem {
-    @include text-size(s, m);
-    @include text-weight(500);
+    @include mixins.text-size(s, m);
+    @include mixins.text-weight(500);
 
     align-items: center;
     border-radius: 6px;
@@ -68,8 +68,8 @@
     }
 
     .label {
-      @include text-size(m, m);
-      @include text-weight(500);
+      @include mixins.text-size(m, m);
+      @include mixins.text-weight(500);
 
       white-space: nowrap;
 

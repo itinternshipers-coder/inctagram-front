@@ -1,0 +1,58 @@
+@use "@/styles/base/mixins" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background-color: var(--background);
+  color: var(--foreground);
+
+  width: 100%;
+}
+
+.content {
+  padding: 15px;
+
+  @include text-weight(400);
+  @include text-size(s, m);
+
+  text-align: left;
+  max-width: 980px;
+}
+
+.backBlock {
+  width: 100%;
+  padding: 10px 15px;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 10px;
+  @include text-weight(400);
+  @include text-size(s, s);
+
+  color: var(--foreground);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--hover);
+  }
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.title {
+  @include text-weight(700);
+  @include text-size(m, m);
+  text-align: center;
+}

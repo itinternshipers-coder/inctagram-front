@@ -2,8 +2,31 @@ import type { Preview } from '@storybook/nextjs-vite'
 import '../src/styles/globals.scss'
 import React from 'react'
 
+import { Provider } from 'react-redux'
+import { configureStore } from '@reduxjs/toolkit'
+import authSlice from '../src/features/auth/model/auth-slice'
+import { baseApi } from '../src/shared/api/base-api'
+
+// Создаём store для Storybook
+const createMockStore = () => {
+  return configureStore({
+    reducer: {
+      auth: authSlice.reducer,
+      [baseApi.reducerPath]: baseApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
+  })
+}
+
 const preview: Preview = {
   parameters: {
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: '/',
+        query: {},
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -15,6 +38,16 @@ const preview: Preview = {
     },
   },
   decorators: [
+    // Redux Provider декоратор
+    (Story) => {
+      const store = createMockStore()
+      return (
+        <Provider store={store}>
+          <Story />
+        </Provider>
+      )
+    },
+
     (Story, context) => {
       const theme = context.globals.theme || 'dark'
 

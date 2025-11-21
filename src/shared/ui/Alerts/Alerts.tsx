@@ -30,7 +30,7 @@ export const Alerts = ({ status, text, position }: AlertsProps) => {
         <p>
           {status === 'success' ? text || 'Your settings are saved' : `Error! ${text || 'Server is not available'}`}
         </p>
-        <Button variant={'tertiary'} className={s.button} onClick={onClickHandler}>
+        <Button variant={'tertiary'} className={s.button} onClick={onClickHandler} type="button">
           {<CloseOutlineIcon width={24} height={24} />}
         </Button>
       </div>

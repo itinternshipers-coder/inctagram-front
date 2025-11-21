@@ -9,10 +9,12 @@
   border-bottom: 1px solid var(--border);
   flex-wrap: wrap;
   justify-content: space-between;
+  position: relative;
 }
 
 .authorized_notifications {
   display: flex;
+  align-items: center;
   column-gap: 45px;
 }
 
@@ -30,4 +32,9 @@
   button {
     font-size: var(--font-size-14);
   }
+}
+
+.themeSwitch {
+  display: flex;
+  align-items: center;
 }

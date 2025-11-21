@@ -1,15 +1,13 @@
 'use client'
 
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { EyeOffOutlineIcon, EyeOutlineIcon, GithubIcon, GoogleIcon } from '@/shared/icons/svgComponents'
+import { GithubIcon, GoogleIcon } from '@/shared/icons/svgComponents'
 import { Card } from '@/shared/ui/Card/Card'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { Button } from '@/shared/ui/Button/Button'
 import { Input } from '@/shared/ui/Input/Input'
-import { Alerts } from '@/shared/ui/Alerts/Alerts'
 import s from './SignInForm.module.scss'
 
 const signInSchema = z.object({
@@ -20,11 +18,8 @@ const signInSchema = z.object({
 type SignInFormData = z.infer<typeof signInSchema>
 
 export default function SignInForm() {
-  const [error, setError] = useState<string | null>(null)
-
   const {
     register,
-    handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -33,8 +28,6 @@ export default function SignInForm() {
       password: '',
     },
   })
-
-  const onSubmit = async (data: SignInFormData) => {}
 
   return (
     <Card className={s.form}>
@@ -52,7 +45,7 @@ export default function SignInForm() {
         </Button>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <div className={s.inputGroup}>
           <Input
             label="Email"
@@ -81,8 +74,6 @@ export default function SignInForm() {
         <Button type="submit" fullWidth disabled={isSubmitting}>
           {isSubmitting ? 'Вход...' : 'Sign In'}
         </Button>
-
-        {error && <Alerts status="error" text={error} position="bottom-left" />}
 
         <div className={s.signupLink}>
           <Typography>Don’t have an account?</Typography>

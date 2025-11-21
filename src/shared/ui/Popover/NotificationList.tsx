@@ -20,6 +20,11 @@ type NotificationProps = {
 export default function NotificationList({ notifications = [], notificationHandlerAction }: NotificationProps) {
   return (
     <div className={s.notificationsList} onClick={notificationHandlerAction}>
+      <div className={s.header}>
+        <h3 className={s.title}>Уведомления</h3>
+        <button className={s.clearBtn}>Очистить всё</button>
+      </div>
+
       {notifications.map((n) => (
         <div key={n.id} className={s.notification}>
           <div className={s.notificationHeader}>

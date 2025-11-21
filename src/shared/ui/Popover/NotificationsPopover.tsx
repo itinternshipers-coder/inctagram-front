@@ -29,11 +29,6 @@ export default function NotificationsPopover({
       <Popover.Trigger asChild>{children}</Popover.Trigger>
       <Popover.Portal>
         <Popover.Content className={clsx(s.content, className)} side={side} sideOffset={sideOffset} align={align}>
-          <div className={s.header}>
-            <h3 className={s.title}>Уведомления</h3>
-            <button className={s.clearBtn}>Очистить всё</button>
-          </div>
-
           <div className={s.notificationsListWrapper}>
             <Scrollbar>{content}</Scrollbar>
           </div>

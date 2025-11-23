@@ -43,6 +43,14 @@ export const SignUpForm = () => {
 
   const [signup, { isLoading }] = useSignupMutation()
 
+  if (isLoading) {
+    return (
+      <Card className={s.card}>
+        <Typography variant="regular_text_16">...loading</Typography>
+      </Card>
+    )
+  }
+
   const agreementValue = agreementField.value
   const handleAgreementChange = agreementField.onChange
 
@@ -90,13 +98,20 @@ export const SignUpForm = () => {
           </div>
 
           <div className={s.registrationForm}>
-            <Input label="Username" placeholder="userName" {...register('username')} error={errors.username?.message} />
+            <Input
+              label="Username"
+              placeholder="userName"
+              {...register('username')}
+              error={errors.username?.message}
+              wrapperClassName={s.inputWithErrorSpace}
+            />
             <Input
               label="Email"
               type="email"
               placeholder="userName@gmail.com"
               {...register('email')}
               error={errors.email?.message}
+              wrapperClassName={s.inputWithErrorSpace}
             />
             <Input
               label="Password"
@@ -104,6 +119,7 @@ export const SignUpForm = () => {
               placeholder="*****************"
               {...register('password')}
               error={errors.password?.message}
+              wrapperClassName={s.inputWithErrorSpace}
             />
             <Input
               label="Password confirmation"
@@ -111,6 +127,7 @@ export const SignUpForm = () => {
               placeholder="*****************"
               {...register('passwordConfirmation')}
               error={errors.passwordConfirmation?.message}
+              wrapperClassName={s.inputWithErrorSpace}
             />
           </div>
 

@@ -8,13 +8,13 @@ import { Input } from '@/shared/ui/Input/Input'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useController, useForm } from 'react-hook-form'
-import { SignUpFormData, signUpSchema } from './validation'
 import { Modal } from '@/shared/ui/Modal/Modal'
 import { useState } from 'react'
 import { ErrorResponse } from '@/shared/api/types'
 import { useSignupMutation } from '../../api/auth-api'
 import Link from 'next/link'
 import s from './SignUpForm.module.scss'
+import { SignUpFormData, SignUpSchema } from '../../lib/schemas/signup-schema'
 
 export const SignUpForm = () => {
   const {
@@ -25,15 +25,15 @@ export const SignUpForm = () => {
     setError,
     reset,
   } = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(SignUpSchema),
     mode: 'onChange',
     defaultValues: {
-      agreement: false,
+      agreeToTerms: false,
     },
   })
 
   const { field: agreementField } = useController({
-    name: 'agreement',
+    name: 'agreeToTerms',
     control,
     defaultValue: false,
   })
@@ -48,7 +48,7 @@ export const SignUpForm = () => {
 
   const onSubmit = async (data: SignUpFormData) => {
     try {
-      const { agreement, passwordConfirm, ...signUpData } = data
+      const { agreeToTerms, passwordConfirmation, ...signUpData } = data
       await signup(signUpData).unwrap()
 
       setShowAgreementModal(true)
@@ -109,8 +109,8 @@ export const SignUpForm = () => {
               label="Password confirmation"
               type="password"
               placeholder="*****************"
-              {...register('passwordConfirm')}
-              error={errors.passwordConfirm?.message}
+              {...register('passwordConfirmation')}
+              error={errors.passwordConfirmation?.message}
             />
           </div>
 

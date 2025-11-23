@@ -26,7 +26,7 @@ export const SignUpForm = () => {
     reset,
   } = useForm<SignUpFormData>({
     resolver: zodResolver(SignUpSchema),
-    mode: 'onChange',
+    mode: 'onTouched',
     defaultValues: {
       agreeToTerms: false,
     },

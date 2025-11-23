@@ -1,6 +1,6 @@
 'use client'
 
-import SignInForm from '@/app/features/auth/ui/SignInForm/SignInForm'
+import SignInForm from '@/features/auth/ui/SignInForm/SignInForm'
 
 export default function LoginPage() {
   return (

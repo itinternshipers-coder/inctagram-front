@@ -4,15 +4,13 @@ import { useResendConfirmMutation } from '@/features/auth/api/auth-api'
 import type { ErrorResponse } from '@/shared/api/types'
 import { Alert } from '@/shared/ui/Alerts/Alert'
 
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '@/shared/ui/Button/Button'
 import { Modal } from '@/shared/ui/Modal/Modal'
 import { Typography } from '@/shared/ui/Typography/Typography'
-
-import verificationExpired from '@/shared/assets/images/verificationExpired.svg'
-import verifiedSuccess from '@/shared/assets/images/verifiedSuccess.svg'
+import verificationExpired from 'public/VerificationExpired.svg'
+import verifiedSuccess from 'public/VerifiedSuccess.svg'
 
 import styles from './EmailConfirmation.module.scss'
 
@@ -46,10 +44,6 @@ export const EmailConfirmation = ({ isSuccess, email }: EmailConfirmationProps) 
         }
       }
     }
-  }
-
-  const closeModalHandler = () => {
-    setOpen(false)
   }
 
   return (
@@ -87,11 +81,10 @@ export const EmailConfirmation = ({ isSuccess, email }: EmailConfirmationProps) 
           </Button>
         </div>
 
-        <Image
+        <img
           className={styles.image}
           src={isSuccess ? verifiedSuccess : verificationExpired}
           alt={isSuccess ? 'Email verified successfully' : 'Email verification link expired'}
-          priority
         />
       </div>
     </div>

@@ -8,7 +8,7 @@ type TextPageLayoutProps = {
   backHref?: string
 }
 
-const TextPageLayout = ({ title, children, backHref = '/' }: TextPageLayoutProps) => {
+const TextPageLayout = ({ title, children, backHref = '/register' }: TextPageLayoutProps) => {
   return (
     <div className={s.container}>
       <div className={s.backBlock}>

@@ -1,6 +1,6 @@
 import { Button } from '@/shared/ui/Button/Button'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Alerts } from './Alerts'
+import { Alerts } from 'src/shared/ui/Alerts/Alert'
 
 const meta: Meta<typeof Alerts> = {
   title: 'Components/Alerts',

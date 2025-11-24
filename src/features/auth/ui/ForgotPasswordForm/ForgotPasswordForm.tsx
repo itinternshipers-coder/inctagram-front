@@ -84,7 +84,7 @@ export const ForgotPasswordForm = () => {
   const buttonText = isSubmitted ? 'Send Link Again' : 'Send Link'
 
   return (
-    <div className={s.container}>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card as={'div'} className={s.card}>
           <Typography variant={'h1'} className={s.typography}>
@@ -129,6 +129,6 @@ export const ForgotPasswordForm = () => {
         message={`We have sent a link to confirm your email to ${emailModal}`}
         buttonText="OK"
       />
-    </div>
+    </>
   )
 }

@@ -1,55 +1,82 @@
 'use client'
+import { useForgotPasswordMutation } from '@/features/auth/api/password-api'
+import { PasswordRecoveryFormData, PasswordRecoverySchema } from '@/features/auth/lib/schemas/password-recovery-schema'
 import s from '@/features/auth/ui/ForgotPasswordForm/ForgotPasswordForm.module.scss'
-import { EmailFormData, emailSchema } from '@/features/auth/ui/ForgotPasswordForm/validation'
 import { Button } from '@/shared/ui/Button/Button'
 import { Card } from '@/shared/ui/Card/Card'
 import { Input } from '@/shared/ui/Input/Input'
+import { Modal } from '@/shared/ui/Modal/Modal'
 import { Recaptcha, RecaptchaStatus } from '@/shared/ui/Recaptcha/Recaptcha'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useCallback, useState } from 'react'
+import { useController, useForm } from 'react-hook-form'
 
 export const ForgotPasswordForm = () => {
-  const [status, setStatus] = useState<RecaptchaStatus>('idle')
+  const [recaptchaStatus, setRecaptchaStatus] = useState<RecaptchaStatus>('idle')
+  const [showModal, setShowModal] = useState(false)
+  const [emailModal, setEmailModal] = useState('')
+
+  const [forgotPassword] = useForgotPasswordMutation()
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitted, isValid },
+    control,
+    formState: { errors, isSubmitted, isValid, isSubmitting },
     watch,
-    reset,
-  } = useForm<EmailFormData>({
-    resolver: zodResolver(emailSchema),
+  } = useForm<PasswordRecoveryFormData>({
+    resolver: zodResolver(PasswordRecoverySchema),
     defaultValues: {
       email: '',
+      recaptchaToken: '',
     },
     mode: 'onChange',
   })
 
-  // Следим за значением email через watch вместо отдельного состояния
+  const { field: recaptchaField } = useController({
+    name: 'recaptchaToken',
+    control,
+    defaultValue: '',
+    rules: { required: 'Please complete the reCAPTCHA' },
+  })
+
+  const handleRecaptchaStatusChange = useCallback(
+    (status: RecaptchaStatus) => {
+      setRecaptchaStatus(status)
+
+      // Генерируем/очищаем токен сразу при изменении статуса
+      if (status === 'success') {
+        const mockToken = `recaptcha_token_${Date.now()}_${Math.random().toString(36).slice(2, 15)}`
+        recaptchaField.onChange(mockToken)
+      } else if (status === 'error' || status === 'expired') {
+        recaptchaField.onChange('')
+      }
+    },
+    [recaptchaField]
+  )
+
+  // Следим за значениями полей
   const emailValue = watch('email')
+  const recaptchaTokenValue = watch('recaptchaToken')
 
-  // Проверяем валидность email и reCAPTCHA
-  const isEmailValid = emailValue.length > 0 && isValid // Используем валидность формы
-  const inputChecked = isEmailValid && status === 'success'
+  // Проверяем валидность формы
+  const isFormReady = isValid && emailValue && recaptchaTokenValue
+  const isButtonDisabled = !isFormReady || isSubmitting
 
-  const onSubmit = async (data: EmailFormData) => {
-    console.log('Email пользователя:', data)
-
+  const onSubmit = async (data: PasswordRecoveryFormData) => {
     try {
-      // Здесь должен быть API запрос для восстановления пароля
-      // await forgotPasswordAPI(data.email)
+      // API запрос для восстановления пароля
+      await forgotPassword({
+        email: data.email,
+        recaptchaToken: data.recaptchaToken,
+      })
 
-      // Показываем успешное состояние
-      // setIsSubmitted(true)
-      // setIsModalOpen(true)
-
-      // Опционально: сбрасываем форму если нужно
-      reset()
+      setShowModal(true)
+      setEmailModal(data.email)
+      setRecaptchaStatus('idle')
     } catch (error) {
-      // Обработка ошибок API
       console.error('Ошибка отправки:', error)
     }
   }
@@ -57,63 +84,51 @@ export const ForgotPasswordForm = () => {
   const buttonText = isSubmitted ? 'Send Link Again' : 'Send Link'
 
   return (
-    <>
-      <div className={s.container}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Card as={'div'} className={s.card}>
-            <Typography variant={'h1'} className={s.typography}>
-              Forgot Password
+    <div className={s.container}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Card as={'div'} className={s.card}>
+          <Typography variant={'h1'} className={s.typography}>
+            Forgot Password
+          </Typography>
+
+          <div className={s.sendEmail}>
+            <Input
+              label="Email"
+              type="email"
+              {...register('email')}
+              error={errors.email?.message}
+              placeholder="Epam@epam.com"
+            />
+            <Typography variant={'regular_text_14'} className={s.textForSend}>
+              Enter your email address and we will send you further instructions
             </Typography>
-            <div className={s.sendEmail}>
-              <Input
-                label="Email"
-                type="email"
-                {...register('email')}
-                error={errors.email?.message}
-                placeholder="Epam@epam.com"
-              />
-              <Typography variant={'regular_text_14'} className={s.textForSend}>
-                Enter your email address and we will send you further instructions
+
+            {isSubmitted && (
+              <Typography variant={'regular_text_14'} className={s.textForSendEmail}>
+                The link has been sent by email. If you don’t receive an email send link again
               </Typography>
+            )}
+          </div>
 
-              {isSubmitted && (
-                <Typography variant={'regular_text_14'} className={s.textForSendedEmail}>
-                  The link has been sent by email. If you don’t receive an email send link again
-                </Typography>
-              )}
-            </div>
-            <div className={s.button}>
-              <Button variant="primary" fullWidth={true} as={'button'} type={'submit'} disabled={!inputChecked}>
-                {buttonText}
-              </Button>
-              <Button href={'/'} as={Link} variant="link">
-                Back to Sign In
-              </Button>
-            </div>
-            {isSubmitted ? <></> : <Recaptcha onStatusChange={(status) => setStatus(status)} />}
-          </Card>
-        </form>
-      </div>
-      {/*{isModalOpen && (*/}
-      {/*  <div className={s.modalOverlay}>*/}
-      {/*    <Card className={s.modalCard}>*/}
-      {/*      <div className={s.modalContent}>*/}
-      {/*        <div className={s.modalTitle}>*/}
-      {/*          <Typography variant={'h1'}>Email sent</Typography>*/}
-      {/*          <Button variant={'tertiary'} className={s.buttonModal}>*/}
-      {/*            {<CloseOutlineIcon width={24} height={24} />}*/}
-      {/*          </Button>*/}
-      {/*        </div>*/}
-
-      {/*        <Typography variant={'regular_text_16'} className={s.modalMessage}>*/}
-      {/*          We have sent a link to confirm your email to*/}
-      {/*        </Typography>*/}
-
-      {/*        <Button variant="primary">OK</Button>*/}
-      {/*      </div>*/}
-      {/*    </Card>*/}
-      {/*  </div>*/}
-      {/*)}*/}
-    </>
+          <div className={s.button}>
+            <Button variant="primary" fullWidth={true} type={'submit'} disabled={isButtonDisabled}>
+              {isSubmitting ? 'Sending...' : buttonText}
+            </Button>
+            <Button href={'/login'} as={Link} variant="link">
+              Back to Sign In
+            </Button>
+          </div>
+          {/* ReCAPTCHA компонент - только со статусом */}
+          {!isSubmitted && <Recaptcha initialStatus={recaptchaStatus} onStatusChange={handleRecaptchaStatusChange} />}
+        </Card>
+      </form>
+      <Modal
+        open={showModal}
+        onOpenChange={setShowModal}
+        title="Email sent"
+        message={`We have sent a link to confirm your email to ${emailModal}`}
+        buttonText="OK"
+      />
+    </div>
   )
 }

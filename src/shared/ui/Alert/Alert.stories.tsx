@@ -1,10 +1,10 @@
 import { Button } from '@/shared/ui/Button/Button'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Alerts } from 'src/shared/ui/Alerts/Alert'
+import { Alert } from '@/shared/ui/Alert/Alert'
 
-const meta: Meta<typeof Alerts> = {
-  title: 'Components/Alerts',
-  component: Alerts,
+const meta: Meta<typeof Alert> = {
+  title: 'Components/Alert',
+  component: Alert,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',

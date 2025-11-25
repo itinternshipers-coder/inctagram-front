@@ -2,7 +2,8 @@
 
 import { useResendConfirmMutation } from '@/features/auth/api/auth-api'
 import type { ErrorResponse } from '@/shared/api/types'
-import { Alert } from '@/shared/ui/Alerts/Alert'
+import { VerifiedSuccessIcon } from '@/shared/icons/svgComponents'
+import { Alert } from '@/shared/ui/Alert/Alert'
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -81,11 +82,12 @@ export const EmailConfirmation = ({ isSuccess, email }: EmailConfirmationProps) 
           </Button>
         </div>
 
-        <img
-          className={styles.image}
-          src={isSuccess ? verifiedSuccess : verificationExpired}
-          alt={isSuccess ? 'Email verified successfully' : 'Email verification link expired'}
-        />
+        {/*<img*/}
+        {/*  className={styles.image}*/}
+        {/*  src={isSuccess ? verifiedSuccess : verificationExpired}*/}
+        {/*  alt={isSuccess ? 'Email verified successfully' : 'Email verification link expired'}*/}
+        {/*/>*/}
+        <VerifiedSuccessIcon />
       </div>
     </div>
   )

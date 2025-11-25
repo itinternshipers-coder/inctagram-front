@@ -3,7 +3,7 @@ import { CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import clsx from 'clsx'
 import { useState } from 'react'
-import s from 'src/shared/ui/Alerts/Alert.module.scss'
+import s from '@/shared/ui/Alert/Alert.module.scss'
 
 type AlertsProps = {
   status: 'success' | 'error'

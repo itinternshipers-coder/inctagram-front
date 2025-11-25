@@ -1,5 +1,5 @@
 .wrapper {
-  border: 1px solid var(--light-100);
+  border: 1px solid var(--border);
   display: inline-block;
 
   &__error {
@@ -9,7 +9,7 @@
 
 .recaptcha {
   align-items: center;
-  background: var(--dark-500);
+  background: var(--background-element);
   color: var(--light-100);
   display: flex;
   justify-content: space-between;
@@ -27,7 +27,10 @@
 
   &__button {
     align-items: center;
-    background: white;
+    background: var(--background-element);
+    border: 1px solid;
+    border-color: var(--border);
+    border-radius: 1px;
     cursor: pointer;
     display: flex;
     height: 20px;
@@ -38,8 +41,7 @@
 
     &:not(&--checked, &--loading) {
       &:hover {
-        background: rgb(255 255 255 / 5%);
-        border-color: var(--light-100);
+        background: var(--muted);
       }
 
       &:active {
@@ -49,12 +51,13 @@
 
     &--loading {
       background: transparent;
-      border-color: #4d8df4;
+      border: none;
       cursor: wait;
     }
 
     &--checked {
       background: transparent;
+
       cursor: default;
     }
 
@@ -67,6 +70,7 @@
   &__label {
     font-size: var(--font-size-12);
     user-select: none;
+    color: var(--foreground);
   }
 
   &__branding {
@@ -89,17 +93,18 @@
   }
 
   &__title {
-    color: var(--light-100);
+    color: var(--foreground);
     font-size: 0.5rem;
   }
 
   &__links {
+    text-align: center;
     font-size: 0.375rem;
     white-space: nowrap;
   }
 
   &__link {
-    color: var(--light-100);
+    color: var(--foreground);
     opacity: 0.7;
     text-decoration: none;
 

@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ThemeProvider>
             <Header isLoginIn={true} />
             <main>{children}</main>
+            <div id="portal-root"></div>
           </ThemeProvider>
         </StoreProvider>
       </body>

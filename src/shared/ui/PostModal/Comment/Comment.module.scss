@@ -1,0 +1,32 @@
+.commentItem {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.commentContent {
+  font-size: 14px;
+  flex-grow: 1;
+}
+
+.username {
+  font-weight: bold;
+  color: white;
+  margin-right: 5px;
+}
+
+.commentMeta {
+  display: block;
+  font-size: 0.8em;
+  color: #888;
+  margin-top: 5px;
+}
+
+/* Avatar is needed here because the Comment component uses s.userAvatar */
+.userAvatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}

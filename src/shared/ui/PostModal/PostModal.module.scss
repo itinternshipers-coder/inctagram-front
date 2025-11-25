@@ -1,0 +1,200 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.modalContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 972px;
+  min-height: 562px;
+  z-index: 1001;
+}
+
+.modalContent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid red;
+  color: white;
+}
+
+.closeButton {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  background: none;
+  border: none;
+  color: white !important;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 999999999999;
+  padding: 0;
+}
+
+/* Layout */
+.modalLeft {
+  flex: 2;
+  position: relative;
+  background-color: #333;
+}
+
+.modalRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 481px;
+  background-color: #333;
+}
+
+/* Post Header */
+.postHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // padding: 10px 15px; ////////////////
+  padding: 12px 24px;
+
+  border-bottom: 1px solid #eee;
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.authorAvatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.menuButton {
+  color: white !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* Comments Section */
+.commentsWrapper {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 12px 24px;
+}
+
+/* Post Footer */
+.postFooter {
+  border-top: 1px solid #eee;
+}
+
+.interactionRow {
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 24px;
+}
+
+.likeButton,
+.iconButton {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.likesInfo {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.userThumbnail {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #333;
+  padding: 12px 24px;
+}
+
+.likesCount {
+  font-weight: bold;
+  color: white;
+}
+
+.postDate {
+  color: #888;
+  font-size: 12px;
+  padding: 0 24px;
+}
+
+.addCommentSection {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  padding: 10px 15px;
+}
+
+.addCommentSection input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 17px 0;
+  background-color: transparent;
+  color: white;
+}
+
+.publishCommentButton {
+  background: none;
+  border: none;
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Dropdown */
+.dropdownContent {
+  background-color: #444;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  z-index: 999999;
+}
+
+.dropdownItem {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  outline: none;
+}
+
+.dropdownItem:hover,
+.dropdownItem:focus {
+  background-color: #555;
+}
+
+.dropdownItem.delete {
+  color: red;
+}
+
+.dropdownSeparator {
+  height: 1px;
+  background-color: #555;
+  margin: 5px 0;
+}

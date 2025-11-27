@@ -2,7 +2,6 @@
 
 import { useLogout } from '@/features/device/lib/useLogout'
 import { useAppSelector } from '@/shared/lib/hooks'
-import ConfirmModal from '@/shared/ui/ConfirmModal/ConfirmModal'
 import React, { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import {
@@ -27,6 +26,7 @@ import {
 import SidebarLinkItem from './SidebarLinkItem'
 import '@/styles/base/_mixins.scss'
 import s from './Sidebar.module.scss'
+import { Modal } from '@/shared/ui/Modal/Modal'
 
 type SidebarProps = {
   role: 'user' | 'admin'
@@ -200,12 +200,17 @@ const Sidebar = ({ role }: SidebarProps) => {
             </button>
           </div>
           {openModal && (
-            <ConfirmModal
-              closeModal={openCloseModal}
-              onConfirm={handleLogout}
-              text={`Are you really want to log out of your account "${email}"?`}
+            <Modal
+              open={openModal}
+              onOpenChange={openCloseModal}
               title={'Log Out'}
-              openModal={openModal}
+              message={`Are you really want to log out of your account "${email}"?`}
+              confirmMode={true}
+              buttonText={'No'}
+              onAction={openCloseModal}
+              cancelButtonText={'Yes'}
+              onCancel={handleLogout}
+              style={{ maxWidth: '478px', width: '100%' }}
             />
           )}
         </>

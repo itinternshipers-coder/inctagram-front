@@ -14,10 +14,11 @@ export const useLogout = () => {
     try {
       if (!sessions) return
       await deleteSession(sessions.current.deviceId).unwrap()
-      dispatch(logoutAction())
-      route.push('/')
     } catch (e) {
       console.error(e)
+    } finally {
+      dispatch(logoutAction())
+      route.push('/login')
     }
   }, [sessions, deleteSession, route, dispatch])
 

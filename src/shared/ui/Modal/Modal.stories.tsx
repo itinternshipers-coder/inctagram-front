@@ -43,7 +43,11 @@ const Template = (props: ModalProps) => {
         open={open}
         onOpenChange={setOpen}
         isActionDisabled={isButtonDisabled}
-        onCheckboxChange={props.hasCheckbox ? setIsAgreed : props.onCheckboxChange}
+        onCheckboxChange={
+          props.hasCheckbox
+            ? (val: boolean | 'indeterminate' | undefined) => setIsAgreed(Boolean(val))
+            : props.onCheckboxChange
+        }
       />
     </div>
   )

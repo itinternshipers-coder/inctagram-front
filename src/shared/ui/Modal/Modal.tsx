@@ -24,7 +24,7 @@ export type ModalProps = {
 
   hasCheckbox?: boolean // Показывать чекбокс (CreatePayment)
   checkboxText?: string
-  onCheckboxChange?: (checked: boolean) => void
+  onCheckboxChange?: (checked: boolean | 'indeterminate') => void
 
   isActionDisabled?: boolean // Блокировка кнопки OK при неактивном чекбоксе
 

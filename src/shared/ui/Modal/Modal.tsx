@@ -1,7 +1,7 @@
 'use client'
 
 import * as Dialog from '@radix-ui/react-dialog'
-import React from 'react'
+import React, { useState } from 'react'
 import { CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import { CheckBox } from '../CheckBox/CheckBox'
 import { Button } from '../Button/Button'
@@ -24,7 +24,7 @@ export type ModalProps = {
 
   hasCheckbox?: boolean // Показывать чекбокс (CreatePayment)
   checkboxText?: string
-  onCheckboxChange?: (checked: boolean) => void
+  onCheckboxChange?: (checked: boolean | 'indeterminate') => void
 
   isActionDisabled?: boolean // Блокировка кнопки OK при неактивном чекбоксе
 
@@ -52,6 +52,9 @@ export const Modal = ({
   isCancelPrimary = false,
   style,
 }: ModalProps) => {
+  const [swap, setSwap] = useState(false)
+  const dynamicIsCancelPrimary = swap ? !isCancelPrimary : isCancelPrimary
+
   // Класс контейнера кнопок:
   // 1) confirmMode = две кнопки
   // 2) hasCheckbox = чекбокс + кнопка
@@ -72,8 +75,8 @@ export const Modal = ({
    *
    * Это позволяет гибко настраивать, какая кнопка важнее визуально.
    */
-  const cancelVariant = isCancelPrimary ? 'primary' : 'secondary'
-  const actionVariant = isCancelPrimary ? 'secondary' : 'primary'
+  const cancelVariant = isCancelPrimary || dynamicIsCancelPrimary ? 'primary' : 'secondary'
+  const actionVariant = isCancelPrimary || dynamicIsCancelPrimary ? 'secondary' : 'primary'
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -100,6 +103,8 @@ export const Modal = ({
               {/* variant определяется через cancelVariant */}
               <Dialog.Close asChild>
                 <Button
+                  onMouseEnter={() => setSwap(true)}
+                  onMouseLeave={() => setSwap(false)}
                   className={`${cancelVariant === 'primary' ? s.primary : s.secondary}`}
                   onClick={onCancel}
                   variant={cancelVariant}

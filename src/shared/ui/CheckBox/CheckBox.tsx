@@ -5,11 +5,13 @@ import * as React from 'react'
 import CheckmarkOutlineIcon from '../../icons/svgComponents/icons/CheckmarkOutlineIcon'
 import s from './CheckBox.module.scss'
 
+type CheckedState = boolean | 'indeterminate'
+
 type CheckBoxProps = {
-  checked: boolean
+  checked?: CheckedState
   disabled?: boolean
   name?: string
-  onCheckedChange?: (checked: boolean) => void
+  onCheckedChange?: (checked: CheckedState) => void
 }
 
 export const CheckBox = ({ disabled, checked, name, onCheckedChange }: CheckBoxProps) => {

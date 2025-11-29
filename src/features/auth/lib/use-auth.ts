@@ -1,10 +1,12 @@
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import { useLoginMutation, useLogoutMutation, useMeQuery } from '../api/auth-api'
 import { logout, setAccessToken, setUser } from '../model/auth-slice'
 
 export const useAuth = () => {
   const dispatch = useAppDispatch()
+  const route = useRouter()
   const auth = useAppSelector((state) => state.auth)
 
   const [loginMutation] = useLoginMutation()
@@ -36,10 +38,13 @@ export const useAuth = () => {
   const logoutUser = useCallback(async () => {
     try {
       await logoutMutation().unwrap()
+    } catch (e) {
+      console.error(e)
     } finally {
       dispatch(logout())
+      route.push('/login')
     }
-  }, [dispatch, logoutMutation])
+  }, [dispatch, logoutMutation, route])
 
   return {
     ...auth,

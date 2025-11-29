@@ -1,6 +1,6 @@
 'use client'
 
-import { useLogout } from '@/features/device/lib/useLogout'
+import { useAuth } from '@/features/auth/lib/use-auth'
 import { useAppSelector } from '@/shared/lib/hooks'
 import React, { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -48,7 +48,7 @@ const ROUTES = {
 
 const Sidebar = ({ role }: SidebarProps) => {
   const pathname = usePathname()
-  const { logout } = useLogout()
+  const { logout } = useAuth()
   const email = useAppSelector((state) => state.auth.user?.email)
   const [openModal, setOpenModal] = useState(false)
   const [disabledLink, setDisabledLink] = useState<string | null>(null)

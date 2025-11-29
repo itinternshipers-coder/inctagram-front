@@ -54,12 +54,6 @@ const preview: Preview = {
       // Применяем тему к body
       if (typeof document !== 'undefined') {
         document.documentElement.setAttribute('data-theme', theme)
-
-        if (!document.getElementById('portal-root')) {
-          const portalRoot = document.createElement('div')
-          portalRoot.id = 'portal-root'
-          document.body.appendChild(portalRoot)
-        }
       }
 
       return React.createElement('div', { style: { padding: '20px', minHeight: '100vh' } }, React.createElement(Story))

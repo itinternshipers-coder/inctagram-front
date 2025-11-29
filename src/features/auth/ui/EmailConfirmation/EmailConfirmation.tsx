@@ -2,16 +2,15 @@
 
 import { useResendConfirmMutation } from '@/features/auth/api/auth-api'
 import type { ErrorResponse } from '@/shared/api/types'
-import { VerifiedSuccessIcon } from '@/shared/icons/svgComponents'
+import Image from 'next/image'
 import { Alert } from '@/shared/ui/Alert/Alert'
-
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { Button } from '@/shared/ui/Button/Button'
 import { Modal } from '@/shared/ui/Modal/Modal'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import verificationExpired from 'public/VerificationExpired.svg'
-import verifiedSuccess from 'public/VerifiedSuccess.svg'
+
+import { useRouter } from 'next/navigation'
+
+import { useState } from 'react'
 
 import styles from './EmailConfirmation.module.scss'
 
@@ -25,6 +24,9 @@ export const EmailConfirmation = ({ isSuccess, email }: EmailConfirmationProps) 
   const [resendConfirm, { isLoading }] = useResendConfirmMutation()
   const [open, setOpen] = useState(false)
   const [error, setError] = useState('')
+
+  const verifiedSuccess = '/images/illustrations/VerifiedSuccess.svg'
+  const verifiedExpired = '/images/illustrations/VerifiedExpired.svg'
 
   const handleSignIn = () => {
     router.push('/signin')
@@ -82,12 +84,7 @@ export const EmailConfirmation = ({ isSuccess, email }: EmailConfirmationProps) 
           </Button>
         </div>
 
-        {/*<img*/}
-        {/*  className={styles.image}*/}
-        {/*  src={isSuccess ? verifiedSuccess : verificationExpired}*/}
-        {/*  alt={isSuccess ? 'Email verified successfully' : 'Email verification link expired'}*/}
-        {/*/>*/}
-        <VerifiedSuccessIcon />
+        <Image src={isSuccess ? verifiedSuccess : verifiedExpired} alt="Email verified" width={432} height={300} />
       </div>
     </div>
   )

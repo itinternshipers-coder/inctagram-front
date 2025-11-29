@@ -63,6 +63,15 @@ pnpm exec lint-staged || {
 }
 
 echo ""
+echo "🔎 Typecheck (tsc --noEmit) ..."
+# Typecheck для типизации
+pnpm exec tsc --noEmit || {
+  echo "❌ Ошибка типизации!"
+  exit 1
+}
+
+echo ""
+
 echo "✅ Все проверки пройдены! Пуш разрешён."
 exit 0
 

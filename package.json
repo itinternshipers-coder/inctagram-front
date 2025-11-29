@@ -20,7 +20,8 @@
     "lint:fix": "pnpm lint:js:fix && pnpm lint:css:fix",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "icons:build": "node scripts/split-sprite-and-generate.mjs"
+    "icons:build": "node scripts/split-sprite-and-generate.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

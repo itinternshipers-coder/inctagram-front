@@ -2,8 +2,8 @@
 
 @mixin sidebar-base($justify: space-around) {
   align-items: center;
-  background-color: var(--dark-900);
-  border-right: 1px solid var(--dark-300);
+  background-color: var(--background);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -29,7 +29,7 @@
 
     align-items: center;
     border-radius: 6px;
-    color: var(--light-100);
+    color: var(--foreground);
     display: inline-grid; // 👈 вместо display: grid
     grid-template-columns: 40px 1fr;
     padding: 8px 12px;

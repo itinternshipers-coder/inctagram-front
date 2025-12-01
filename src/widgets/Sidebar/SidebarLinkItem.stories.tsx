@@ -1,29 +1,28 @@
-import { useState } from 'react'
-import SidebarLinkItem from './SidebarLinkItem'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { useRouter } from 'next/router'
+import { useState } from 'react'
 import s from './Sidebar.module.scss'
+import SidebarLinkItem from './SidebarLinkItem'
 
 import {
-  PlusSquareIcon,
-  PlusSquareOutlineIcon,
-  PersonIcon,
-  PersonOutlineIcon,
-  MessageCircleIcon,
-  MessageCircleOutlineIcon,
-  SearchOutlineIcon,
-  TrendingUpOutlineIcon,
   BookmarkIcon,
   BookmarkOutlineIcon,
   HomeIcon,
   HomeOutlineIcon,
   LogOutOutlineIcon,
+  MessageCircleIcon,
+  MessageCircleOutlineIcon,
+  PersonIcon,
+  PersonOutlineIcon,
+  PlusSquareIcon,
+  PlusSquareOutlineIcon,
+  SearchOutlineIcon,
+  TrendingUpOutlineIcon,
 } from '@/shared/icons/svgComponents'
 
 const meta: Meta<typeof SidebarLinkItem> = {
   title: 'Widgets/SidebarLinkItem',
   component: SidebarLinkItem,
-  parameters: { layout: 'centered' },
+  parameters: { layout: 'fullscreen' },
 }
 export default meta
 type Story = StoryObj<typeof SidebarLinkItem>
@@ -39,7 +38,6 @@ const SidebarTemplateUser = ({
 }) => {
   const [currentActive, setCurrentActive] = useState<string | null>(activeHref || null)
   const [hovered, setHovered] = useState<string | null>(null)
-  const router = useRouter()
 
   const handleClick = (href: string) => {
     setCurrentActive(href)
@@ -148,7 +146,7 @@ const SidebarTemplateUser = ({
         </div>
       </div>
       <div className={s.logoutSection}>
-        <button type="button" className={`${s.sidebarItem} ${s.logoutButton}`} onClick={() => router.push('/login')}>
+        <button type="button" className={`${s.sidebarItem} ${s.logoutButton}`} onClick={() => {}}>
           <span className={s.iconWrapper}>
             <LogOutOutlineIcon />
           </span>

@@ -79,7 +79,7 @@ const meta: Meta<typeof SidebarMock> = {
   title: 'Widgets/Sidebar',
   component: SidebarMock,
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
   },
 }
 

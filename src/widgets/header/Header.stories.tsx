@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Header } from '@/widgets/header/Header'
+import { ThemeProvider } from '@/shared/providers/ThemeProvider'
 
 const meta: Meta<typeof Header> = {
   title: 'Widgets/Header',
@@ -8,6 +9,13 @@ const meta: Meta<typeof Header> = {
   parameters: {
     layout: 'fullscreen',
   },
+  decorators: [
+    (Story) => (
+      <ThemeProvider>
+        <Story />
+      </ThemeProvider>
+    ),
+  ],
 }
 
 export default meta

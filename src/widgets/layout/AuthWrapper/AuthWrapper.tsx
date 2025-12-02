@@ -16,7 +16,7 @@ export const AuthWrapper = ({ children }: Props) => {
   const isLoggedIn = !!accessToken
 
   return (
-    <div>
+    <>
       <Header isLoginIn={isLoggedIn} />
       <div className={s.contentWrapper}>
         {isLoggedIn && <Sidebar role="user" />}
@@ -24,6 +24,6 @@ export const AuthWrapper = ({ children }: Props) => {
           <div className={clsx(s.children, !isLoggedIn && s.childrenWithoutSidebar)}>{children}</div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

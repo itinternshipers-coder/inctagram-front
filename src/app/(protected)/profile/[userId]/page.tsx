@@ -1,13 +1,15 @@
 'use client'
 
+import { use } from 'react'
+
 type ProfilePageProps = {
-  params: { userId: string }
-  searchParams: { _postId?: string; _action?: string }
+  params: Promise<{ userId: string }>
+  searchParams: Promise<{ _postId?: string; _action?: string }>
 }
 
 export default function ProfilePage({ params, searchParams }: ProfilePageProps) {
-  const { userId } = params
-  const { _postId, _action } = searchParams
+  const { userId } = use(params)
+  const { _postId, _action } = use(searchParams)
 
   return (
     <div>

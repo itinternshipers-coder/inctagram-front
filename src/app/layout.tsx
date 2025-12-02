@@ -2,11 +2,10 @@
 
 import { StoreProvider } from '@/shared/providers/StoreProvider'
 import { ThemeProvider } from '@/shared/providers/ThemeProvider'
-import { Header } from '@/widgets/header/Header'
-import { Inter } from 'next/font/google'
-import './globals.scss'
-import React from 'react'
 import { AuthWrapper } from '@/widgets/layout/AuthWrapper/AuthWrapper'
+import { Inter } from 'next/font/google'
+import React from 'react'
+import './globals.scss'
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],

@@ -6,6 +6,7 @@ import s from './AuthWrapper.module.scss'
 import Sidebar from '@/widgets/Sidebar/Sidebar'
 import { Header } from '@/widgets/header/Header'
 import { useAuth } from '@/features/auth/lib/use-auth'
+import { useAuthInit } from '@/features/auth/lib/use-auth-init'
 
 type Props = {
   children: React.ReactNode
@@ -14,7 +15,7 @@ type Props = {
 export const AuthWrapper = ({ children }: Props) => {
   const { accessToken } = useAuth()
   const isLoggedIn = !!accessToken
-
+  useAuthInit()
   return (
     <>
       <Header isLoginIn={isLoggedIn} />

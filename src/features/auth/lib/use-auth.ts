@@ -43,7 +43,6 @@ export const useAuth = () => {
     try {
       await logoutMutation().unwrap()
     } catch (e) {
-      console.error(e)
     } finally {
       dispatch(logout())
       if (typeof window !== 'undefined') {

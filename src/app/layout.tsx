@@ -6,6 +6,7 @@ import { Header } from '@/widgets/header/Header'
 import { Inter } from 'next/font/google'
 import './globals.scss'
 import React from 'react'
+import { AuthWrapper } from '@/widgets/layout/AuthWrapper/AuthWrapper'
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -19,8 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <StoreProvider>
           <ThemeProvider>
-            <Header isLoginIn={true} />
-            <main>{children}</main>
+            <AuthWrapper>
+              <main>{children}</main>
+            </AuthWrapper>
           </ThemeProvider>
         </StoreProvider>
       </body>

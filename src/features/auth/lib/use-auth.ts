@@ -1,8 +1,10 @@
+// src/features/auth/lib/useAuth.ts
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
-import { useLoginMutation, useLogoutMutation, useMeQuery } from '../api/auth-api'
+import { useLoginMutation, useLogoutMutation } from '../api/auth-api'
 import { logout, setAccessToken, setUser } from '../model/auth-slice'
+import { authApi } from '../api/auth-api'
 
 export const useAuth = () => {
   const dispatch = useAppDispatch()
@@ -12,17 +14,17 @@ export const useAuth = () => {
   const [loginMutation] = useLoginMutation()
   const [logoutMutation] = useLogoutMutation()
 
-  const { data: userData, refetch: refetchMe } = useMeQuery(undefined, {
-    skip: true,
-  })
-
   const login = useCallback(
     async (credentials: { email: string; password: string }) => {
       try {
         const result = await loginMutation(credentials).unwrap()
-        dispatch(setAccessToken(result.accessToken))
 
-        const userResult = await refetchMe().unwrap()
+        dispatch(setAccessToken(result.accessToken))
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('accessToken', result.accessToken)
+        }
+
+        const userResult = await dispatch(authApi.endpoints.me.initiate(undefined, { forceRefetch: true })).unwrap()
 
         if (userResult) {
           dispatch(setUser(userResult))
@@ -30,11 +32,13 @@ export const useAuth = () => {
 
         return result
       } catch (error) {
+        dispatch(logout())
         throw error
       }
     },
-    [dispatch, loginMutation, refetchMe] // ← добавил refetchMe в зависимости
+    [dispatch, loginMutation]
   )
+
   const logoutUser = useCallback(async () => {
     try {
       await logoutMutation().unwrap()
@@ -42,6 +46,9 @@ export const useAuth = () => {
       console.error(e)
     } finally {
       dispatch(logout())
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('accessToken')
+      }
       route.push('/login')
     }
   }, [dispatch, logoutMutation, route])
@@ -50,7 +57,5 @@ export const useAuth = () => {
     ...auth,
     login,
     logout: logoutUser,
-    refetchMe,
-    userData,
   }
 }

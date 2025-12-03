@@ -5,7 +5,7 @@ import { setAccessToken, logout } from '@/features/auth/model/auth-slice'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_BASE_API_URL,
-  // credentials: 'include',
+  credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState
     const token = state.auth.accessToken

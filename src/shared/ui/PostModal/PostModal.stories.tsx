@@ -43,6 +43,7 @@ const mockComments: CommentType[] = [
       },
     ],
   },
+
   {
     id: 'comment-uuid-2',
     user: { id: 'c2', username: 'Commenter2', avatarUrl: 'https://via.placeholder.com/30' },

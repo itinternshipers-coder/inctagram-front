@@ -222,3 +222,5 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
 }
 
 export default PostModal
+
+///  variant?: 'primary' | 'secondary' | 'tertiary' | 'link'

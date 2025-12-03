@@ -1,32 +1,175 @@
+// .commentItem {
+//   display: flex;
+//   gap: 10px;
+//   margin-bottom: 12px;
+// }
+
+// .userAvatar {
+//   width: 32px;
+//   height: 32px;
+//   border-radius: 50%;
+// }
+
+// .commentContent {
+//   display: flex;
+//   flex-direction: column;
+//   flex: 1;
+// }
+
+// .topRow {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   min-width: 385px;
+// }
+
+// .commentText {
+//   margin: 0;
+//   // padding: 0 10px 0 0;
+//   font-size: 14px;
+//   // width: 385px;
+// }
+
+// .likeButton {
+//   background: none;
+//   border: none;
+//   padding: 0;
+//   cursor: pointer;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 24px; // фиксированный размер кнопки
+//   height: 24px;
+// }
+
+// .likeButton svg {
+//   width: 20px !important; // фиксированный размер иконки
+//   height: 20px !important;
+//   fill: currentColor;
+//   flex-shrink: 0; // не сжимать
+// }
+// .commentMeta {
+//   display: flex;
+//   gap: 10px;
+//   font-size: 12px;
+//   color: #8e8e8e;
+//   margin-top: 4px;
+//   align-items: center;
+// }
+
+// .replies {
+//   margin-top: 8px;            // расстояние сверху между родительским комментарием и ответами
+//   display: flex;
+//   flex-direction: column;     // все replies в одну колонку
+//   gap: 8px;                    // расстояние между соседними ответами
+//   margin-left: 0;             // убираем сдвиг вправо
+// }
+// .username {
+//   font-weight: 600;
+// }
+
+// .time {
+//   font-size: 12px;
+//   color: #8e8e8e;
+// }
+
+// .likes {
+//   font-size: 12px;
+//   color: #8e8e8e;
+// }
+
+// .answerButton {
+//   background: none;
+//   border: none;
+//   color: #3897f0;
+//   font-size: 12px;
+//   cursor: pointer;
+//   padding: 0;
+// }
 .commentItem {
   display: flex;
   gap: 10px;
-  margin-bottom: 15px;
-  color: white;
+  margin-bottom: 12px;
+}
+
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
 }
 
 .commentContent {
-  font-size: 14px;
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-.username {
-  font-weight: bold;
-  color: white;
-  margin-right: 5px;
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.commentText {
+  margin: 0;
+  font-size: 14px;
+}
+
+.likeButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.likeButton svg {
+  width: 20px !important;
+  height: 20px !important;
+  fill: currentColor;
+  flex-shrink: 0;
 }
 
 .commentMeta {
-  display: block;
-  font-size: 0.8em;
-  color: #888;
-  margin-top: 5px;
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: #8e8e8e;
+  margin-top: 4px;
+  align-items: center;
 }
 
-/* Avatar is needed here because the Comment component uses s.userAvatar */
-.userAvatar {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  object-fit: cover;
+.repliesWrapper {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 24px; // общий отступ для всех ответов
+}
+
+.username {
+  font-weight: 600;
+}
+
+.time {
+  font-size: 12px;
+  color: #8e8e8e;
+}
+
+.likes {
+  font-size: 12px;
+  color: #8e8e8e;
+}
+
+.answerButton {
+  background: none;
+  border: none;
+  color: #3897f0;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
 }

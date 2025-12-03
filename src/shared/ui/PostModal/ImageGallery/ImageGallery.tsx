@@ -1,7 +1,8 @@
 import { useState } from 'react'
-// import { Photo } from "./types";
 import { Photo } from '../types'
 import s from './ImageGalery.module.scss'
+import { Button } from '../../Button/Button'
+import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
 
 export const ImageGallery = ({ photos }: { photos: Photo[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -21,18 +22,17 @@ export const ImageGallery = ({ photos }: { photos: Photo[] }) => {
   }
 
   return (
-    // Используем s.imageGalleryContainer
     <div className={s.imageGalleryContainer}>
       <img src={currentPhoto.url} alt="Post content" className={s.mainImage} />
 
       {photos.length > 1 && (
         <>
-          <button onClick={goToPrev} className={`${s.navButton} ${s.prevButton}`}>
-            {'<'}
-          </button>
-          <button onClick={goToNext} className={`${s.navButton} ${s.nextButton}`}>
-            {'>'}
-          </button>
+          <Button onClick={goToPrev} className={`${s.navButton} ${s.prevButton}`} variant="link">
+            <ArrowIosBackOutlineIcon width={48} height={48} />
+          </Button>
+          <Button onClick={goToNext} className={`${s.navButton} ${s.nextButton}`} variant="link">
+            <ArrowIosForwardOutlineIcon width={48} height={48} />
+          </Button>
         </>
       )}
 
@@ -40,7 +40,6 @@ export const ImageGallery = ({ photos }: { photos: Photo[] }) => {
         {photos.map((_, index) => (
           <span
             key={index}
-            // Используем логику для активного класса
             className={`${s.dot} ${index === currentIndex ? s.active : ''}`}
             onClick={() => setCurrentIndex(index)}
           ></span>

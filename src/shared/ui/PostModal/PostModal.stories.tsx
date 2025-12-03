@@ -33,14 +33,37 @@ const mockComments: CommentType[] = [
   {
     id: 'comment-uuid-1',
     user: { id: 'c1', username: 'Commenter1', avatarUrl: 'https://via.placeholder.com/30' },
-    text: 'Это комментарий! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    text: 'Это комментарий с ответами!',
     time: '2 hours ago',
+    likesCount: 21,
+
+    replies: [
+      {
+        id: 'reply-1',
+        user: { id: 'r1', username: 'ReplyGuy', avatarUrl: 'https://via.placeholder.com/30' },
+        text: 'Это ответ на комментарий!',
+        time: '1 hour ago',
+        likesCount: 5,
+
+        replies: [
+          {
+            id: 'reply-1-1',
+            user: { id: 'r2', username: 'NestedUser', avatarUrl: 'https://via.placeholder.com/30' },
+            text: 'Ответ на ответ — вложенный!',
+            time: '30 minutes ago',
+            likesCount: 2,
+          },
+        ],
+      },
+    ],
   },
+
   {
     id: 'comment-uuid-2',
     user: { id: 'c2', username: 'Commenter2', avatarUrl: 'https://via.placeholder.com/30' },
-    text: 'Очень красиво! Спасибо за пост.',
+    text: 'Без ответов.',
     time: '1 hour ago',
+    likesCount: 20,
   },
 ]
 

@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 // 1. Тип для объекта фотографии
 export type Photo = {
   id: string
@@ -20,7 +22,9 @@ export type CommentType = {
   id: string
   user: Author // Кто оставил комментарий
   text: string
+  likesCount?: number
   time: string // Например, "2 hours ago"
+  replies?: CommentType[] // <-- вложенные ответы
 }
 
 // 4. Основной тип данных поста для компонента PostModal
@@ -34,7 +38,6 @@ export type PostDataType = {
   deletedAt: string | null
   photos: Photo[]
 
-  // Обогащенные данные для UI (необходимы для PostModal)
   author: Author // Полные данные автора
   likesCount: string // Например, '2 243'
   comments: CommentType[] // Список комментариев

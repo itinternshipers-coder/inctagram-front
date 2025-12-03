@@ -5,19 +5,73 @@ import { PostModalProps } from './types'
 import {
   BookmarkOutlineIcon,
   CloseOutlineIcon,
+  Edit2OutlineIcon,
   HeartOutlineIcon,
   MoreHorizontalOutlineIcon,
   PaperPlaneOutlineIcon,
+  TrashOutlineIcon,
 } from '@/shared/icons/svgComponents'
 import { Button } from '../Button/Button'
-import s from './PostModal.module.scss'
 import { ImageGallery } from './ImageGallery/ImageGallery'
 import { Comment } from './Comment/Comment'
+import { useState } from 'react'
+import s from './PostModal.module.scss'
 
 const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
   const displayDate = new Date(postData.createdAt).toLocaleDateString()
   const comments = postData.comments || []
   const photos = postData.photos || []
+  const [value, setValue] = useState('')
+
+  // const [toggleLike] = useToggleLikeMutation()
+  // const [addBookmark] = useAddBookmarkMutation()
+  // const [sharePost] = useSharePostMutation()
+  // const [editPost] = useEditPostMutation()
+  // const [deletePost] = useDeletePostMutation()
+  // const [addComment] = useAddCommentMutation()
+
+  // const [toggleLike] = useToggleLikeMutation()
+  // const [localLiked, setLocalLiked] = useState(postData.isLikedByMe)
+  const [localLiked, setLocalLiked] = useState(false)
+  // const [likesCount, setLikesCount] = useState(postData.likesCount)
+
+  // const handleToggleLike = async () => {
+  //   setLocalLiked((prev) => !prev)
+  //   setLikesCount((prev) => (localLiked ? prev - 1 : prev + 1))
+
+  //   try {
+  //     const res = await toggleLike({ postId: postData.id }).unwrap()
+  //     setLocalLiked(res.liked)
+  //     setLikesCount(res.likesCount)
+  //   } catch (err) {
+  //     setLocalLiked(postData.isLikedByMe)
+  //     setLikesCount(postData.likesCount)
+  //     console.error(err)
+  //   }
+  // }
+
+  const handlePublishPost = () => {
+    //useMutation
+  }
+  const handleAddBookmark = () => {
+    //useMutation
+  }
+  const handleShare = () => {
+    //useMutation
+  }
+  const handleToggleLike = () => {
+    setLocalLiked((prev) => !prev)
+    //useMutation
+  }
+  const handleEditPost = () => {
+    //useMutation
+  }
+  const handleDeletePost = () => {
+    //useMutation
+  }
+  const handleOnChange = (username: string) => {
+    setValue(`@${username} `)
+  }
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -45,18 +99,15 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
                   </DropdownMenu.Trigger>
 
                   <DropdownMenu.Portal>
-                    <DropdownMenu.Content className={s.dropdownContent} sideOffset={5}>
-                      <DropdownMenu.Item className={s.dropdownItem} onSelect={() => console.log('Edit Post')}>
+                    <DropdownMenu.Content className={s.dropdownContent} sideOffset={0} alignOffset={0} align="end">
+                      <DropdownMenu.Item className={s.dropdownItem} onSelect={handleEditPost}>
+                        <Edit2OutlineIcon />
                         Edit Post
                       </DropdownMenu.Item>
-                      <DropdownMenu.Separator className={s.dropdownSeparator} />
-                      <DropdownMenu.Item
-                        className={`${s.dropdownItem} ${s.delete}`}
-                        onSelect={() => console.log('Delete Post')}
-                      >
+                      <DropdownMenu.Item className={s.dropdownItem} onSelect={handleDeletePost}>
+                        <TrashOutlineIcon />
                         Delete Post
                       </DropdownMenu.Item>
-                      <DropdownMenu.Arrow className={s.dropdownArrow} />
                     </DropdownMenu.Content>
                   </DropdownMenu.Portal>
                 </DropdownMenu.Root>
@@ -68,7 +119,15 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
                 )}
 
                 {comments.map((c) => (
-                  <Comment key={c.id} user={c.user} text={c.text} time={c.time} />
+                  <Comment
+                    key={c.id}
+                    user={c.user}
+                    text={c.text}
+                    time={c.time}
+                    likesCount={c.likesCount}
+                    replies={c.replies}
+                    handleOnChange={handleOnChange}
+                  />
                 ))}
               </div>
 
@@ -76,13 +135,19 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
                 <div className={s.interactionRow}>
                   <div className={s.likesInfo}>
                     <Toggle.Root className={s.likeButton} aria-label="Like Post">
-                      <HeartOutlineIcon />
+                      <Button onClick={handleToggleLike} variant="link" className={s.iconButton}>
+                        {localLiked ? <HeartOutlineIcon color="red" /> : <HeartOutlineIcon />}
+                      </Button>
                     </Toggle.Root>
-                    <PaperPlaneOutlineIcon />
+
+                    <Button onClick={handleShare} variant="link" className={s.iconButton}>
+                      <PaperPlaneOutlineIcon />
+                    </Button>
                   </div>
-                  <div className={s.iconButton}>
+
+                  <Button className={s.iconButton} onClick={handleAddBookmark} variant="link">
                     <BookmarkOutlineIcon />
-                  </div>
+                  </Button>
                 </div>
 
                 <div className={s.likesInfo}>
@@ -93,8 +158,10 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
                 <div className={s.postDate}>{displayDate}</div>
 
                 <div className={s.addCommentSection}>
-                  <input placeholder="Add a Comment..." />
-                  <button className={s.publishCommentButton}>Publish</button>
+                  <input placeholder="Add a Comment..." value={value} onChange={(e) => setValue(e.target.value)} />
+                  <Button className={s.publishCommentButton} onClick={handlePublishPost}>
+                    Publish
+                  </Button>
                 </div>
               </div>
             </div>
@@ -112,3 +179,5 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
 }
 
 export default PostModal
+
+///  variant?: 'primary' | 'secondary' | 'tertiary' | 'link'

@@ -18,7 +18,15 @@ export const passwordApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    // Новый endpoint: проверка recovery кода
+    verifyRecoveryCode: builder.query<{ message: string }, { code: string }>({
+      query: ({ code }) => ({
+        url: API_ENDPOINTS.AUTH.PASSWORD_RECOVERY_VERIFY,
+        params: { code },
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
-export const { useForgotPasswordMutation, useCreateNewPasswordMutation } = passwordApi
+export const { useForgotPasswordMutation, useCreateNewPasswordMutation, useVerifyRecoveryCodeQuery } = passwordApi

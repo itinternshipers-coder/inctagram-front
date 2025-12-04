@@ -1,22 +1,12 @@
-// import { redirect } from 'next/navigation'
-
-import { Typography } from '@/shared/ui/Typography/Typography'
+import { getMainPageData } from '@/features/userStats/helpers/getMainPageData'
+import { RegisteredUsers } from '@/features/userStats/ui/RegisteredUsers/RegisteredUsers'
 
 export default async function RootPage() {
+  const { usersCount, recentPosts } = await getMainPageData()
+
   return (
     <div>
-      <Typography as={'h1'} variant={'large'}>
-        Root page
-      </Typography>
+      <RegisteredUsers count={usersCount} />
     </div>
   )
-  // const session = false //
-  //
-  // if (session) {
-  //   // Авторизован - редирект на защищённую главную
-  //   redirect('/profile')
-  // } else {
-  //   // Не авторизован - редирект на публичную страницу (логин)
-  //   redirect('/login')
-  // }
 }

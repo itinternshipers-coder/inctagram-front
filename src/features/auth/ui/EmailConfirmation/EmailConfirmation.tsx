@@ -1,6 +1,7 @@
 'use client'
 
 import { useResendConfirmMutation } from '@/features/auth/api/auth-api'
+import { normalizeError } from '@/shared/api/error-utils'
 import type { ErrorResponse } from '@/shared/api/types'
 import Image from 'next/image'
 import { Alert } from '@/shared/ui/Alert/Alert'
@@ -17,45 +18,43 @@ import styles from './EmailConfirmation.module.scss'
 type EmailConfirmationProps = {
   isSuccess: boolean
   email: string | null
+  confirmError?: ErrorResponse | null
 }
 
-export const EmailConfirmation = ({ isSuccess, email }: EmailConfirmationProps) => {
+export const EmailConfirmation = ({ isSuccess, email, confirmError }: EmailConfirmationProps) => {
   const router = useRouter()
   const [resendConfirm, { isLoading }] = useResendConfirmMutation()
-  const [open, setOpen] = useState(false)
-  const [error, setError] = useState('')
+  const [openModal, setOpenModal] = useState(false)
+  const [resendError, setResendError] = useState<ErrorResponse | null>(null)
 
   const verifiedSuccess = '/images/illustrations/VerifiedSuccess.svg'
   const verifiedExpired = '/images/illustrations/VerifiedExpired.svg'
 
   const handleSignIn = () => {
-    router.push('/signin')
+    router.push('/login')
   }
 
   const handleResend = async () => {
     if (email) {
       try {
         await resendConfirm({ email }).unwrap()
-        setOpen(true)
-        setError('')
+        setOpenModal(true)
+        setResendError(null)
       } catch (error) {
-        const apiError = error as ErrorResponse
-        if (apiError?.errorsMessages && apiError.errorsMessages.length > 0) {
-          setError(apiError.errorsMessages[0].message)
-        } else {
-          setError('An error occurred while resending the email.')
-        }
+        setResendError(normalizeError(error))
       }
     }
   }
 
+  const errorMessage = confirmError?.errorsMessages?.[0]?.message || resendError?.errorsMessages?.[0]?.message
+
   return (
     <div className={styles.container}>
-      {error && <Alert status="error" text={error} position={'bottom-left'} />}
+      {errorMessage && <Alert status="error" text={errorMessage} position={'bottom-left'} />}
 
       <Modal
-        open={open}
-        onOpenChange={setOpen}
+        open={openModal}
+        onOpenChange={setOpenModal}
         title="Email sent"
         message={`We have sent a link to confirm your email to ${email}`}
         buttonText="OK"

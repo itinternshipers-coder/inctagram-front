@@ -1,6 +1,11 @@
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+
 export async function getMainPageData() {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL
+  const endpoint = API_ENDPOINTS.POSTS.PUBLIC_STATS
+
   try {
-    const res = await fetch('https://gateway.traineegramm.ru/api/v1/posts/public/stats')
+    const res = await fetch(`${baseUrl}${endpoint}`)
 
     if (!res.ok) {
       const txt = await res.text()

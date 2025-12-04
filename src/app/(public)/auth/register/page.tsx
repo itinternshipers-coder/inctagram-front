@@ -1,5 +1,4 @@
 import { SignUpForm } from '@/features/auth/ui/SignUpForm/SignUpForm'
-import Link from 'next/link'
 
 export default function RegisterPage() {
   return (

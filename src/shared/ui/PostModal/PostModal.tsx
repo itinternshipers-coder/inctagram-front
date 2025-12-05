@@ -21,6 +21,7 @@ import {
   selectIsEditModalOpen,
 } from '@/entities/post/model/post-slice'
 import s from './PostModal.module.scss'
+import { useDeletePostMutation } from '@/entities/post/model'
 
 export type PhotoType = {
   photoId: string
@@ -222,5 +223,3 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
 }
 
 export default PostModal
-
-///  variant?: 'primary' | 'secondary' | 'tertiary' | 'link'

@@ -1,6 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Toggle from '@radix-ui/react-toggle'
+import { useState } from 'react'
+
 import { PostModalProps } from './types'
 import {
   BookmarkOutlineIcon,
@@ -14,61 +16,51 @@ import {
 import { Button } from '../Button/Button'
 import { ImageGallery } from './ImageGallery/ImageGallery'
 import { Comment } from './Comment/Comment'
-import { useState } from 'react'
 import s from './PostModal.module.scss'
+import { useDeletePostMutation } from '@/entities/post/model'
 
 const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
   const displayDate = new Date(postData.createdAt).toLocaleDateString()
   const comments = postData.comments || []
   const photos = postData.photos || []
   const [value, setValue] = useState('')
-
-  // const [toggleLike] = useToggleLikeMutation()
-  // const [addBookmark] = useAddBookmarkMutation()
-  // const [sharePost] = useSharePostMutation()
-  // const [editPost] = useEditPostMutation()
-  // const [deletePost] = useDeletePostMutation()
-  // const [addComment] = useAddCommentMutation()
-
-  // const [toggleLike] = useToggleLikeMutation()
-  // const [localLiked, setLocalLiked] = useState(postData.isLikedByMe)
   const [localLiked, setLocalLiked] = useState(false)
-  // const [likesCount, setLikesCount] = useState(postData.likesCount)
 
-  // const handleToggleLike = async () => {
-  //   setLocalLiked((prev) => !prev)
-  //   setLikesCount((prev) => (localLiked ? prev - 1 : prev + 1))
+  const [deletePost] = useDeletePostMutation()
 
-  //   try {
-  //     const res = await toggleLike({ postId: postData.id }).unwrap()
-  //     setLocalLiked(res.liked)
-  //     setLikesCount(res.likesCount)
-  //   } catch (err) {
-  //     setLocalLiked(postData.isLikedByMe)
-  //     setLikesCount(postData.likesCount)
-  //     console.error(err)
-  //   }
-  // }
+  // Временный объект автора, если у тебя нет отдельного author в API
+  const author = {
+    id: postData.authorId,
+    username: postData.userName,
+    avatarUrl: '',
+  }
 
-  const handlePublishPost = () => {
-    //useMutation
-  }
-  const handleAddBookmark = () => {
-    //useMutation
-  }
-  const handleShare = () => {
-    //useMutation
-  }
   const handleToggleLike = () => {
     setLocalLiked((prev) => !prev)
-    //useMutation
+    // TODO: подключить мутацию toggleLike
   }
+
+  const handleAddBookmark = () => {
+    // TODO: подключить мутацию addBookmark
+  }
+
+  const handleShare = () => {
+    // TODO: подключить мутацию sharePost
+  }
+
   const handleEditPost = () => {
-    //useMutation
+    // TODO: подключить мутацию editPost
   }
+
   const handleDeletePost = () => {
-    //useMutation
+    deletePost({ id: postData.id })
   }
+
+  const handlePublishPost = () => {
+    // TODO: подключить мутацию addComment
+    setValue('')
+  }
+
   const handleOnChange = (username: string) => {
     setValue(`@${username} `)
   }
@@ -87,8 +79,8 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
             <div className={s.modalRight}>
               <div className={s.postHeader}>
                 <div className={s.authorInfo}>
-                  <img src={postData.author.avatarUrl} alt={postData.author.username} className={s.authorAvatar} />
-                  <strong>{postData.author.username}</strong>
+                  {author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />}
+                  <strong>{author.username}</strong>
                 </div>
 
                 <DropdownMenu.Root>
@@ -114,9 +106,7 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
               </div>
 
               <div className={s.commentsWrapper}>
-                {postData.description && (
-                  <Comment user={postData.author} text={postData.description} time={displayDate} />
-                )}
+                {postData.description && <Comment user={author} text={postData.description} time={displayDate} />}
 
                 {comments.map((c) => (
                   <Comment
@@ -151,7 +141,7 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
                 </div>
 
                 <div className={s.likesInfo}>
-                  <img src={postData.author.avatarUrl} alt={postData.author.username} className={s.userThumbnail} />
+                  {author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.userThumbnail} />}
                   <p className={s.likesCount}>{postData.likesCount} Like</p>
                 </div>
 
@@ -179,5 +169,3 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
 }
 
 export default PostModal
-
-///  variant?: 'primary' | 'secondary' | 'tertiary' | 'link'

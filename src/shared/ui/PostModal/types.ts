@@ -1,49 +1,40 @@
-import { ReactNode } from 'react'
-
-// 1. Тип для объекта фотографии
 export type Photo = {
   id: string
   photoId: string
   s3Key: string
-  url: string // URL, который будет использоваться для отображения в галерее
+  url: string
   order: number
-  createdAt: string // ISO 8601 строка даты
+  createdAt: string
 }
 
-// 2. Тип для автора поста (предполагаемые данные, необходимые для UI)
 export type Author = {
-  id: string // Взято из authorId в PostDataType, но здесь полные данные
-  username: string // "UserName"
-  avatarUrl: string // URL аватара
+  id: string
+  username: string
+  avatarUrl: string
 }
 
-// 3. Тип для комментариев (предполагаемые данные, необходимые для UI)
 export type CommentType = {
   id: string
-  user: Author // Кто оставил комментарий
+  user: Author
   text: string
   likesCount?: number
-  time: string // Например, "2 hours ago"
-  replies?: CommentType[] // <-- вложенные ответы
+  time: string
+  replies?: CommentType[]
 }
 
-// 4. Основной тип данных поста для компонента PostModal
 export type PostDataType = {
-  // Данные из API
   id: string
   authorId: string
+  userName: string
   description: string
   createdAt: string
   updatedAt: string
-  deletedAt: string | null
+  deletedAt?: string | null
+  likesCount: number
   photos: Photo[]
-
-  author: Author // Полные данные автора
-  likesCount: string // Например, '2 243'
-  comments: CommentType[] // Список комментариев
+  comments: CommentType[]
 }
 
-// 5. Тип для Props компонента PostModal
 export type PostModalProps = {
   postData: PostDataType
   open: boolean

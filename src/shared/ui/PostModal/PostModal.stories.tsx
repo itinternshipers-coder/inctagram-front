@@ -2,8 +2,7 @@ import { Meta, StoryFn } from '@storybook/nextjs-vite'
 import { Author, CommentType, Photo, PostDataType, PostModalProps } from './types'
 import PostModal from './PostModal'
 import React, { useState } from 'react'
-// import s from './PostModal.module.scss'
-// --- Моковые Данные (Соответствуют PostDataType) ---
+
 const mockAuthor: Author = {
   id: 'user-uuid-1',
   username: 'UserName',
@@ -15,7 +14,7 @@ const mockPhotos: Photo[] = [
     id: 'photo-uuid-1',
     photoId: 'photo-storage-id-1',
     s3Key: 'key/1.jpg',
-    url: 'https://images.unsplash.com/photo-1549419163-9524be0e704e?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // Реалистичное фото
+    url: 'https://images.unsplash.com/photo-1549419163-9524be0e704e?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     order: 0,
     createdAt: '2025-11-09T10:00:00.000Z',
   },
@@ -23,7 +22,7 @@ const mockPhotos: Photo[] = [
     id: 'photo-uuid-2',
     photoId: 'photo-storage-id-2',
     s3Key: 'key/2.jpg',
-    url: 'https://images.unsplash.com/photo-1507525428034-b723cfab7388?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', // Второе фото
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cfab7388?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     order: 1,
     createdAt: '2025-11-09T10:01:00.000Z',
   },
@@ -36,7 +35,6 @@ const mockComments: CommentType[] = [
     text: 'Это комментарий с ответами!',
     time: '2 hours ago',
     likesCount: 21,
-
     replies: [
       {
         id: 'reply-1',
@@ -44,7 +42,6 @@ const mockComments: CommentType[] = [
         text: 'Это ответ на комментарий!',
         time: '1 hour ago',
         likesCount: 5,
-
         replies: [
           {
             id: 'reply-1-1',
@@ -57,7 +54,6 @@ const mockComments: CommentType[] = [
       },
     ],
   },
-
   {
     id: 'comment-uuid-2',
     user: { id: 'c2', username: 'Commenter2', avatarUrl: 'https://via.placeholder.com/30' },
@@ -70,17 +66,16 @@ const mockComments: CommentType[] = [
 const mockPostData: PostDataType = {
   id: 'post-uuid-123',
   authorId: mockAuthor.id,
+  userName: mockAuthor.username,
   description:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Это демонстрационное описание, которое будет видно как первый "комментарий".',
   createdAt: '2025-07-03T10:00:00.000Z',
   updatedAt: '2025-07-03T10:05:00.000Z',
   deletedAt: null,
   photos: mockPhotos,
-  author: mockAuthor,
-  likesCount: '2 243',
+  likesCount: 2243,
   comments: mockComments,
 }
-// ---------------------------------------------
 
 const meta: Meta<PostModalProps> = {
   title: 'Components/PostModal',
@@ -104,7 +99,6 @@ const Template: StoryFn<PostModalProps> = (args) => {
 
   return (
     <div style={{ height: '500px' }}>
-      {/* Кнопка для открытия модального окна в Storybook */}
       <button
         onClick={() => setIsOpen(true)}
         style={{ padding: '10px', backgroundColor: '#333', color: 'white', border: 'none' }}
@@ -116,8 +110,6 @@ const Template: StoryFn<PostModalProps> = (args) => {
   )
 }
 
-// --- Варианты Историй ---
-
 export const PostWithComments = Template.bind({})
 PostWithComments.args = {
   postData: mockPostData,
@@ -128,7 +120,7 @@ export const PostWithoutComments = Template.bind({})
 PostWithoutComments.args = {
   postData: {
     ...mockPostData,
-    comments: [], // Пустой массив комментариев
+    comments: [],
   } as PostDataType,
 }
 PostWithoutComments.storyName = '02. Post without Comments'
@@ -138,6 +130,7 @@ LoadingEmptyState.args = {
   postData: {
     id: 'loading-id',
     authorId: '',
+    userName: 'Loading...',
     description: '',
     createdAt: '',
     updatedAt: '',
@@ -152,8 +145,7 @@ LoadingEmptyState.args = {
         createdAt: '',
       },
     ],
-    author: { id: '', username: 'Loading...', avatarUrl: 'https://via.placeholder.com/40' },
-    likesCount: '...',
+    likesCount: 0,
     comments: [],
   } as PostDataType,
 }

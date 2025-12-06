@@ -145,7 +145,7 @@ export const ForgotPasswordForm = () => {
             <Button variant="primary" fullWidth={true} type={'submit'} disabled={isButtonDisabled}>
               {isSubmitting ? 'Sending...' : buttonText}
             </Button>
-            <Button href={'/login'} as={Link} variant="link">
+            <Button href={'/auth/login'} as={Link} variant="link">
               Back to Sign In
             </Button>
           </div>

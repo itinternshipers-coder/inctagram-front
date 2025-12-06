@@ -21,19 +21,6 @@ type Props = {
   confirmError?: ErrorResponse | null
 }
 
-const IMAGE_CONFIG = {
-  success: {
-    src: '/images/illustrations/VerifiedSuccess.svg',
-    width: 432,
-    height: 300,
-  },
-  expired: {
-    src: '/images/illustrations/VerifiedExpired.svg',
-    width: 473,
-    height: 352,
-  },
-} as const
-
 export const EmailConfirmation = ({ isSuccess, email, confirmError }: Props) => {
   const router = useRouter()
   const [resendConfirm, { isLoading }] = useResendConfirmMutation()

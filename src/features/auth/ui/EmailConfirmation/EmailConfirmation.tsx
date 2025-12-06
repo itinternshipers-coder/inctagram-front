@@ -15,23 +15,37 @@ import { useState } from 'react'
 
 import styles from './EmailConfirmation.module.scss'
 
-type EmailConfirmationProps = {
+type Props = {
   isSuccess: boolean
   email: string | null
   confirmError?: ErrorResponse | null
 }
 
-export const EmailConfirmation = ({ isSuccess, email, confirmError }: EmailConfirmationProps) => {
+const IMAGE_CONFIG = {
+  success: {
+    src: '/images/illustrations/VerifiedSuccess.svg',
+    width: 432,
+    height: 300,
+  },
+  expired: {
+    src: '/images/illustrations/VerifiedExpired.svg',
+    width: 473,
+    height: 352,
+  },
+} as const
+
+export const EmailConfirmation = ({ isSuccess, email, confirmError }: Props) => {
   const router = useRouter()
   const [resendConfirm, { isLoading }] = useResendConfirmMutation()
   const [openModal, setOpenModal] = useState(false)
   const [resendError, setResendError] = useState<ErrorResponse | null>(null)
 
-  const verifiedSuccess = '/images/illustrations/VerifiedSuccess.svg'
-  const verifiedExpired = '/images/illustrations/VerifiedExpired.svg'
+  const imageSrc = isSuccess ? '/images/illustrations/VerifiedSuccess.svg' : '/images/illustrations/VerifiedExpired.svg'
+  const imageWidth = isSuccess ? 432 : 473
+  const imageHeight = isSuccess ? 300 : 352
 
   const handleSignIn = () => {
-    router.push('/login')
+    router.push('/auth/login')
   }
 
   const handleResend = async () => {
@@ -83,7 +97,7 @@ export const EmailConfirmation = ({ isSuccess, email, confirmError }: EmailConfi
           </Button>
         </div>
 
-        <Image src={isSuccess ? verifiedSuccess : verifiedExpired} alt="Email verified" width={432} height={300} />
+        <Image src={imageSrc} alt="Email verified" width={imageWidth} height={imageHeight} />
       </div>
     </div>
   )

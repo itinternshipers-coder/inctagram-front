@@ -80,12 +80,6 @@ src/
 │   ├── profile-tabs/ProfileTabs.tsx
 │   └── feed/FeedGrid.tsx
 │
-├── pages/
-│   ├── feed/ui.tsx
-│   ├── user-profile/ui.tsx
-│   ├── post-modal/ui.tsx
-│   └── settings/ui.tsx
-│
 ├── shared/
 │   ├── ui/
 │   │   ├── Button.tsx

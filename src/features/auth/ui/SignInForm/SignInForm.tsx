@@ -112,7 +112,7 @@ export default function SignInForm() {
 
         <div className={s.forgotPassword}>
           <Typography variant="regular_text_14">
-            <a href="/forgot-password">Forgot Password</a>
+            <Link href="/auth/forgot-password">Forgot Password</Link>
           </Typography>
         </div>
 
@@ -125,7 +125,7 @@ export default function SignInForm() {
         <div className={s.signupLink}>
           <Typography title={`Don't have an account?`}></Typography>
           <Typography variant="regular_text_16">
-            <a href="/register">Sign Up</a>
+            <Link href="/auth/register">Sign Up</Link>
           </Typography>
         </div>
       </form>

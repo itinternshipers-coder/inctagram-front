@@ -7,7 +7,7 @@ import { Card } from '@/shared/ui/Card/Card'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { Button } from '@/shared/ui/Button/Button'
 import { Input } from '@/shared/ui/Input/Input'
-import { Alerts } from '@/shared/ui/Alerts/Alerts'
+import { Alert } from '@/shared/ui/Alert/Alert'
 import s from './SignInForm.module.scss'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -112,7 +112,7 @@ export default function SignInForm() {
 
         <div className={s.forgotPassword}>
           <Typography variant="regular_text_14">
-            <a href="/forgot-password">Forgot Password</a>
+            <Link href="/auth/forgot-password">Forgot Password</Link>
           </Typography>
         </div>
 
@@ -120,12 +120,12 @@ export default function SignInForm() {
           {isLoading ? 'Вход...' : 'Sign In'}
         </Button>
 
-        {errorMessage && <Alerts status="error" text={errorMessage} position="bottom-left" />}
+        {errorMessage && <Alert status="error" text={errorMessage} position="bottom-left" />}
 
         <div className={s.signupLink}>
           <Typography title={`Don't have an account?`}></Typography>
           <Typography variant="regular_text_16">
-            <a href="/register">Sign Up</a>
+            <Link href="/auth/register">Sign Up</Link>
           </Typography>
         </div>
       </form>

@@ -5,7 +5,7 @@ import { setAccessToken, logout } from '@/features/auth/model/auth-slice'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_BASE_API_URL,
-  // credentials: 'include',
+  credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState
     const token = state.auth.accessToken
@@ -54,6 +54,6 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ['Post', 'Posts'],
+  tagTypes: ['Post', 'Posts', 'Sessions'],
   endpoints: () => ({}),
 })

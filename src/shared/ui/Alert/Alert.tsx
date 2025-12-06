@@ -3,7 +3,7 @@ import { CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import clsx from 'clsx'
 import { useState } from 'react'
-import s from './Alerts.module.scss'
+import s from '@/shared/ui/Alert/Alert.module.scss'
 
 type AlertsProps = {
   status: 'success' | 'error'
@@ -11,7 +11,7 @@ type AlertsProps = {
   position: 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right'
 }
 
-export const Alerts = ({ status, text, position }: AlertsProps) => {
+export const Alert = ({ status, text, position }: AlertsProps) => {
   const [isVisible, setIsVisible] = useState(true)
   const [isClosing, setIsClosing] = useState(false)
 

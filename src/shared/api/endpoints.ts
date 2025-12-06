@@ -9,6 +9,8 @@ export const API_ENDPOINTS = {
     ME: '/auth/me',
     PASSWORD_RECOVERY: '/auth/password-recovery',
     PASSWORD_RECOVERY_CONFIRM: '/auth/password-recovery-confirm',
+    PASSWORD_RECOVERY_VERIFY: '/auth/password-recovery/verify',
+    RESEND_PASSWORD_RECOVERY: '/auth/password-recovery/resend',
     OAUTH: '/auth/oauth',
   },
   SESSIONS: {

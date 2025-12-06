@@ -1,14 +1,26 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePasswordRecovery } from '@/features/auth/lib/use-password-recovery'
+import { PasswordRecovery } from '@/features/auth/ui/PasswordRecovery/PasswordRecovery'
 
 export default function PasswordRecoveryPage() {
-  const router = useRouter()
+  const { recoveryCode, email, isLoading, data, error } = usePasswordRecovery()
 
-  const isSuccess = true
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <div>Loading...</div>
+      </div>
+    )
+  }
 
-  if (isSuccess) {
-    router.replace('/create-new-password') // если ссылка рабочая - редирект на create-new-password
+  if (!recoveryCode) {
     return null
   }
+
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+      <PasswordRecovery recoveryCode={recoveryCode} email={email} data={data} error={error} />
+    </div>
+  )
 }

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, ChangeEvent } from 'react'
+import { useState, useCallback, useEffect, ChangeEvent, useRef } from 'react'
 
 type UseImageUploadProps = {
   maxSizeMB?: number
@@ -11,6 +11,7 @@ type UseImageUploadReturn = {
   error: string | null
   onSelectFile: (e: ChangeEvent<HTMLInputElement>) => void
   clear: () => void
+  accept: string
 }
 
 export const useImageUpload = (options: UseImageUploadProps = {}): UseImageUploadReturn => {
@@ -20,11 +21,23 @@ export const useImageUpload = (options: UseImageUploadProps = {}): UseImageUploa
   const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  // ref на текущий objectURL, чтобы revoke при замене/анмаунте
+  const currentObjectUrlRef = useRef<string | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  const accept = allowedTypes.join(',')
+
+  const formatAllowedTypes = (types: string[]) => {
+    const exts = types.map((t) => t.split('/')[1])
+    if (exts.length === 1) return exts[0]
+    if (exts.length === 2) return `${exts[0]} and ${exts[1]}`
+    return exts.slice(0, -1).join(', ') + ' and ' + exts[exts.length - 1]
+  }
+
   const validateFile = useCallback(
     (file: File) => {
-      if (!allowedTypes.includes(file.type)) {
-        const formats = allowedTypes.map((type) => type.split('/')[1])
-        return `Error! The format of the uploaded photo must be ${formats[0]} and ${formats[1]}.`
+      if (allowedTypes.length > 0 && !allowedTypes.includes(file.type)) {
+        return `Error! The format of the uploaded photo must be ${formatAllowedTypes(allowedTypes)}.`
       }
 
       if (file.size / 1024 / 1024 > maxSizeMB) {
@@ -33,47 +46,69 @@ export const useImageUpload = (options: UseImageUploadProps = {}): UseImageUploa
 
       return null
     },
-
     [allowedTypes, maxSizeMB]
   )
 
+  const revokeCurrentObjectUrl = useCallback(() => {
+    if (currentObjectUrlRef.current) {
+      try {
+        URL.revokeObjectURL(currentObjectUrlRef.current)
+      } catch {
+        // ignore
+      }
+      currentObjectUrlRef.current = null
+    }
+  }, [])
+
   const onSelectFile = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
+      const selected = e.target.files?.[0] ?? null
 
-      if (!file) {
+      // revoke предыдущего preview (если был)
+      revokeCurrentObjectUrl()
+      setPreview(null)
+
+      if (!selected) {
+        setFile(null)
+        setError(null)
         return
       }
 
-      const validationError = validateFile(file)
-
+      const validationError = validateFile(selected)
       if (validationError) {
         setError(validationError)
         setFile(null)
-        setPreview(null)
         return
       }
 
       setError(null)
-      setFile(file)
-      setPreview(URL.createObjectURL(file))
+      setFile(selected)
+      const objectUrl = URL.createObjectURL(selected)
+      currentObjectUrlRef.current = objectUrl
+      setPreview(objectUrl)
     },
-    [validateFile]
+    [validateFile, revokeCurrentObjectUrl]
   )
 
   useEffect(() => {
     return () => {
-      if (preview) {
-        URL.revokeObjectURL(preview)
-      }
+      revokeCurrentObjectUrl()
     }
-  }, [preview])
+  }, [revokeCurrentObjectUrl])
 
-  const clear = () => {
+  const clear = useCallback(() => {
+    revokeCurrentObjectUrl()
     setFile(null)
     setPreview(null)
     setError(null)
-  }
+    if (inputRef.current) {
+      try {
+        inputRef.current.value = ''
+      } catch {
+        // ignore
+      }
+    }
+  }, [revokeCurrentObjectUrl])
 
   return {
     file, // загруженный файл
@@ -81,5 +116,6 @@ export const useImageUpload = (options: UseImageUploadProps = {}): UseImageUploa
     error,
     onSelectFile, // функция, которую закидываем в input
     clear,
+    accept, // указываем в атрибуте инпута accept для отображения файлов с нужным форматом
   }
 }

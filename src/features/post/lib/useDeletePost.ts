@@ -1,12 +1,10 @@
+'use client'
+
 import { useDeletePostMutation } from '@/entities/post/api/posts-api'
 import { useState } from 'react'
 
-type Props = {
-  idPost: string
-}
-
 type useDeletePostReturn = {
-  postDelete: (idPost: string) => void
+  postDelete: () => void
   isOpen: boolean
   open: () => void
   close: () => void
@@ -14,7 +12,7 @@ type useDeletePostReturn = {
   loading: boolean
 }
 
-export const useDeletePost = ({ idPost }: Props): useDeletePostReturn => {
+export const useDeletePost = (idPost: string): useDeletePostReturn => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [deletePost] = useDeletePostMutation()
   const [err, setErr] = useState<string | null>(null)
@@ -31,13 +29,13 @@ export const useDeletePost = ({ idPost }: Props): useDeletePostReturn => {
   const postDelete = async () => {
     setLoading(true)
     try {
-      deletePost({ id: idPost }).unwrap()
+      await deletePost({ id: idPost }).unwrap()
+      close()
     } catch (error) {
       if (error instanceof Error) setErr(error.message)
       else setErr('Unknown error')
     } finally {
       setLoading(false)
-      close()
     }
   }
 

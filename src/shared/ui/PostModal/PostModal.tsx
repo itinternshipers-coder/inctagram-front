@@ -32,6 +32,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { Input } from '../Input/Input'
 import { Modal } from '../Modal/Modal'
+import TextArea from '../TextArea/TextArea'
 
 const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
   const displayDate = new Date(postData.createdAt).toLocaleDateString()
@@ -142,15 +143,38 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
                   </div>
                 )}
                 {isEditingThisPost ? (
-                  <>
-                    <div className={s.commentsWrapper}>
-                      <div className={s.commentEditWrapper}>
-                        <Input value={value} onChange={(e) => setValue(e.target.value)} className={s.input} />
-                        <Button onClick={() => dispatch(openEditModal(postData.id))}>Save chage</Button>
+                  <div className={s.editWrapper}>
+                    <div className={s.postXclose}>
+                      <Dialog.Close asChild>
+                        <Button variant="tertiary" className={s.menuButton}>
+                          <CloseOutlineIcon />
+                        </Button>
+                      </Dialog.Close>
+                    </div>
+
+                    <div className={s.postHeaderEdit}>
+                      <div className={s.authorInfo}>
+                        {author.avatarUrl && (
+                          <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />
+                        )}
+                        <strong>{author.username}</strong>
                       </div>
                     </div>
-                    ç
-                  </>
+                    <div className={s.editContent}>
+                      <div className={s.texareaCustom}>
+                        <TextArea
+                          value={value}
+                          onChange={(e) => setValue(e.target.value)}
+                          className={s.texareaCustom}
+                          label="Add publication descriptions"
+                        />
+                        <div className={s.charCount}>{value.length}/500</div> {/* Счетчик символов */}
+                      </div>
+                      <div className={s.editFooter}>
+                        <Button onClick={() => dispatch(openEditModal(postData.id))}>Save chage </Button>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <>
                     <div className={s.commentsWrapper}>
@@ -191,13 +215,13 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
                         {author.avatarUrl && (
                           <img src={author.avatarUrl} alt={author.username} className={s.userThumbnail} />
                         )}
-                        <p className={s.likesCount}>{postData.likesCount} Like</p>
+                        <div className={s.likesCount}>{postData.likesCount} Like</div>
                       </div>
 
                       <div className={s.postDate}>{displayDate}</div>
 
                       <div className={s.addCommentSection}>
-                        <input
+                        <Input
                           placeholder="Add a Comment..."
                           value={value}
                           onChange={(e) => setValue(e.target.value)}
@@ -212,11 +236,13 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
               </div>
             </Dialog.Content>
 
-            <Dialog.Close asChild>
-              <Button variant="tertiary" className={s.closeButton}>
-                <CloseOutlineIcon />
-              </Button>
-            </Dialog.Close>
+            {!isEditingThisPost && (
+              <Dialog.Close asChild>
+                <Button variant="tertiary" className={s.closeButton}>
+                  <CloseOutlineIcon />
+                </Button>
+              </Dialog.Close>
+            )}
           </div>
         </Dialog.Portal>
       </Dialog.Root>

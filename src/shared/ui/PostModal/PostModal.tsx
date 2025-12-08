@@ -17,7 +17,21 @@ import { Button } from '../Button/Button'
 import { ImageGallery } from './ImageGallery/ImageGallery'
 import { Comment } from './Comment/Comment'
 import s from './PostModal.module.scss'
-import { useDeletePostMutation } from '@/entities/post/model'
+import { useDeletePostMutation, useUpdatePostMutation } from '@/entities/post/model'
+import {
+  openCreateModal,
+  closeCreateModal,
+  openEditModal,
+  closeEditModal,
+  selectPost,
+  toggleOptimisticLike,
+  selectSelectedPostId,
+  selectIsCreateModalOpen,
+  selectIsEditModalOpen,
+} from '@/entities/post/model/post-slice'
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import { Input } from '../Input/Input'
+import { Modal } from '../Modal/Modal'
 
 const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
   const displayDate = new Date(postData.createdAt).toLocaleDateString()
@@ -27,6 +41,15 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
   const [localLiked, setLocalLiked] = useState(false)
 
   const [deletePost] = useDeletePostMutation()
+  const [updatePost] = useUpdatePostMutation()
+
+  const dispatch = useAppDispatch()
+
+  const selectedPostId = useAppSelector(selectSelectedPostId)
+  const IsCreateModalOpen = useAppSelector(selectIsCreateModalOpen)
+  const isEditModalOpen = useAppSelector(selectIsEditModalOpen)
+
+  const isEditingThisPost = selectedPostId === postData.id
 
   // Временный объект автора, если у тебя нет отдельного author в API
   const author = {
@@ -36,8 +59,8 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
   }
 
   const handleToggleLike = () => {
-    setLocalLiked((prev) => !prev)
     // TODO: подключить мутацию toggleLike
+    dispatch(toggleOptimisticLike(postData.id))
   }
 
   const handleAddBookmark = () => {
@@ -48,12 +71,22 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
     // TODO: подключить мутацию sharePost
   }
 
+  const cancelEditPost = () => {
+    dispatch(closeEditModal())
+  }
+
   const handleEditPost = () => {
-    // TODO: подключить мутацию editPost
+    setValue(postData.description || '')
+    dispatch(selectPost(postData.id))
+  }
+
+  const handleSavePost = () => {
+    updatePost({ id: postData.id, body: { description: value } })
+    dispatch(closeEditModal())
   }
 
   const handleDeletePost = () => {
-    deletePost({ id: postData.id })
+    dispatch(openCreateModal())
   }
 
   const handlePublishPost = () => {
@@ -66,105 +99,159 @@ const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className={s.modalOverlay} />
-
-        <div className={s.modalContainer}>
-          <Dialog.Content className={s.modalContent}>
-            <div className={s.modalLeft}>
-              <ImageGallery photos={photos} />
-            </div>
-
-            <div className={s.modalRight}>
-              <div className={s.postHeader}>
-                <div className={s.authorInfo}>
-                  {author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />}
-                  <strong>{author.username}</strong>
-                </div>
-
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger asChild>
-                    <Button className={s.menuButton} variant="tertiary">
-                      <MoreHorizontalOutlineIcon />
-                    </Button>
-                  </DropdownMenu.Trigger>
-
-                  <DropdownMenu.Portal>
-                    <DropdownMenu.Content className={s.dropdownContent} sideOffset={0} alignOffset={0} align="end">
-                      <DropdownMenu.Item className={s.dropdownItem} onSelect={handleEditPost}>
-                        <Edit2OutlineIcon />
-                        Edit Post
-                      </DropdownMenu.Item>
-                      <DropdownMenu.Item className={s.dropdownItem} onSelect={handleDeletePost}>
-                        <TrashOutlineIcon />
-                        Delete Post
-                      </DropdownMenu.Item>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Portal>
-                </DropdownMenu.Root>
+    <>
+      <Dialog.Root open={open} onOpenChange={onOpenChange}>
+        <Dialog.Portal>
+          <Dialog.Overlay className={s.modalOverlay} />
+          <div className={s.modalContainer}>
+            <Dialog.Content className={s.modalContent}>
+              <div className={s.modalLeft}>
+                <ImageGallery photos={photos} />
               </div>
 
-              <div className={s.commentsWrapper}>
-                {postData.description && <Comment user={author} text={postData.description} time={displayDate} />}
+              <div className={s.modalRight}>
+                {!isEditingThisPost && (
+                  <div className={s.postHeader}>
+                    <div className={s.authorInfo}>
+                      {author.avatarUrl && (
+                        <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />
+                      )}
+                      <strong>{author.username}</strong>
+                    </div>
 
-                {comments.map((c) => (
-                  <Comment
-                    key={c.id}
-                    user={c.user}
-                    text={c.text}
-                    time={c.time}
-                    likesCount={c.likesCount}
-                    replies={c.replies}
-                    handleOnChange={handleOnChange}
-                  />
-                ))}
-              </div>
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild>
+                        <Button className={s.menuButton} variant="tertiary">
+                          <MoreHorizontalOutlineIcon />
+                        </Button>
+                      </DropdownMenu.Trigger>
 
-              <div className={s.postFooter}>
-                <div className={s.interactionRow}>
-                  <div className={s.likesInfo}>
-                    <Toggle.Root className={s.likeButton} aria-label="Like Post">
-                      <Button onClick={handleToggleLike} variant="link" className={s.iconButton}>
-                        {localLiked ? <HeartOutlineIcon color="red" /> : <HeartOutlineIcon />}
-                      </Button>
-                    </Toggle.Root>
-
-                    <Button onClick={handleShare} variant="link" className={s.iconButton}>
-                      <PaperPlaneOutlineIcon />
-                    </Button>
+                      <DropdownMenu.Portal>
+                        <DropdownMenu.Content className={s.dropdownContent} sideOffset={0} alignOffset={0} align="end">
+                          <DropdownMenu.Item className={s.dropdownItem} onSelect={handleEditPost}>
+                            <Edit2OutlineIcon />
+                            Edit Post
+                          </DropdownMenu.Item>
+                          <DropdownMenu.Item className={s.dropdownItem} onSelect={handleDeletePost}>
+                            <TrashOutlineIcon />
+                            Delete Post
+                          </DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
                   </div>
+                )}
+                {isEditingThisPost ? (
+                  <>
+                    <div className={s.commentsWrapper}>
+                      <div className={s.commentEditWrapper}>
+                        <Input value={value} onChange={(e) => setValue(e.target.value)} className={s.input} />
+                        <Button onClick={() => dispatch(openEditModal(postData.id))}>Save chage</Button>
+                      </div>
+                    </div>
+                    ç
+                  </>
+                ) : (
+                  <>
+                    <div className={s.commentsWrapper}>
+                      {postData.description && <Comment user={author} text={postData.description} time={displayDate} />}
 
-                  <Button className={s.iconButton} onClick={handleAddBookmark} variant="link">
-                    <BookmarkOutlineIcon />
-                  </Button>
-                </div>
+                      {comments.map((c) => (
+                        <Comment
+                          key={c.id}
+                          user={c.user}
+                          text={c.text}
+                          time={c.time}
+                          likesCount={c.likesCount}
+                          replies={c.replies}
+                          handleOnChange={handleOnChange}
+                        />
+                      ))}
+                    </div>
+                    <div className={s.postFooter}>
+                      <div className={s.interactionRow}>
+                        <div className={s.likesInfo}>
+                          <Toggle.Root className={s.likeButton} aria-label="Like Post">
+                            <Button onClick={handleToggleLike} variant="link" className={s.iconButton}>
+                              {localLiked ? <HeartOutlineIcon color="red" /> : <HeartOutlineIcon />}
+                            </Button>
+                          </Toggle.Root>
 
-                <div className={s.likesInfo}>
-                  {author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.userThumbnail} />}
-                  <p className={s.likesCount}>{postData.likesCount} Like</p>
-                </div>
+                          <Button onClick={handleShare} variant="link" className={s.iconButton}>
+                            <PaperPlaneOutlineIcon />
+                          </Button>
+                        </div>
 
-                <div className={s.postDate}>{displayDate}</div>
+                        <Button className={s.iconButton} onClick={handleAddBookmark} variant="link">
+                          <BookmarkOutlineIcon />
+                        </Button>
+                      </div>
 
-                <div className={s.addCommentSection}>
-                  <input placeholder="Add a Comment..." value={value} onChange={(e) => setValue(e.target.value)} />
-                  <Button className={s.publishCommentButton} onClick={handlePublishPost}>
-                    Publish
-                  </Button>
-                </div>
+                      <div className={s.likesInfo}>
+                        {author.avatarUrl && (
+                          <img src={author.avatarUrl} alt={author.username} className={s.userThumbnail} />
+                        )}
+                        <p className={s.likesCount}>{postData.likesCount} Like</p>
+                      </div>
+
+                      <div className={s.postDate}>{displayDate}</div>
+
+                      <div className={s.addCommentSection}>
+                        <input
+                          placeholder="Add a Comment..."
+                          value={value}
+                          onChange={(e) => setValue(e.target.value)}
+                        />
+                        <Button className={s.publishCommentButton} onClick={handlePublishPost}>
+                          Publish
+                        </Button>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
-            </div>
-          </Dialog.Content>
+            </Dialog.Content>
 
-          <Dialog.Close asChild>
-            <Button variant="tertiary" className={s.closeButton}>
-              <CloseOutlineIcon />
-            </Button>
-          </Dialog.Close>
-        </div>
-      </Dialog.Portal>
-    </Dialog.Root>
+            <Dialog.Close asChild>
+              <Button variant="tertiary" className={s.closeButton}>
+                <CloseOutlineIcon />
+              </Button>
+            </Dialog.Close>
+          </div>
+        </Dialog.Portal>
+      </Dialog.Root>
+      {IsCreateModalOpen && (
+        <Modal
+          open={true}
+          onOpenChange={() => {}}
+          title="Delete post"
+          message="Are you sure you want to delete this post?"
+          confirmMode={true}
+          buttonText="Yes"
+          cancelButtonText="No"
+          isCancelPrimary={true}
+          onAction={() => {
+            deletePost({ id: postData.id })
+            dispatch(closeCreateModal())
+          }}
+          onCancel={() => dispatch(closeCreateModal())}
+        />
+      )}
+      {isEditModalOpen && (
+        <Modal
+          open={true}
+          onOpenChange={() => dispatch(closeEditModal())}
+          title="Save changes"
+          message="Are you sure you want to save changes to this post?"
+          confirmMode={true}
+          buttonText="Yes"
+          cancelButtonText="No"
+          isCancelPrimary={false}
+          onAction={handleSavePost}
+          onCancel={cancelEditPost}
+        />
+      )}
+    </>
   )
 }
 

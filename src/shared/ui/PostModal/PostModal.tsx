@@ -36,6 +36,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { Input } from '../Input/Input'
 import { Modal } from '../Modal/Modal'
+import TextArea from '../TextArea/TextArea'
 
 export type PhotoType = {
   photoId: string

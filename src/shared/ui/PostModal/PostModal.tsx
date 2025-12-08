@@ -21,7 +21,21 @@ import {
   selectIsEditModalOpen,
 } from '@/entities/post/model/post-slice'
 import s from './PostModal.module.scss'
-import { useDeletePostMutation } from '@/entities/post/model'
+import { useDeletePostMutation, useUpdatePostMutation } from '@/entities/post/model'
+import {
+  openCreateModal,
+  closeCreateModal,
+  openEditModal,
+  closeEditModal,
+  selectPost,
+  toggleOptimisticLike,
+  selectSelectedPostId,
+  selectIsCreateModalOpen,
+  selectIsEditModalOpen,
+} from '@/entities/post/model/post-slice'
+import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import { Input } from '../Input/Input'
+import { Modal } from '../Modal/Modal'
 
 export type PhotoType = {
   photoId: string

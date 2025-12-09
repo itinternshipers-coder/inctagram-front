@@ -3,7 +3,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgb(0 0 0 / 85%);
 }
 
 .content {
@@ -12,18 +12,14 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   width: 378px;
   min-height: 228px;
   padding: 0 24px;
   display: flex;
   flex-direction: column;
-
   animation: fadeIn 0.2s ease;
-
   background-color: var(--dark-300);
   color: var(--foreground);
-
   border-radius: 2px;
   border: 1px solid var(--dark-100);
 }
@@ -48,6 +44,7 @@
 
 .title {
   @include text-weight(700);
+
   color: var(--foreground);
 }
 
@@ -72,6 +69,7 @@
 
 .message {
   @include text-size(m, m);
+
   color: var(--foreground);
 }
 

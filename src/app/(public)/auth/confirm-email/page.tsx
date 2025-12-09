@@ -2,21 +2,14 @@
 
 import { useEmailConfirmation } from '@/features/auth/lib/use-confirmation'
 import { EmailConfirmation } from '@/features/auth/ui/EmailConfirmation/EmailConfirmation'
+import { Suspense } from 'react'
 
-export default function EmailConfirmationPage() {
+function EmailConfirmationContent() {
   const { email, isLoading, isSuccess, error } = useEmailConfirmation()
 
-  // Показываем загрузку (заглушка пока нет спиннера)
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-        }}
-      >
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
         <div>Loading...</div>
       </div>
     )
@@ -27,4 +20,18 @@ export default function EmailConfirmationPage() {
   }
 
   return <EmailConfirmation isSuccess={isSuccess} email={email} confirmError={error} />
+}
+
+export default function EmailConfirmationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          Loading...
+        </div>
+      }
+    >
+      <EmailConfirmationContent />
+    </Suspense>
+  )
 }

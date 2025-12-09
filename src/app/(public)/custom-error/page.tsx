@@ -2,8 +2,9 @@
 
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react' // Добавить импорт
 
-export default function CustomError() {
+function CustomErrorContent() {
   const searchParams = useSearchParams()
   const message = searchParams.get('message')
 
@@ -13,5 +14,19 @@ export default function CustomError() {
         {message || 'Not Found!'}
       </Typography>
     </div>
+  )
+}
+
+export default function CustomError() {
+  return (
+    <Suspense
+      fallback={
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          Loading...
+        </div>
+      }
+    >
+      <CustomErrorContent />
+    </Suspense>
   )
 }

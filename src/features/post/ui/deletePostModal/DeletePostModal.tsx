@@ -1,26 +1,25 @@
 import { Modal } from '@/shared/ui/Modal/Modal'
 
 type Props = {
+  title: string
+  message: string
   postDelete: () => void
   isOpen: boolean
-  open: () => void
   close: () => void
-  err?: string | null
-  loading?: boolean
 }
 
-export const DeletePostModal = ({ postDelete, isOpen, open, close, loading, err }: Props) => {
+export const DeletePostModal = ({ title, message, postDelete, isOpen, close }: Props) => {
   return (
     <Modal
       open={isOpen}
       onOpenChange={close}
-      title={'Delete Post'}
-      message={'Are you sure you want to delete this post?'}
+      title={title}
+      message={message}
       confirmMode={true}
-      buttonText={'Yes'}
-      onAction={postDelete}
-      cancelButtonText={'No'}
-      onCancel={close}
+      buttonText={'No'}
+      onAction={close}
+      cancelButtonText={'Yes'}
+      onCancel={postDelete}
     />
   )
 }

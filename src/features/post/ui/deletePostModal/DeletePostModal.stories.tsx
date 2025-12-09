@@ -9,7 +9,6 @@ const meta: Meta<typeof DeletePostModal> = {
   },
   argTypes: {
     postDelete: { action: 'postDelete' },
-    open: { action: 'open' },
     close: { action: 'close' },
   },
 }
@@ -20,8 +19,8 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
+    title: 'Delete Post',
+    message: 'Are you sure you want to delete this post?',
     isOpen: true,
-    err: null,
-    loading: false,
   },
 }

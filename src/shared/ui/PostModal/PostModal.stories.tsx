@@ -3,8 +3,7 @@ import { Provider } from 'react-redux'
 import { store } from '@/store/store'
 import React, { useState } from 'react'
 
-import { Author, CommentType, Photo, PostDataType, PostModalProps } from './types'
-import PostModal from './PostModal'
+import PostModal, { UserPostType, CommentType, Author, PhotoType, PostModalProps } from './PostModal'
 
 // -------------------- Моки --------------------
 const mockAuthor: Author = {
@@ -13,19 +12,15 @@ const mockAuthor: Author = {
   avatarUrl: 'https://via.placeholder.com/40',
 }
 
-const mockPhotos: Photo[] = [
+const mockPhotos: PhotoType[] = [
   {
-    id: 'photo-uuid-1',
     photoId: 'photo-storage-id-1',
-    s3Key: 'key/1.jpg',
     url: 'https://images.unsplash.com/photo-1549419163-9524be0e704e?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3',
     order: 0,
     createdAt: '2025-11-09T10:00:00.000Z',
   },
   {
-    id: 'photo-uuid-2',
     photoId: 'photo-storage-id-2',
-    s3Key: 'key/2.jpg',
     url: 'https://images.unsplash.com/photo-1507525428034-b723cfab7388?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3',
     order: 1,
     createdAt: '2025-11-09T10:01:00.000Z',
@@ -46,15 +41,6 @@ const mockComments: CommentType[] = [
         text: 'Это ответ на комментарий!',
         time: '1 hour ago',
         likesCount: 5,
-        replies: [
-          {
-            id: 'reply-1-1',
-            user: { id: 'r2', username: 'NestedUser', avatarUrl: 'https://via.placeholder.com/30' },
-            text: 'Ответ на ответ — вложенный!',
-            time: '30 minutes ago',
-            likesCount: 2,
-          },
-        ],
       },
     ],
   },
@@ -67,17 +53,14 @@ const mockComments: CommentType[] = [
   },
 ]
 
-const mockPostData: PostDataType = {
+const mockPostData: UserPostType = {
   id: 'post-uuid-123',
   authorId: mockAuthor.id,
   userName: mockAuthor.username,
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Это демонстрационное описание.',
   createdAt: '2025-07-03T10:00:00.000Z',
   updatedAt: '2025-07-03T10:05:00.000Z',
-  deletedAt: null,
   photos: mockPhotos,
-  likesCount: 2243,
-  comments: mockComments,
 }
 
 // -------------------- Meta --------------------
@@ -86,6 +69,7 @@ const meta: Meta<PostModalProps> = {
   component: PostModal,
   args: {
     postData: mockPostData,
+    comments: mockComments,
     open: true,
   },
   parameters: {
@@ -121,15 +105,14 @@ const Template: StoryFn<PostModalProps> = (args) => {
 export const PostWithComments = Template.bind({})
 PostWithComments.args = {
   postData: mockPostData,
+  comments: mockComments,
 }
 PostWithComments.storyName = '01. Post with Comments'
 
 export const PostWithoutComments = Template.bind({})
 PostWithoutComments.args = {
-  postData: {
-    ...mockPostData,
-    comments: [],
-  } as PostDataType,
+  postData: mockPostData,
+  comments: [],
 }
 PostWithoutComments.storyName = '02. Post without Comments'
 
@@ -142,19 +125,15 @@ LoadingEmptyState.args = {
     description: '',
     createdAt: '',
     updatedAt: '',
-    deletedAt: null,
     photos: [
       {
-        id: 'photo-loading',
         photoId: 'loading',
-        s3Key: '',
         url: 'https://via.placeholder.com/600x400?text=Loading...',
         order: 0,
         createdAt: '',
       },
     ],
-    likesCount: 0,
-    comments: [],
-  } as PostDataType,
+  } as UserPostType,
+  comments: [],
 }
 LoadingEmptyState.storyName = '03. Loading/Empty State'

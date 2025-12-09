@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Photo } from '../types'
 import s from './ImageGalery.module.scss'
 import { Button } from '../../Button/Button'
 import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
+import { PostPhoto } from '@/entities/post/model'
+import { PhotoType } from '../PostModal'
 
-export const ImageGallery = ({ photos }: { photos: Photo[] }) => {
+export const ImageGallery = ({ photos }: { photos: PhotoType[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   if (photos.length === 0) {

@@ -28,6 +28,7 @@ export const useEmailConfirmation = () => {
     confirmEmail({ confirmationCode: result.data.code }).unwrap()
 
     return () => reset()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, email])
 
   return {

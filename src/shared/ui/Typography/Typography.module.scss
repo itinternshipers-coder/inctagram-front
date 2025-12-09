@@ -69,6 +69,7 @@
   @extend %link-base;
   @include text-size(s, m);
   @include text-weight(400);
+
   color: var(--accent-500);
 }
 
@@ -76,5 +77,6 @@
   @extend %link-base;
   @include text-size(xs, s);
   @include text-weight(300);
+
   color: var(--accent-500);
 }

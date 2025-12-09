@@ -67,6 +67,18 @@ export type PasswordRecovery = {
   error: ErrorResponse
 }
 
+// resend-recovery-link
+export type ResendRecoveryLink = {
+  request: {
+    oldRecoveryCode: string
+  }
+  response: {
+    message: string
+    email: string
+  }
+  error: ErrorResponse
+}
+
 // password-recovery-confirm
 export type PasswordRecoveryConfirm = {
   request: {

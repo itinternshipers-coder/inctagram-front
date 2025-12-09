@@ -1,4 +1,4 @@
-import { PasswordRecovery, PasswordRecoveryConfirm } from '@/features/auth/model/types'
+import { PasswordRecovery, PasswordRecoveryConfirm, ResendRecoveryLink } from '@/features/auth/model/types'
 import { baseApi } from '@/shared/api/base-api'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 
@@ -11,6 +11,13 @@ export const passwordApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    resendRecoveryLink: builder.mutation<ResendRecoveryLink['response'], ResendRecoveryLink['request']>({
+      query: (body) => ({
+        url: API_ENDPOINTS.AUTH.RESEND_PASSWORD_RECOVERY,
+        method: 'POST',
+        body,
+      }),
+    }),
     createNewPassword: builder.mutation<PasswordRecoveryConfirm['response'], PasswordRecoveryConfirm['request']>({
       query: (body) => ({
         url: API_ENDPOINTS.AUTH.PASSWORD_RECOVERY_CONFIRM,
@@ -18,7 +25,19 @@ export const passwordApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+    verifyRecoveryCode: builder.query<{ message: string }, { code: string }>({
+      query: ({ code }) => ({
+        url: API_ENDPOINTS.AUTH.PASSWORD_RECOVERY_VERIFY,
+        params: { code },
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
-export const { useForgotPasswordMutation, useCreateNewPasswordMutation } = passwordApi
+export const {
+  useForgotPasswordMutation,
+  useCreateNewPasswordMutation,
+  useVerifyRecoveryCodeQuery,
+  useResendRecoveryLinkMutation,
+} = passwordApi

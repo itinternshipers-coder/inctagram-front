@@ -18,7 +18,7 @@ export const usePasswordRecovery = () => {
     if (!recoveryCode) {
       router.replace('/custom-error?message=Missing recovery code')
     }
-  }, [recoveryCode])
+  }, [recoveryCode, router])
 
   return {
     recoveryCode,

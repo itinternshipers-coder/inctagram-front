@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 
 import PostModal, { UserPostType, CommentType, Author, PhotoType, PostModalProps } from './PostModal'
 
-// -------------------- Моки --------------------
 const mockAuthor: Author = {
   id: 'user-uuid-1',
   username: 'UserName',
@@ -63,7 +62,6 @@ const mockPostData: UserPostType = {
   photos: mockPhotos,
 }
 
-// -------------------- Meta --------------------
 const meta: Meta<PostModalProps> = {
   title: 'Components/PostModal',
   component: PostModal,
@@ -82,7 +80,6 @@ const meta: Meta<PostModalProps> = {
 
 export default meta
 
-// -------------------- Template --------------------
 const Template: StoryFn<PostModalProps> = (args) => {
   const [isOpen, setIsOpen] = useState(args.open)
 
@@ -101,7 +98,6 @@ const Template: StoryFn<PostModalProps> = (args) => {
   )
 }
 
-// -------------------- Stories --------------------
 export const PostWithComments = Template.bind({})
 PostWithComments.args = {
   postData: mockPostData,

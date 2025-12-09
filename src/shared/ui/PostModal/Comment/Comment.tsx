@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { CommentType } from '../types'
 import s from './Comment.module.scss'
 import { HeartOutlineIcon } from '@/shared/icons/svgComponents'
+import { CommentType } from '../PostModal'
 
 type CommentProps = Omit<CommentType, 'id' | 'user'> & {
   user: CommentType['user']

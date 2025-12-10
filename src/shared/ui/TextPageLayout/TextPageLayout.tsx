@@ -1,3 +1,4 @@
+import { ROUTES } from '@/shared/config/routes'
 import Link from 'next/link'
 import { ArrowBackOutlineIcon } from '@/shared/icons/svgComponents'
 import s from './TextPageLayout.module.scss'
@@ -8,7 +9,7 @@ type TextPageLayoutProps = {
   backHref?: string
 }
 
-const TextPageLayout = ({ title, children, backHref = '/register' }: TextPageLayoutProps) => {
+const TextPageLayout = ({ title, children, backHref = ROUTES.PUBLIC.SIGN_UP }: TextPageLayoutProps) => {
   return (
     <div className={s.container}>
       <div className={s.backBlock}>

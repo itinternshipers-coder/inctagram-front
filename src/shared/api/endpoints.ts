@@ -1,8 +1,8 @@
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: '/auth/sign-in',
-    LOGOUT: '/auth/sign-out',
-    SIGNUP: '/auth/sign-up',
+    SIGN_IN: '/auth/sign-in',
+    SIGN_OUT: '/auth/sign-out',
+    SIGN_UP: '/auth/sign-up',
     CONFIRM_EMAIL: '/auth/confirm-email',
     RESEND_CONFIRMATION: '/auth/resend-confirmation',
     REFRESH_TOKEN: '/auth/refresh-token',

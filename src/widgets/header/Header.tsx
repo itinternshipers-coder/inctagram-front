@@ -1,4 +1,5 @@
 'use client'
+import { ROUTES } from '@/shared/config/routes'
 import { Button } from '@/shared/ui/Button/Button'
 import { NotificationBell } from '@/shared/ui/NotificationBell/NotificationBell'
 import NotificationList from '@/shared/ui/Popover/NotificationList'
@@ -18,7 +19,7 @@ type HeaderProps = {
 export const Header = ({ isLoginIn }: HeaderProps) => {
   return (
     <header className={s.container}>
-      <Typography as={Link} href={'/'} variant={'large'}>
+      <Typography as={Link} href={ROUTES.PUBLIC.HOME} variant={'large'}>
         Inctagram
       </Typography>
       <div>
@@ -34,10 +35,10 @@ export const Header = ({ isLoginIn }: HeaderProps) => {
           <div className={s.unauthorized_notifications}>
             <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
             <div className={s.button}>
-              <Button as={Link} href={'/login'} variant={'link'}>
+              <Button as={Link} href={ROUTES.PUBLIC.SIGN_IN} variant={'link'}>
                 Log in
               </Button>
-              <Button as={Link} href={'/sign-up'} variant={'primary'}>
+              <Button as={Link} href={ROUTES.PUBLIC.SIGN_UP} variant={'primary'}>
                 Sign up
               </Button>
             </div>

@@ -1,7 +1,9 @@
 'use client'
 
+import { useAuth } from '@/features/auth/lib/use-auth'
+import { useAppSelector } from '@/shared/lib/hooks'
 import React, { useEffect, useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import {
   BookmarkIcon,
   BookmarkOutlineIcon,
@@ -24,6 +26,7 @@ import {
 import SidebarLinkItem from './SidebarLinkItem'
 import '@/styles/base/_mixins.scss'
 import s from './Sidebar.module.scss'
+import { Modal } from '@/shared/ui/Modal/Modal'
 
 type SidebarProps = {
   role: 'user' | 'admin'
@@ -45,8 +48,9 @@ const ROUTES = {
 
 const Sidebar = ({ role }: SidebarProps) => {
   const pathname = usePathname()
-  const router = useRouter()
-
+  const { logout } = useAuth()
+  const email = useAppSelector((state) => state.auth.user?.email)
+  const [openModal, setOpenModal] = useState(false)
   const [disabledLink, setDisabledLink] = useState<string | null>(null)
 
   useEffect(() => {
@@ -59,6 +63,19 @@ const Sidebar = ({ role }: SidebarProps) => {
     }
   }
   const isActive = (href: string) => pathname === href
+
+  const openCloseModal = () => {
+    setOpenModal(!openModal)
+  }
+
+  const handleLogout = async () => {
+    setOpenModal(!openModal)
+    try {
+      await logout()
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <div className={`${s.sidebar} ${role === 'admin' ? s.admin : ''}`}>
@@ -175,17 +192,27 @@ const Sidebar = ({ role }: SidebarProps) => {
           </div>
 
           <div className={s.logoutSection}>
-            <button
-              type="button"
-              className={`${s.sidebarItem} ${s.logoutButton}`}
-              onClick={() => router.push('/login')}
-            >
+            <button type="button" className={`${s.sidebarItem} ${s.logoutButton}`} onClick={openCloseModal}>
               <span className={s.iconWrapper}>
                 <LogOutOutlineIcon />
               </span>
               <span className={s.label}>Log Out</span>
             </button>
           </div>
+          {openModal && (
+            <Modal
+              open={openModal}
+              onOpenChange={openCloseModal}
+              title={'Log Out'}
+              message={`Are you really want to log out of your account "${email}"?`}
+              confirmMode={true}
+              buttonText={'No'}
+              onAction={openCloseModal}
+              cancelButtonText={'Yes'}
+              onCancel={handleLogout}
+              style={{ maxWidth: '478px', width: '100%' }}
+            />
+          )}
         </>
       )}
     </div>

@@ -1,0 +1,42 @@
+.form {
+  padding: 24px;
+  max-width: 378px;
+  width: 100%;
+}
+
+.title {
+  font-size: var(--font-size-20) !important;
+  line-height: var(--line-height-36) !important;
+  text-align: center;
+}
+
+.socialButtons {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin: 14px 0 24px;
+}
+
+.inputGroup {
+  margin-bottom: 24px;
+}
+
+.forgotPassword p {
+  text-align: right;
+  margin: 36px 0 24px;
+  color: var(--hover);
+}
+
+.signupLink {
+  margin-top: 18px;
+  text-align: center;
+
+  p {
+    margin-top: 12px;
+  }
+
+  & a {
+    color: var(--primary);
+    font-weight: var(--font-weight-semibold);
+  }
+}

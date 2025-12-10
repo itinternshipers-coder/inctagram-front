@@ -14,9 +14,9 @@
   /* отключить обработку браузером всех жестов панорамирования и масштабирования на сенсорных устройствах */
   touch-action: none;
   cursor: pointer;
+
   /* обеспечивает отсутствие выбора */
   user-select: none;
-
   display: flex;
   background: transparent;
 

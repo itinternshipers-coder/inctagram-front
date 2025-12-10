@@ -1,0 +1,21 @@
+.contentWrapper {
+  display: flex;
+  width: 100%;
+}
+
+.contentBlock {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.children {
+  width: 100%;
+  max-width: 100%;
+}
+
+.childrenWithoutSidebar {
+  padding: 0 154px;
+}

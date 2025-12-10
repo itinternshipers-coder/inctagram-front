@@ -39,6 +39,15 @@ export const SelectBox = ({
 }: Props) => {
   const [open, setOpen] = React.useState(false)
 
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isOpen) {
+      document.body.classList.add('select-open')
+    } else {
+      document.body.classList.remove('select-open')
+    }
+    setOpen(isOpen)
+  }
+
   return (
     <div className={s.wrapper} style={{ width }}>
       {label && (
@@ -50,7 +59,7 @@ export const SelectBox = ({
       <Select.Root
         defaultValue={defaultValue || undefined}
         open={open}
-        onOpenChange={(isOpen) => setOpen(isOpen)}
+        onOpenChange={handleOpenChange}
         onValueChange={onValueChange}
         value={value}
       >

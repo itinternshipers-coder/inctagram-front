@@ -1,0 +1,31 @@
+.content {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3px;
+  padding: 12px 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--background-element);
+  width: 360px;
+  max-height: 440px;
+}
+
+.notificationsListWrapper {
+  height: 380px; // Фиксированная высота для скролла пока
+  padding: 0 12px;
+}
+
+.arrow {
+  position: absolute;
+  top: -4px;
+  left: calc(50% - 4px);
+  transform: rotate(45deg);
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-left: none;
+  background-color: var(--background-element);
+}

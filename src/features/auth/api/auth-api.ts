@@ -6,20 +6,20 @@ export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<Login['response'], Login['request']>({
       query: (body) => ({
-        url: API_ENDPOINTS.AUTH.LOGIN,
+        url: API_ENDPOINTS.AUTH.SIGN_IN,
         method: 'POST',
         body,
       }),
     }),
     logout: builder.mutation<Logout['response'], Logout['request']>({
       query: () => ({
-        url: API_ENDPOINTS.AUTH.LOGOUT,
+        url: API_ENDPOINTS.AUTH.SIGN_OUT,
         method: 'POST',
       }),
     }),
     signup: builder.mutation<SignUp['response'], SignUp['request']>({
       query: (body) => ({
-        url: API_ENDPOINTS.AUTH.SIGNUP,
+        url: API_ENDPOINTS.AUTH.SIGN_UP,
         method: 'POST',
         body,
       }),

@@ -6,6 +6,7 @@ import {
   PasswordRecoveryConfirmSchema,
 } from '@/features/auth/lib/schemas/password-recovery-confirm-schema'
 import s from '@/features/auth/ui/CreateNewPassword/CreateNewPassword.module.scss'
+import { ROUTES } from '@/shared/config/routes'
 import { Button } from '@/shared/ui/Button/Button'
 import { Card } from '@/shared/ui/Card/Card'
 import { Input } from '@/shared/ui/Input/Input'
@@ -44,7 +45,7 @@ export const CreateNewPassword = ({ recoveryCode }: Props) => {
         newPassword: data.newPassword,
       }).unwrap()
 
-      router.push('/auth/login')
+      router.push(ROUTES.PUBLIC.SIGN_IN)
     } catch (error) {
       console.error('Password change failed:', error)
     }

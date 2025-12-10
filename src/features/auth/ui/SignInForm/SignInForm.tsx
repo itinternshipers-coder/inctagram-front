@@ -1,5 +1,6 @@
 'use client'
 
+import { ROUTES } from '@/shared/config/routes'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { GithubIcon, GoogleIcon } from '@/shared/icons/svgComponents'
@@ -46,7 +47,7 @@ export default function SignInForm() {
 
     try {
       await login(data)
-      router.push('/profile')
+      router.push(ROUTES.PROTECTED.PROFILE)
     } catch (err) {
       const error = err as FetchBaseQueryError | SerializedError
 
@@ -81,11 +82,11 @@ export default function SignInForm() {
       <Typography variant="h1" className={s.title} title="Sign In"></Typography>
 
       <div className={s.socialButtons}>
-        <Button as={Link} variant="link" href="/login" className="socialButton">
+        <Button as={Link} variant="link" href={ROUTES.PUBLIC.SIGN_IN} className="socialButton">
           <GoogleIcon width={36} height={36} />
         </Button>
 
-        <Button as={Link} variant="link" href="/login" className="socialButton">
+        <Button as={Link} variant="link" href={ROUTES.PUBLIC.SIGN_IN} className="socialButton">
           <GithubIcon width={36} height={36} style={{ color: 'var(--foreground)' }} />
         </Button>
       </div>
@@ -112,7 +113,7 @@ export default function SignInForm() {
 
         <div className={s.forgotPassword}>
           <Typography variant="regular_text_14">
-            <Link href="/auth/forgot-password">Forgot Password</Link>
+            <Link href={ROUTES.PUBLIC.FORGOT_PASSWORD}>Forgot Password</Link>
           </Typography>
         </div>
 
@@ -125,7 +126,7 @@ export default function SignInForm() {
         <div className={s.signupLink}>
           <Typography title={`Don't have an account?`}></Typography>
           <Typography variant="regular_text_16">
-            <Link href="/auth/register">Sign Up</Link>
+            <Link href={ROUTES.PUBLIC.SIGN_UP}>Sign Up</Link>
           </Typography>
         </div>
       </form>

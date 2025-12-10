@@ -1,3 +1,5 @@
+import { ROUTES } from '@/shared/config/routes'
+import { MOCK_ROUTES } from '@/widgets/Sidebar/Sidebar'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
 import s from './Sidebar.module.scss'
@@ -56,38 +58,38 @@ const SidebarTemplateUser = ({
       <div className={s.mainSection}>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href="/feed"
+            href={ROUTES.PUBLIC.HOME}
             label="Feed"
             ActiveIcon={<HomeIcon />}
             InactiveIcon={<HomeOutlineIcon />}
-            isActive={currentActive === '/feed'}
-            disabled={disabledHref === '/feed'}
-            className={getItemClass('/feed')}
-            onClick={() => handleClick('/feed')}
+            isActive={currentActive === ROUTES.PUBLIC.HOME}
+            disabled={disabledHref === ROUTES.PUBLIC.HOME}
+            className={getItemClass(ROUTES.PUBLIC.HOME)}
+            onClick={() => handleClick(ROUTES.PUBLIC.HOME)}
           />
         </div>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href="/plus"
+            href={MOCK_ROUTES.plus}
             label="Create"
             ActiveIcon={<PlusSquareIcon />}
             InactiveIcon={<PlusSquareOutlineIcon />}
-            isActive={currentActive === '/plus'}
-            disabled={disabledHref === '/plus'}
-            className={getItemClass('/plus')}
-            onClick={() => handleClick('/plus')}
+            isActive={currentActive === MOCK_ROUTES.plus}
+            disabled={disabledHref === MOCK_ROUTES.plus}
+            className={getItemClass(MOCK_ROUTES.plus)}
+            onClick={() => handleClick(MOCK_ROUTES.plus)}
           />
         </div>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href="/profile"
+            href={ROUTES.PROTECTED.PROFILE}
             label="My Profile"
             ActiveIcon={<PersonIcon />}
             InactiveIcon={<PersonOutlineIcon />}
-            isActive={currentActive === '/profile'}
-            disabled={disabledHref === '/profile'}
-            className={getItemClass('/profile')}
-            onClick={() => handleClick('/profile')}
+            isActive={currentActive === ROUTES.PROTECTED.PROFILE}
+            disabled={disabledHref === ROUTES.PROTECTED.PROFILE}
+            className={getItemClass(ROUTES.PROTECTED.PROFILE)}
+            onClick={() => handleClick(ROUTES.PROTECTED.PROFILE)}
           />
         </div>
       </div>
@@ -95,26 +97,26 @@ const SidebarTemplateUser = ({
       <div className={s.additionalSection}>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href="/message"
+            href={MOCK_ROUTES.message}
             label="Messenger"
             ActiveIcon={<MessageCircleIcon />}
             InactiveIcon={<MessageCircleOutlineIcon />}
-            isActive={currentActive === '/message'}
-            disabled={disabledHref === '/message'}
-            className={getItemClass('/message')}
-            onClick={() => handleClick('/message')}
+            isActive={currentActive === MOCK_ROUTES.message}
+            disabled={disabledHref === MOCK_ROUTES.message}
+            className={getItemClass(MOCK_ROUTES.message)}
+            onClick={() => handleClick(MOCK_ROUTES.message)}
           />
         </div>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href="/search"
+            href={MOCK_ROUTES.search}
             label="Search"
             ActiveIcon={<SearchOutlineIcon />}
             InactiveIcon={<SearchOutlineIcon />}
-            isActive={currentActive === '/search'}
-            disabled={disabledHref === '/search'}
-            className={getItemClass('/search')}
-            onClick={() => handleClick('/search')}
+            isActive={currentActive === MOCK_ROUTES.search}
+            disabled={disabledHref === MOCK_ROUTES.search}
+            className={getItemClass(MOCK_ROUTES.search)}
+            onClick={() => handleClick(MOCK_ROUTES.search)}
           />
         </div>
       </div>
@@ -122,26 +124,26 @@ const SidebarTemplateUser = ({
       <div className={s.additionalSection}>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href="/statistics"
+            href={MOCK_ROUTES.statistics}
             label="Statistics"
             ActiveIcon={<TrendingUpOutlineIcon />}
             InactiveIcon={<TrendingUpOutlineIcon />}
-            isActive={currentActive === '/statistics'}
-            disabled={disabledHref === '/statistics'}
-            className={getItemClass('/statistics')}
-            onClick={() => handleClick('/statistics')}
+            isActive={currentActive === MOCK_ROUTES.statistics}
+            disabled={disabledHref === MOCK_ROUTES.statistics}
+            className={getItemClass(MOCK_ROUTES.statistics)}
+            onClick={() => handleClick(MOCK_ROUTES.statistics)}
           />
         </div>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href="/favorites"
+            href={MOCK_ROUTES.favorites}
             label="Favorites"
             ActiveIcon={<BookmarkIcon />}
             InactiveIcon={<BookmarkOutlineIcon />}
-            isActive={currentActive === '/favorites'}
-            disabled={disabledHref === '/favorites'}
-            className={getItemClass('/favorites')}
-            onClick={() => handleClick('/favorites')}
+            isActive={currentActive === MOCK_ROUTES.favorites}
+            disabled={disabledHref === MOCK_ROUTES.favorites}
+            className={getItemClass(MOCK_ROUTES.favorites)}
+            onClick={() => handleClick(MOCK_ROUTES.favorites)}
           />
         </div>
       </div>
@@ -159,7 +161,7 @@ const SidebarTemplateUser = ({
 
 export const Active: Story = { render: () => <SidebarTemplateUser /> }
 export const Disabled: Story = {
-  render: () => <SidebarTemplateUser disabledHref="/feed" activeHref="" />,
+  render: () => <SidebarTemplateUser disabledHref={ROUTES.PUBLIC.HOME} activeHref="" />,
 }
 export const Hover: Story = { render: () => <SidebarTemplateUser enableHover /> }
 export const Tab: Story = { render: () => <SidebarTemplateUser activeHref="" enableHover /> }

@@ -3,6 +3,7 @@
 import { useResendConfirmMutation } from '@/features/auth/api/auth-api'
 import { normalizeError } from '@/shared/api/error-utils'
 import type { ErrorResponse } from '@/shared/api/types'
+import { ROUTES } from '@/shared/config/routes'
 import Image from 'next/image'
 import { Alert } from '@/shared/ui/Alert/Alert'
 import { Button } from '@/shared/ui/Button/Button'
@@ -32,7 +33,7 @@ export const EmailConfirmation = ({ isSuccess, email, confirmError }: Props) => 
   const imageHeight = isSuccess ? 300 : 352
 
   const handleSignIn = () => {
-    router.push('/auth/login')
+    router.push(ROUTES.PUBLIC.SIGN_IN)
   }
 
   const handleResend = async () => {

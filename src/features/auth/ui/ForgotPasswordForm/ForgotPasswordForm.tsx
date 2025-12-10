@@ -3,6 +3,7 @@ import { useForgotPasswordMutation } from '@/features/auth/api/password-api'
 import { PasswordRecoveryFormData, PasswordRecoverySchema } from '@/features/auth/lib/schemas/password-recovery-schema'
 import s from '@/features/auth/ui/ForgotPasswordForm/ForgotPasswordForm.module.scss'
 import { ErrorsMessage } from '@/shared/api/types'
+import { ROUTES } from '@/shared/config/routes'
 import { Alert } from '@/shared/ui/Alert/Alert'
 import { Button } from '@/shared/ui/Button/Button'
 import { Card } from '@/shared/ui/Card/Card'
@@ -145,7 +146,7 @@ export const ForgotPasswordForm = () => {
             <Button variant="primary" fullWidth={true} type={'submit'} disabled={isButtonDisabled}>
               {isSubmitting ? 'Sending...' : buttonText}
             </Button>
-            <Button href={'/auth/login'} as={Link} variant="link">
+            <Button href={ROUTES.PUBLIC.SIGN_IN} as={Link} variant="link">
               Back to Sign In
             </Button>
           </div>

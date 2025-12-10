@@ -1,5 +1,6 @@
 'use client'
 
+import { ROUTES } from '@/shared/config/routes'
 import { GithubIcon, GoogleIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import { Card } from '@/shared/ui/Card/Card'
@@ -136,11 +137,11 @@ export const SignUpForm = () => {
 
             <Typography variant="small_text" as="span" className={s.typography}>
               I agree to the
-              <Typography variant="small_link" as={Link} href={'/terms-of-service'} className={s.link}>
+              <Typography variant="small_link" as={Link} href={ROUTES.PUBLIC.TERMS} className={s.link}>
                 Terms of Service
               </Typography>
               and
-              <Typography variant="small_link" as={Link} href={'/privacy-policy'} className={s.link}>
+              <Typography variant="small_link" as={Link} href={ROUTES.PUBLIC.PRIVACY} className={s.link}>
                 Privacy Policy
               </Typography>
             </Typography>
@@ -152,7 +153,7 @@ export const SignUpForm = () => {
 
           <Typography variant="regular_text_16">Do you have an account?</Typography>
           <div>
-            <Button href={'/login'} as={Link} variant="link">
+            <Button href={ROUTES.PUBLIC.SIGN_IN} as={Link} variant="link">
               Sign In
             </Button>
           </div>

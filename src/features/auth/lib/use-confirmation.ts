@@ -1,4 +1,5 @@
 import { normalizeError } from '@/shared/api/error-utils'
+import { ROUTES } from '@/shared/config/routes'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { useConfirmEmailMutation } from '../api/auth-api'
@@ -21,7 +22,9 @@ export const useEmailConfirmation = () => {
 
     if (!result.success) {
       //редирект на станицу ошибки если нет каких-то квери
-      router.replace(`/custom-error?message=${encodeURIComponent('The confirmation link is invalid or expired')}`)
+      router.replace(
+        `${ROUTES.PUBLIC.CUSTOM_ERROR}?message=${encodeURIComponent('The confirmation link is invalid or expired')}`
+      )
       return
     }
 

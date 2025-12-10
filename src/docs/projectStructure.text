@@ -98,7 +98,7 @@ src/
 │   │
 │   ├── api/http-client.ts
 │   ├── lib/utils.ts
-│   └── hooks/useAuth.ts
+│   └── config/routes.ts
 │
 ├── store/store.ts
 ├──lib/auth/auth-options.ts

@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import s from './Sidebar.module.scss'
 
 type SidebarLinkItemProps = {
   href: string
@@ -25,23 +24,26 @@ const SidebarLinkItem = ({
 }: SidebarLinkItemProps) => {
   const handleClick = (e: React.MouseEvent) => {
     if (disabled) {
-      e.preventDefault() //отменяет переход по ссылке
-      e.stopPropagation() //блокирует всплытие
+      e.preventDefault() // отменяет переход по ссылке
+      e.stopPropagation() // блокирует всплытие
       return
     }
-
-    //вызываем функцию клика (ставит disabledLink в Sidebar)
-    onClick()
+    onClick() // вызывает функцию клика (ставит disabledLink в Sidebar)
   }
 
   return (
     <Link
       href={href}
-      className={`${className} ${s.sidebarItem} ${isActive ? s.active : ''} ${disabled ? 'disabled' : ''}`}
       onClick={handleClick}
+      className={`
+        flex items-center p-2 rounded transition-colors duration-200
+        ${isActive ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800'}
+        ${disabled ? 'opacity-50 pointer-events-none' : ''}
+        ${className}
+      `}
     >
-      <span className={s.iconWrapper}>{isActive ? ActiveIcon : InactiveIcon}</span>
-      <span className={`${s.label} ${isActive ? s.active : ''}`}>{label}</span>
+      <span className="mr-3 flex-shrink-0">{isActive ? ActiveIcon : InactiveIcon}</span>
+      <span className="font-medium">{label}</span>
     </Link>
   )
 }

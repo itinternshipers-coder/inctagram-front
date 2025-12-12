@@ -3,12 +3,11 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  z-index: 100000000;
+  background: rgb(0 0 0 / 85%);
 }
 
 .content {
-  z-index: 100000001;
+  z-index: 100000000;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -23,14 +22,6 @@
   color: var(--foreground);
   border-radius: 2px;
   border: 1px solid var(--dark-100);
-}
-.modalWrapper {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10000000000000000001;
-  cursor: pointer;
 }
 
 .header {

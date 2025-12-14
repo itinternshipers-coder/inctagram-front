@@ -35,7 +35,6 @@ const mockUserImage = 'https://placehold.co/100?text=User'
 const meta = {
   title: 'Entities/Post/PostCard',
   component: PostCard,
-  tags: ['autodocs'],
   argTypes: {},
 } satisfies Meta<typeof PostCard>
 

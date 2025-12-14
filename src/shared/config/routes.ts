@@ -21,7 +21,7 @@ export const ROUTES = {
   // Модальные роуты (если нужны)
   MODALS: {
     POST: (postId: string) => `/post/${postId}`,
-    // CREATE_POST: '/post/create',
+    CREATE_POST: '/post/create',
   },
 
   // Динамические (функции)

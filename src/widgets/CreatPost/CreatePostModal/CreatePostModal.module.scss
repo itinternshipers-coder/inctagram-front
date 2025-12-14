@@ -1,28 +1,10 @@
-.overlay {
+.overlayModal {
   position: fixed;
   inset: 0;
-  background: rgb(0 0 0 / 85%);
+  background: rgb(0 0 0 / 75%);
 }
 
-//.content {
-//  z-index: 100000000;
-//  position: fixed;
-//  top: 50%;
-//  left: 50%;
-//  transform: translate(-50%, -50%);
-//  width: 378px;
-//  min-height: 228px;
-//  padding: 0 24px;
-//  display: flex;
-//  flex-direction: column;
-//  animation: fadeIn 0.2s ease;
-//  background-color: var(--dark-300);
-//  color: var(--foreground);
-//  border-radius: 2px;
-//  border: 1px solid var(--dark-100);
-//}
-
-.containerCard {
+.containerModal {
   z-index: 100000000;
   position: fixed;
   top: 50%;
@@ -36,7 +18,7 @@
   border-radius: 2px;
 }
 
-.cardHeader {
+.headerModal {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,9 +43,16 @@
   }
 }
 
-.contentCard {
-  //padding-top: 72px;
-  //border: 1px solid green;
+.buttonBack {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.contentModal {
+  //border: 2px dashed white;
   display: flex;
   justify-content: center;
 }

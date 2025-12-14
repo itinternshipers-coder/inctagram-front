@@ -1,10 +1,10 @@
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { useState } from 'react'
 import { ImageGallery } from '@/shared/ui/PostModal/ImageGallery/ImageGallery'
-import { PostPhoto } from '../model'
 
 import clsx from 'clsx'
 import s from './PostCard.module.scss'
+import { PostPhoto } from '../../model'
 
 export type Props = {
   photos: PostPhoto[]

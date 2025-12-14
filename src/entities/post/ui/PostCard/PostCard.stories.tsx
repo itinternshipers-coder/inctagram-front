@@ -8,7 +8,7 @@ const mockPhotos: PostPhoto[] = [
     id: '1',
     photoId: 'p1',
     s3Key: 'posts/1/1.jpg',
-    url: 'https://picsum.photos/600/600?random=1',
+    url: 'https://placehold.co/600x600.png?text=PostPhoto',
     order: 1,
     createdAt: '2025-12-14T10:00:00Z',
   },
@@ -16,13 +16,21 @@ const mockPhotos: PostPhoto[] = [
     id: '2',
     photoId: 'p2',
     s3Key: 'posts/1/2.jpg',
-    url: 'https://picsum.photos/600/600?random=2',
+    url: 'https://placehold.co/600x600/orange/.png?text=PostPhoto',
     order: 2,
+    createdAt: '2025-12-14T10:00:00Z',
+  },
+  {
+    id: '3',
+    photoId: 'p3',
+    s3Key: 'posts/1/3.jpg',
+    url: 'https://placehold.co/600x600/blue/.png?text=PostPhoto',
+    order: 3,
     createdAt: '2025-12-14T10:00:00Z',
   },
 ]
 
-const mockUserImage = 'https://picsum.photos/100?random=user'
+const mockUserImage = 'https://placehold.co/100?text=User'
 
 const meta = {
   title: 'Entities/Post/PostCard',

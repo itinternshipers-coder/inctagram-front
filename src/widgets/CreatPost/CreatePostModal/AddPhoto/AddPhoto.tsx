@@ -1,7 +1,7 @@
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { ImageOutlineIcon } from '@/shared/icons/svgComponents'
-import { Alert } from '@/shared/ui/Alert/Alert'
 import { Button } from '@/shared/ui/Button/Button'
+import { Typography } from '@/shared/ui/Typography/Typography'
 import { useEffect } from 'react'
 import s from 'src/widgets/CreatPost/CreatePostModal/AddPhoto/AddPhoto.module.scss'
 
@@ -24,19 +24,22 @@ export const AddPhoto = ({ onSelectImage }: AddPhotoProps) => {
 
   return (
     <div className={s.containerAddPhoto}>
+      {error && (
+        <Typography variant={'bold_text_14'} className={s.error}>
+          {error}
+        </Typography>
+      )}
+
       <div className={s.uploadIcon}>
         <ImageOutlineIcon size={48} />
       </div>
       <div className={s.container}>
-        {error && <Alert status={'error'} position={'top-left'} text={error}></Alert>}
         <label className={s.fileInputLabel}>
           <input type="file" accept="image/jpeg,image/png" onChange={onSelectFile} className={s.hiddenInput} />
-
           <Button as="span" variant="primary" className={s.buttonSpan}>
             Select from Computer
           </Button>
         </label>
-
         <Button className={s.button} variant="tertiary" onClick={() => alert('hello')}>
           Open Draft
         </Button>

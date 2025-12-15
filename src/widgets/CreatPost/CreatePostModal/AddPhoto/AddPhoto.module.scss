@@ -1,11 +1,16 @@
 .containerAddPhoto {
-  padding-top: 72px;
+  margin-top: 40px;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .uploadIcon {
   width: 222px;
   height: 228px;
-  background-color: var(--dark-500);
+  background-color: var(--background-element);
   border-radius: 2px;
   display: flex;
   justify-content: center;
@@ -31,4 +36,16 @@
 
 .hiddenInput {
   display: none; /* Полностью убирает элемент из потока */
+}
+
+.error {
+  width: 445px;
+  min-height: 60px;
+  text-align: center;
+  border-radius: 2px;
+  padding: 6px 24px 6px 24px;
+  color: var(--light-100);
+  background-color: var(--danger-900);
+  margin: 0 24px 24px 24px;
+  border: 1px solid var(--danger-500);
 }

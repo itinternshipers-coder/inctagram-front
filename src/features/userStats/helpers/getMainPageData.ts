@@ -13,7 +13,14 @@ export async function getMainPageData() {
       throw new Error(`Failed to load main page data: ${res.status} ${res.statusText}`)
     }
 
-    return res.json()
+    const data = await res.json()
+    const recentPosts = data.recentPosts || []
+    const latestFourPosts = recentPosts.slice(0, 4)
+
+    return {
+      usersCount: data.usersCount,
+      recentPosts: latestFourPosts,
+    }
   } catch (e) {
     console.error('FETCH ERROR:', e)
     throw e

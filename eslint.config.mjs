@@ -1,37 +1,30 @@
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { createRequire } from 'module'
-import { FlatCompat } from '@eslint/eslintrc'
+import storybook from 'eslint-plugin-storybook'
+import next from 'eslint-config-next'
+import prettier from 'eslint-config-prettier'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-const require = createRequire(import.meta.url)
+const eslintConfig = [
+  // Конфиг Next.js 16 (уже включает TypeScript и React)
+  ...next,
 
-const compat = new FlatCompat({ baseDirectory: __dirname })
-
-export default [
-  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier', 'plugin:storybook/recommended'),
-
+  // Storybook конфиг для stories файлов
   {
-    ignores: ['node_modules/**', '.next/**', 'out/**', 'build/**', 'next-env.d.ts'],
+    files: ['**/*.stories.{ts,tsx,js,jsx}'],
+    ...storybook.configs['flat/recommended'],
   },
 
+  // Дополнительные правила для Storybook
   {
-    files: ['**/*.{ts,tsx,js,jsx}'],
-    languageOptions: {
-      parser: require.resolve('@typescript-eslint/parser'),
-      parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        ecmaFeatures: { jsx: true },
-      },
+    files: ['src/stories/**/*'],
+    rules: {
+      'react/no-unescaped-entities': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'storybook/hierarchy-separator': 'off',
+      'storybook/no-redundant-story-name': 'error',
     },
-    plugins: {
-      react: require('eslint-plugin-react'),
-      'react-hooks': require('eslint-plugin-react-hooks'),
-      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
-      storybook: require('eslint-plugin-storybook'),
-    },
+  },
+
+  // Дополнительные глобальные правила
+  {
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'warn',
@@ -44,16 +37,7 @@ export default [
     },
   },
 
-  {
-    files: ['src/stories/**/*'],
-    rules: {
-      'react/no-unescaped-entities': 'off',
-      'react/react-in-jsx-scope': 'off',
-      'storybook/hierarchy-separator': 'off',
-      'storybook/no-redundant-story-name': 'error',
-    },
-  },
-
+  // Глобалы для тестов
   {
     files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', '**/tests/**/*.{ts,tsx}'],
     languageOptions: {
@@ -75,7 +59,10 @@ export default [
     rules: {
       'react/react-in-jsx-scope': 'off',
       'react/no-unescaped-entities': 'off',
-      'testing-library/no-render-in-setup': 'off',
     },
   },
+
+  prettier,
 ]
+
+export default eslintConfig

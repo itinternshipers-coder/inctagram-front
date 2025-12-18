@@ -71,9 +71,6 @@ importers:
       '@chromatic-com/storybook':
         specifier: 4.1.1
         version: 4.1.1(storybook@9.1.15(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@20.19.24)(sass@1.93.3)(yaml@2.8.1)))
-      '@eslint/eslintrc':
-        specifier: ^3
-        version: 3.3.1
       '@next/eslint-plugin-next':
         specifier: ^16.0.10
         version: 16.0.10

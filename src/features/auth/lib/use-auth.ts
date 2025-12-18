@@ -1,4 +1,3 @@
-// src/features/auth/lib/useAuth.ts
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
@@ -20,9 +19,6 @@ export const useAuth = () => {
         const result = await loginMutation(credentials).unwrap()
 
         dispatch(setAccessToken(result.accessToken))
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('accessToken', result.accessToken)
-        }
 
         const userResult = await dispatch(authApi.endpoints.me.initiate(undefined, { forceRefetch: true })).unwrap()
 
@@ -45,9 +41,6 @@ export const useAuth = () => {
     } catch (e) {
     } finally {
       dispatch(logout())
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('accessToken')
-      }
       route.push('/login')
     }
   }, [dispatch, logoutMutation, route])

@@ -23,9 +23,11 @@ export const AuthWrapper = ({ children }: Props) => {
 
   if (isLoading) {
     return (
-      <Card className={s.card}>
-        <Typography variant="regular_text_16">...loading</Typography>
-      </Card>
+      <div className={s.loader}>
+        <Card className={s.card}>
+          <Typography variant="regular_text_16">...loading</Typography>
+        </Card>
+      </div>
     )
   }
 

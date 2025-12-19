@@ -20,8 +20,17 @@
   padding: 0 154px;
 }
 
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
 .card {
   display: flex;
   justify-content: center;
-  // align-items: center;
+  align-items: center;
+  width: 368px;
+  padding: 24px;
 }

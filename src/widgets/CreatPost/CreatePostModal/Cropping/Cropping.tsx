@@ -1,12 +1,11 @@
 'use client'
 
-import s from 'src/widgets/CreatPost/CreatePostModal/Cropping/Cropping.module.scss'
-import { useEffect, useState, useCallback, useRef } from 'react'
-import Cropper, { Area } from 'react-easy-crop'
+import getCroppedImg from '@/shared/lib/utils/image/canvasUtils'
 import { Button } from '@/shared/ui/Button/Button'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import getCroppedImg from '@/shared/lib/utils/image/canvasUtils'
-import { ArrowIosBackOutlineIcon } from '@/shared/icons/svgComponents'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import Cropper, { Area } from 'react-easy-crop'
+import s from 'src/widgets/CreatPost/CreatePostModal/Cropping/Cropping.module.scss'
 
 type AspectRatio = {
   value: number

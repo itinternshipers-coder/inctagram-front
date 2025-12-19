@@ -2,7 +2,7 @@
 import { AddPhoto } from '@/widgets/CreatPost/CreatePostModal/AddPhoto/AddPhoto'
 import { Cropping } from '@/widgets/CreatPost/CreatePostModal/Cropping/Cropping'
 import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
-import { useModalSteps } from '@/widgets/CreatPost/CreatePostModal/useModalSteps'
+import { useModalSteps } from '@/widgets/CreatPost/CreatePostModal/hooks/useModalSteps'
 import React, { useState } from 'react'
 import s from './CreatePostModal.module.scss'
 

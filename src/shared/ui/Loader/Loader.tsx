@@ -1,6 +1,6 @@
 import s from './Loader.module.scss'
 
-const Loader = () => {
+export const Loader = () => {
   return (
     <div className={s.overlay}>
       <span className={s.loader}></span>

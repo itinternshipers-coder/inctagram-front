@@ -1,118 +1,40 @@
-.containerCropping {
-  width: 100%;
-  height: 100%;
+.cropperContainer {
   display: flex;
-  flex-direction: column;
-}
-
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  border-bottom: 1px solid #e0e0e0;
-  //
-}
-
-.headerLeft {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.backButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #333;
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-.title {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-}
-
-.nextButton {
-  font-size: 16px;
-  font-weight: 500;
-  color: #007bff;
-
-  &:hover:not(:disabled) {
-    color: #0056b3;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  border-radius: 4px;
+  object-fit: contain;
 }
 
 /* Main Content */
-.content {
-  display: flex;
-  flex: 1;
-  gap: 24px;
-  padding: 24px;
-  min-height: 0;
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-  }
-}
-
-/* Left Side - Image Section */
-.imageSection {
-  flex: 2;
+.contentAddPhoto {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  min-width: 0;
+  gap: 5px;
+  padding: 8px;
+}
+
+/* Zoom Content */
+.zoomContent {
+  border: 1px solid var(--dark-100);
+  text-align: center;
+}
+/* Image Section */
+.imageSection {
+  display: flex;
+  gap: 5px;
+  //border: 1px solid var(--dark-100);
+  padding: 5px;
 }
 
 .imageContainer {
-  flex: 1;
   position: relative;
   width: 100%;
-  min-height: 400px;
-  //background: #f5f5f5;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #e0e0e0;
-}
-
-.cropperContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 
 /* Zoom Controls */
 .zoomControls {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  padding: 8px;
   background: white;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  border-radius: 4px;
 }
 
 .zoomLabel {
@@ -131,7 +53,7 @@
 .zoomButton {
   width: 36px;
   height: 36px;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid #e0e0e0;
   background: white;
   color: #333;
@@ -155,9 +77,8 @@
 }
 
 .zoomSlider {
-  flex: 1;
   height: 4px;
-  border-radius: 2px;
+  border-radius: 4px;
   background: #e0e0e0;
   outline: none;
   -webkit-appearance: none;
@@ -186,26 +107,22 @@
 
 /* Right Side - Controls */
 .controlsSection {
-  flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: 320px;
-  max-width: 400px;
+  gap: 5px;
+  max-width: 100%;
 }
 
 /* Preview */
 .previewSection {
+  display: flex;
+  width: 100%;
   .previewContainer {
     width: 100%;
+    flex-grow: 1;
     aspect-ratio: 1;
-    //background: #f8f9fa;
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
   }
 
   .previewImage {
@@ -215,37 +132,38 @@
   }
 
   .previewPlaceholder {
-    text-align: center;
-    padding: 20px;
     color: #6c757d;
-
-    p {
-      margin: 0;
-      line-height: 1.4;
-    }
   }
 }
 
 /* Aspect Ratio */
 .aspectSection {
+  border: 1px solid var(--dark-100);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   .aspectTitle {
+    text-align: center;
     margin-bottom: 16px;
     font-size: 18px;
     font-weight: 600;
-    color: #333;
+    color: #ffffff;
   }
 
   .aspectButtons {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 12px;
   }
 }
 
 .aspectButton {
-  flex: 1;
+  width: 55px;
   padding: 12px 0;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 4px;
   background: white;
   color: #333;
   font-size: 14px;
@@ -263,62 +181,5 @@
     border-color: #007bff;
     background: #007bff;
     color: white;
-  }
-}
-
-/* Original Image Info */
-.originalInfo {
-  .originalTitle {
-    margin-bottom: 16px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-  }
-}
-
-.originalPreview {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-}
-
-.originalImage {
-  width: 60px;
-  height: 60px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-
-.imageName {
-  flex: 1;
-
-  p {
-    margin: 0 0 4px 0;
-    font-weight: 500;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  span {
-    color: #6c757d;
-  }
-}
-
-/* No Images */
-.noImages {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-
-  h2 {
-    color: #666;
   }
 }

@@ -49,7 +49,7 @@ export const CreatePostModal = () => {
           {currentStep === 'add-photo' && (
             <AddPhoto onSelectImage={handleImageSelect} onCloseModal={handleCloseModal} />
           )}
-          {currentStep === 'cropping' && (
+          {currentStep === 'cropping' && selectedImage && (
             <Cropping
               image={selectedImage}
               onCropComplete={handleCropComplete}

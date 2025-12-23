@@ -10,11 +10,13 @@ export const ModalHeader = ({
   onBack,
   onNext,
   onClose,
+  disabled,
 }: {
   currentStep: ModalStep
-  onBack: () => void
-  onNext: () => void
-  onClose: () => void
+  onBack?: () => void
+  onNext?: () => void
+  onClose?: () => void
+  disabled?: boolean
 }) => {
   const stepTitles: Record<ModalStep, string> = {
     'add-photo': 'Add Photo',
@@ -36,7 +38,7 @@ export const ModalHeader = ({
         <>
           <ArrowIosBackOutlineIcon onClick={onBack} className={s.buttonBack} />
           <Typography variant={'h1'}>{stepTitles[currentStep]}</Typography>
-          <Button variant={'link'} as={'div'} onClick={onNext}>
+          <Button variant={'link'} onClick={onNext} disabled={disabled}>
             {currentStep === 'publication' ? (
               <Button as={Link} href={''} variant={'link'}>
                 {'Publish'}

@@ -1,8 +1,8 @@
 'use client'
 
 import getCroppedImg from '@/shared/lib/utils/image/canvasUtils'
-import { Button } from '@/shared/ui/Button/Button'
-import { Typography } from '@/shared/ui/Typography/Typography'
+import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
+import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
 import s from 'src/widgets/CreatPost/CreatePostModal/Cropping/Cropping.module.scss'
@@ -13,14 +13,15 @@ type AspectRatio = {
 }
 
 type CroppingProps = {
-  image: File | null // Одно изображение
+  image: File // Одно изображение
   onCropComplete?: (croppedImage: File) => void
   onNext?: () => void
   onBack?: () => void
+  currentStep: ModalStep
 }
 
 const ASPECT_RATIOS: AspectRatio[] = [
-  { value: 1 / 1, label: '1:1' },
+  { value: 1, label: '1:1' },
   { value: 4 / 5, label: '4:5' },
   { value: 16 / 9, label: '16:9' },
 ]
@@ -30,8 +31,9 @@ export const Cropping = ({
   onCropComplete,
   onNext,
   onBack,
+  currentStep,
 }: CroppingProps) => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string>('')
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
@@ -43,25 +45,26 @@ export const Cropping = ({
 
   // Загрузка изображения
   useEffect(() => {
-    if (image) {
-      const url = URL.createObjectURL(image)
-      setImageUrl(url)
+    const url = URL.createObjectURL(image)
+    setImageUrl(url)
 
-      return () => {
-        URL.revokeObjectURL(url)
-        if (croppedPreviewUrl) {
-          URL.revokeObjectURL(croppedPreviewUrl)
-        }
-      }
-    } else {
-      setImageUrl(null)
-      setCroppedPreviewUrl(null)
+    return () => {
+      URL.revokeObjectURL(url)
     }
-  }, [image])
+  }, [image]) // Убрал croppedPreviewUrl из зависимостей
 
-  // Обновление предпросмотра
+  // Очистка preview URL при размонтировании
+  useEffect(() => {
+    return () => {
+      if (croppedPreviewUrl) {
+        URL.revokeObjectURL(croppedPreviewUrl)
+      }
+    }
+  }, [croppedPreviewUrl]) // ← Очистка при каждом изменении
+
+  // Обновление предпросмотра с useCallback
   const updateCroppedPreview = useCallback(async () => {
-    if (!imageUrl || !croppedAreaPixels || !image) return
+    if (!croppedAreaPixels) return
 
     setIsGeneratingPreview(true)
 
@@ -69,17 +72,19 @@ export const Cropping = ({
       const croppedImageBlob = await getCroppedImg(imageUrl, croppedAreaPixels)
       const previewUrl = URL.createObjectURL(croppedImageBlob)
 
-      if (croppedPreviewUrl) {
-        URL.revokeObjectURL(croppedPreviewUrl)
-      }
-
-      setCroppedPreviewUrl(previewUrl)
+      // Очищаем предыдущий preview
+      setCroppedPreviewUrl((prev) => {
+        if (prev) {
+          URL.revokeObjectURL(prev)
+        }
+        return previewUrl
+      })
     } catch (e) {
       console.error('Error updating preview:', e)
     } finally {
       setIsGeneratingPreview(false)
     }
-  }, [imageUrl, croppedAreaPixels, image, croppedPreviewUrl])
+  }, [imageUrl, croppedAreaPixels])
 
   // Дебаунс обновления предпросмотра
   useEffect(() => {
@@ -121,134 +126,46 @@ export const Cropping = ({
   const handleZoomOut = () => {
     setZoom((prev) => Math.max(prev - 0.1, 1))
   }
+  const handleSaveCrop = async () => {
+    if (!imageUrl || !croppedAreaPixels || !image || !onCropComplete) {
+      console.error('Cannot save crop: missing data', {
+        imageUrl: !!imageUrl,
+        croppedAreaPixels: !!croppedAreaPixels,
+        image: !!image,
+        onCropComplete: !!onCropComplete,
+      })
 
-  const handleNext = async () => {
+      return
+    }
+
     try {
-      if (!imageUrl || !croppedAreaPixels || !image) return
-
       const croppedImageBlob = await getCroppedImg(imageUrl, croppedAreaPixels)
 
-      const croppedImageFile = new File([croppedImageBlob], `cropped-${image.name}`, { type: 'image/png' })
+      const croppedImageFile = new File([croppedImageBlob], `cropped-${image.name}`, {
+        type: croppedImageBlob.type || 'image/png',
+        lastModified: Date.now(),
+      })
 
-      if (onCropComplete) {
-        onCropComplete(croppedImageFile)
-      }
-
+      onCropComplete(croppedImageFile)
       if (onNext) {
         onNext()
       }
-    } catch (e) {
-      console.error('Error cropping image:', e)
+    } catch (error) {
+      console.error('Error saving cropped image:', error)
     }
   }
 
-  if (!imageUrl || !image) {
-    return (
-      <div className={s.containerCropping}>
-        <div className={s.noImages}>
-          <Typography variant="h2">No image selected</Typography>
-          <Button variant="primary" onClick={onBack}>
-            Back to upload
-          </Button>
-        </div>
-      </div>
-    )
-  }
+  const canSave = croppedAreaPixels && !isGeneratingPreview
 
   return (
-    <div className={s.containerCropping}>
-      {/* Header */}
-      {/*<div className={s.header}>*/}
-      {/*  <div className={s.headerLeft}>*/}
-      {/*    <button className={s.backButton} onClick={onBack}>*/}
-      {/*      <ArrowIosBackOutlineIcon />*/}
-      {/*    </button>*/}
-      {/*    <Typography variant="h1" className={s.title}>*/}
-      {/*      Cropping*/}
-      {/*    </Typography>*/}
-      {/*  </div>*/}
-      {/*  <Button*/}
-      {/*    variant="link"*/}
-      {/*    className={s.nextButton}*/}
-      {/*    onClick={handleNext}*/}
-      {/*    disabled={!croppedAreaPixels || isGeneratingPreview}*/}
-      {/*  >*/}
-      {/*    {isGeneratingPreview ? 'Processing...' : 'Next'}*/}
-      {/*  </Button>*/}
-      {/*</div>*/}
-
+    <>
+      <ModalHeader currentStep={currentStep} onBack={onBack} onNext={handleSaveCrop} disabled={!canSave} />
       {/* Main Content */}
-      <div className={s.content}>
-        {/* Left Side - Image */}
-        <div className={s.imageSection}>
-          <div className={s.imageContainer}>
-            <Cropper
-              image={imageUrl}
-              crop={crop}
-              zoom={zoom}
-              aspect={selectedAspect.value}
-              onCropChange={setCrop}
-              onZoomChange={setZoom}
-              onCropComplete={onCropCompleteHandler}
-              classes={{
-                containerClassName: s.cropperContainer,
-              }}
-            />
-          </div>
-
-          {/* Zoom Controls */}
-          <div className={s.zoomControls}>
-            <Typography variant="h3" className={s.zoomLabel}>
-              Zoom: {zoom.toFixed(1)}x
-            </Typography>
-            <div className={s.zoomSliderWrapper}>
-              <button className={s.zoomButton} onClick={handleZoomOut} disabled={zoom <= 1}>
-                −
-              </button>
-              <input
-                type="range"
-                min={1}
-                max={3}
-                step={0.1}
-                value={zoom}
-                onChange={handleZoomChange}
-                className={s.zoomSlider}
-              />
-              <button className={s.zoomButton} onClick={handleZoomIn} disabled={zoom >= 3}>
-                +
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side - Controls */}
+      <div className={s.contentAddPhoto}>
         <div className={s.controlsSection}>
-          {/* Preview */}
-          <div className={s.previewSection}>
-            <div className={s.previewContainer}>
-              {croppedPreviewUrl ? (
-                <img
-                  src={croppedPreviewUrl}
-                  alt="Cropped preview"
-                  className={s.previewImage}
-                  style={{ aspectRatio: selectedAspect.value }}
-                />
-              ) : (
-                <div className={s.previewPlaceholder}>
-                  <Typography variant="h3" color="secondary">
-                    It, sed do eiusmod tempor <br />
-                    am, quis nostrud exercitation
-                  </Typography>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Aspect Ratios */}
+          {/* Controls */}
           <div className={s.aspectSection}>
-            <Typography variant="h3" className={s.aspectTitle}>
-              Aspect Ratio
-            </Typography>
+            <div className={s.aspectTitle}>Aspect Ratio</div>
             <div className={s.aspectButtons}>
               {ASPECT_RATIOS.map((ratio) => (
                 <button
@@ -261,8 +178,63 @@ export const Cropping = ({
               ))}
             </div>
           </div>
+          {/* Preview */}
+          <div className={s.previewSection}>
+            <div className={s.previewContainer}>
+              {croppedPreviewUrl ? (
+                <img
+                  src={croppedPreviewUrl}
+                  alt="Cropped preview"
+                  className={s.previewImage}
+                  style={{ aspectRatio: selectedAspect.value }}
+                />
+              ) : (
+                <div className={s.previewPlaceholder}>Loading...</div>
+              )}
+            </div>
+          </div>
+        </div>
+        {/* Change Image */}
+        <div className={s.zoomContent}>
+          <h3>Zoom Controls</h3>
+          <div className={s.imageSection}>
+            <div className={s.imageContainer}>
+              <Cropper
+                image={imageUrl}
+                crop={crop}
+                zoom={zoom}
+                aspect={selectedAspect.value}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropCompleteHandler}
+                classes={{
+                  containerClassName: s.cropperContainer,
+                }}
+              />
+            </div>
+            <div className={s.zoomControls}>
+              <div className={s.zoomLabel}>Zoom: {zoom.toFixed(1)}x</div>
+              <div className={s.zoomSliderWrapper}>
+                <button className={s.zoomButton} onClick={handleZoomOut} disabled={zoom <= 1}>
+                  −
+                </button>
+                <input
+                  type="range"
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  value={zoom}
+                  onChange={handleZoomChange}
+                  className={s.zoomSlider}
+                />
+                <button className={s.zoomButton} onClick={handleZoomIn} disabled={zoom >= 3}>
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

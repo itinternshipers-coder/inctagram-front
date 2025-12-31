@@ -108,14 +108,17 @@
 /* Right Side - Controls */
 .controlsSection {
   display: flex;
+  justify-content: space-between;
   gap: 5px;
-  max-width: 100%;
 }
 
 /* Preview */
 .previewSection {
   display: flex;
-  width: 100%;
+  width: 400px;
+  height: 300px;
+  border: 1px solid var(--dark-100);
+
   .previewContainer {
     width: 100%;
     flex-grow: 1;
@@ -123,6 +126,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 5px;
+    //border: 1px solid red;
   }
 
   .previewImage {
@@ -136,6 +141,38 @@
   }
 }
 
+.uploadPhoto {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  height: 70px;
+  border: 1px solid var(--dark-100);
+
+  img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+  }
+}
+
+.containerPhoto {
+  //border: 1px solid var(--dark-100);
+  display: flex;
+  padding: 5px;
+}
+
+.fileInputLabel {
+  display: flex;
+}
+
+.hiddenInput {
+  display: none; /* Полностью убирает элемент из потока */
+}
+
+.buttonPlus {
+  margin: 4px;
+}
+
 /* Aspect Ratio */
 .aspectSection {
   border: 1px solid var(--dark-100);
@@ -147,7 +184,7 @@
     margin-bottom: 16px;
     font-size: 18px;
     font-weight: 600;
-    color: #ffffff;
+    //color: #ffffff;
   }
 
   .aspectButtons {
@@ -160,11 +197,11 @@
 }
 
 .aspectButton {
-  width: 55px;
+  width: 75px;
   padding: 12px 0;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
-  background: white;
+  //background: white;
   color: #333;
   font-size: 14px;
   font-weight: 500;
@@ -182,4 +219,197 @@
     background: #007bff;
     color: white;
   }
+}
+
+.galleryContainer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.galleryItem {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+
+  &.active {
+    border-color: #007bff;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.galleryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.galleryOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  .galleryItem:hover & {
+    opacity: 1;
+  }
+}
+
+.photoNumber {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.editedBadge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #28a745;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.deleteButton {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: #c82333;
+  }
+}
+
+.galleryItemAdd {
+  width: 80px;
+  height: 80px;
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #007bff;
+  font-size: 12px;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f0f8ff;
+    border-color: #0056b3;
+  }
+
+  .uploadIcon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+  }
+}
+
+.aspectButton {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #007bff;
+  }
+
+  &.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+}
+
+.mainPreviewSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mainPreviewImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.cropperSection {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+
+  h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.cropperContainerWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cropperArea {
+  height: 400px;
+  position: relative;
+  background: #000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cropperPlaceholder {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  background: #e9ecef;
+  border-radius: 4px;
 }

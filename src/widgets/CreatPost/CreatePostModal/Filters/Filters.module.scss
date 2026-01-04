@@ -1,0 +1,211 @@
+.contentFilters {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.previewSection {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  height: 504px;
+  border-right: 1px solid var(--border);
+}
+
+.imageWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.previewImage {
+  display: flex;
+  max-width: 100%;
+  max-height: 100%;
+
+  object-fit: contain;
+  transition: filter 0.3s ease;
+}
+
+.previewInfo {
+  p {
+    margin: 4px 0;
+    color: #495057;
+    font-size: 14px;
+
+    strong {
+      color: #212529;
+    }
+  }
+}
+
+.filtersSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    color: #ffffff;
+  }
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 0 16px;
+}
+
+.filterButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(.active) {
+    border-color: #adb5bd;
+    transform: translateY(-2px);
+  }
+
+  &.active {
+    border-color: #007bff;
+    background: #f0f7ff;
+  }
+}
+
+.filterPreview {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f8f9fa;
+  position: relative;
+}
+
+.filterThumbnail {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    #868e96 25%,
+    #adb5bd 25%,
+    #adb5bd 50%,
+    #868e96 50%,
+    #868e96 75%,
+    #adb5bd 75%,
+    #adb5bd 100%
+  );
+  background-size: 20px 20px;
+}
+
+// Примеры CSS-фильтров для превью
+.filterNone .filterThumbnail {
+  filter: none;
+}
+
+.filterGrayscale .filterThumbnail {
+  filter: grayscale(100%);
+}
+
+.filterSepia .filterThumbnail {
+  filter: sepia(80%);
+}
+
+.filterVintage .filterThumbnail {
+  filter: sepia(60%) contrast(1.1) brightness(1.1);
+}
+
+.filterColder .filterThumbnail {
+  filter: brightness(1.1) hue-rotate(180deg) saturate(0.8);
+}
+
+.filterWarmer .filterThumbnail {
+  filter: brightness(1.1) sepia(30%) saturate(1.2);
+}
+
+.filterName {
+  font-size: 13px;
+  font-weight: 500;
+  color: #495057;
+
+  .active & {
+    color: #007bff;
+  }
+}
+
+.noImage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+
+  p {
+    color: #6c757d;
+    font-size: 16px;
+  }
+}
+
+.previewContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  width: 60px;
+  height: 60px;
+}
+.navButton:hover {
+  color: white;
+  background-color: rgb(0, 0, 0);
+}
+.prevButton {
+  left: 10px;
+}
+.nextButton {
+  right: 10px;
+}
+
+.dotsIndicator {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+.dot.active {
+  background: white;
+}

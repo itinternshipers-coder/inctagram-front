@@ -1,9 +1,10 @@
-// Рабочая версия
 'use client'
+
 import { AddPhoto } from '@/widgets/CreatPost/CreatePostModal/AddPhoto/AddPhoto'
 import { Cropping } from '@/widgets/CreatPost/CreatePostModal/Cropping/Cropping'
 import { Filters } from '@/widgets/CreatPost/CreatePostModal/Filters/Filters'
 import { useModalSteps } from '@/widgets/CreatPost/CreatePostModal/hooks/useModalSteps'
+import { Publication } from '@/widgets/CreatPost/CreatePostModal/Publication/Publication'
 import React, { useState } from 'react'
 import s from './CreatePostModal.module.scss'
 
@@ -16,7 +17,7 @@ export const CreatePostModal = () => {
   const [filteredImages, setFilteredImages] = useState<File[] | null>(null)
 
   const { currentStep, goNext, goBack } = useModalSteps()
-  // console.log(filteredImages)
+
   // Обработчик выбора изображения (может принимать несколько файлов)
   const handleImageSelect = (files: File | null) => {
     if (files) {
@@ -79,13 +80,9 @@ export const CreatePostModal = () => {
               onBack={goBack}
             />
           )}
-          {/*{currentStep === 'publication' && filteredImages && (*/}
-          {/*  <Publication*/}
-          {/*    images={filteredImages}*/}
-          {/*    onBack={goBack}*/}
-          {/*    onPublish={handlePublish}*/}
-          {/*  />*/}
-          {/*)}*/}
+          {currentStep === 'publication' && filteredImages && (
+            <Publication images={filteredImages} onBack={goBack} currentStep={currentStep} />
+          )}
         </div>
       )}
     </div>

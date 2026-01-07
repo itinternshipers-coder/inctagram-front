@@ -39,13 +39,7 @@ export const ModalHeader = ({
           <ArrowIosBackOutlineIcon onClick={onBack} className={s.buttonBack} />
           <Typography variant={'h1'}>{stepTitles[currentStep]}</Typography>
           <Button variant={'link'} onClick={onNext} disabled={disabled}>
-            {currentStep === 'publication' ? (
-              <Button as={Link} href={''} variant={'link'}>
-                {'Publish'}
-              </Button>
-            ) : (
-              'Next'
-            )}
+            {currentStep === 'publication' ? 'Publish' : 'Next'}
           </Button>
         </>
       )}

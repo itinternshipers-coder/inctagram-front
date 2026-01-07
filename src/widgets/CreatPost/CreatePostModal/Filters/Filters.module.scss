@@ -42,10 +42,11 @@
 .filtersSection {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  //justify-content: center;
   align-items: center;
-  width: 300px;
-
+  //width: 300px;
+  padding-top: 20px;
+  flex: 1;
   h3 {
     margin: 0 0 16px 0;
     font-size: 18px;
@@ -57,8 +58,9 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 44px;
   padding: 0 16px;
+  //border: 1px solid red;
 }
 
 .filterButton {

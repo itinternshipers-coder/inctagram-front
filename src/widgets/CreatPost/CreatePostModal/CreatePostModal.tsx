@@ -81,7 +81,7 @@ export const CreatePostModal = () => {
             />
           )}
           {currentStep === 'publication' && filteredImages && (
-            <Publication images={filteredImages} onBack={goBack} currentStep={currentStep} />
+            <Publication images={filteredImages} onBack={goBack} currentStep={currentStep} onNext={handleCloseModal} />
           )}
         </div>
       )}

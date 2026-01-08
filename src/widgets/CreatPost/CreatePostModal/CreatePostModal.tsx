@@ -5,7 +5,7 @@ import { Cropping } from '@/widgets/CreatPost/CreatePostModal/Cropping/Cropping'
 import { Filters } from '@/widgets/CreatPost/CreatePostModal/Filters/Filters'
 import { useModalSteps } from '@/widgets/CreatPost/CreatePostModal/hooks/useModalSteps'
 import { Publication } from '@/widgets/CreatPost/CreatePostModal/Publication/Publication'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import s from './CreatePostModal.module.scss'
 
 export type ModalStep = 'add-photo' | 'cropping' | 'filters' | 'publication'
@@ -15,6 +15,8 @@ export const CreatePostModal = () => {
   const [isOpen, setIsOpen] = useState(true)
   const [croppedImages, setCroppedImages] = useState<File[] | null>(null)
   const [filteredImages, setFilteredImages] = useState<File[] | null>(null)
+
+  const [showModal, setShowModal] = useState(false)
 
   const { currentStep, goNext, goBack } = useModalSteps()
 
@@ -52,8 +54,18 @@ export const CreatePostModal = () => {
 
   if (!isOpen) return null
 
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // currentTarget - это overlayModal
+    // target - это конкретный элемент, по которому кликнули
+
+    // Если кликнули именно на overlay (а не на его детей)
+    if (e.target === e.currentTarget) {
+      setShowModal(true)
+    }
+  }
+
   return (
-    <div className={s.overlayModal} onClick={handleCloseModal}>
+    <>
       {currentStep === 'add-photo' || currentStep === 'cropping' ? (
         <div className={s.containerModalSquare} onClick={(e) => e.stopPropagation()}>
           {currentStep === 'add-photo' && (
@@ -70,21 +82,30 @@ export const CreatePostModal = () => {
           )}
         </div>
       ) : (
-        <div className={s.containerModalRectangular} onClick={(e) => e.stopPropagation()}>
-          {currentStep === 'filters' && croppedImages && (
-            <Filters
-              images={croppedImages} // Нужно обновить Filters для работы с массивом
-              onFilterApply={handleFilterApply}
-              currentStep={currentStep}
-              onNext={goNext}
-              onBack={goBack}
-            />
-          )}
-          {currentStep === 'publication' && filteredImages && (
-            <Publication images={filteredImages} onBack={goBack} currentStep={currentStep} onNext={handleCloseModal} />
-          )}
+        <div className={s.overlayModal} onClick={handleOverlayClick}>
+          <div className={s.containerModalRectangular} onClick={(e) => e.stopPropagation()}>
+            {currentStep === 'filters' && croppedImages && (
+              <Filters
+                images={croppedImages} // Нужно обновить Filters для работы с массивом
+                onFilterApply={handleFilterApply}
+                currentStep={currentStep}
+                onNext={goNext}
+                onBack={goBack}
+              />
+            )}
+            {currentStep === 'publication' && filteredImages && (
+              <Publication
+                images={filteredImages}
+                onBack={goBack}
+                currentStep={currentStep}
+                onNext={handleCloseModal}
+                showModal={showModal}
+                onOpenChangeModal={setShowModal}
+              />
+            )}
+          </div>
         </div>
       )}
-    </div>
+    </>
   )
 }

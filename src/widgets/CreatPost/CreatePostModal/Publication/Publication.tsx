@@ -455,11 +455,14 @@
 
 import { useCreatePostMutation } from '@/entities/post/api/posts-api'
 import { CreatePostSchema } from '@/entities/post/model'
+import { ROUTES } from '@/shared/config/routes'
+import { Modal } from '@/shared/ui/Modal/Modal'
 import { ImageGallery } from '@/shared/ui/PostModal/ImageGallery/ImageGallery'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
 import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import s from 'src/widgets/CreatPost/CreatePostModal/Publication/Publication.module.scss'
@@ -486,6 +489,8 @@ type PublicationProps = {
   onBack: () => void
   onNext?: () => void
   currentStep: ModalStep
+  showModal: boolean
+  onOpenChangeModal: (value: boolean) => void
 }
 
 // Модифицированная схема для формы (только описание)
@@ -495,7 +500,14 @@ const CreatePostFormSchema = z.object({
 
 type CreatePostFormInput = z.infer<typeof CreatePostFormSchema>
 
-export const Publication = ({ images, onBack, onNext, currentStep }: PublicationProps) => {
+export const Publication = ({
+  images,
+  onBack,
+  onNext,
+  currentStep,
+  showModal,
+  onOpenChangeModal,
+}: PublicationProps) => {
   const [photos, setPhotos] = useState<PhotoType[]>([])
   const [uploadedPhotos, setUploadedPhotos] = useState<UploadedPhotoType[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -505,6 +517,8 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
   const submitButtonRef = useRef<HTMLButtonElement>(null)
 
   const [createPost, { isLoading: isCreatingPost, error: createPostError }] = useCreatePostMutation()
+
+  const router = useRouter()
 
   // Форма с валидацией (только для описания)
   const {
@@ -584,20 +598,6 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
       }
 
       const { photo } = data
-
-      // Извлекаем s3Key из URL
-      // const extractS3KeyFromUrl = (url: string): string => {
-      //   try {
-      //     const urlObj = new URL(url)
-      //     // Удаляем первый слеш: /traineegramm/... → traineegramm/...
-      //     const path = urlObj.pathname
-      //     return path.startsWith('/') ? path.substring(1) : path
-      //   } catch {
-      //     // Если не удалось распарсить URL, создаем ключ на основе photoId
-      //     return `traineegramm/photos/${photo.id}/${Date.now()}.jpg`
-      //   }
-      // }
-
       return {
         photoId: photo.id,
         s3Key: photo.s3Key,
@@ -745,10 +745,13 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
     submitButtonRef.current?.click()
   }
 
+  const handleSavePost = () => {
+    router.push(ROUTES.PUBLIC.HOME)
+  }
+
   return (
     <>
       <ModalHeader currentStep={currentStep} onBack={onBack} onNext={handlePublish} disabled={!canPublish} />
-
       <div className={s.contentPublication}>
         {/* Отображение ошибок */}
         {/*{uploadError && (*/}
@@ -783,9 +786,21 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
               />
               <div className={s.countSymbol}>{description?.length || 0}/500</div>
             </div>
-            {/* Скрытая кнопка submit */}
+            {/* Скрытая кнопка submit для отправки формы */}
             <button type="submit" ref={submitButtonRef} style={{ display: 'none' }} />
           </form>
+          <Modal
+            open={showModal}
+            onOpenChange={onOpenChangeModal}
+            title="Close"
+            message="Do you really want to close the creation of a publication?
+              If you close everything will be deleted"
+            confirmMode={true}
+            buttonText="Save draft"
+            cancelButtonText="Discard"
+            isCancelPrimary={false}
+            onAction={handleSavePost}
+          />
         </div>
       </div>
     </>

@@ -283,7 +283,13 @@ export const Publication = ({
 
   return (
     <>
-      <ModalHeader currentStep={currentStep} onBack={onBack} onNext={handlePublish} disabled={!canPublish} />
+      <ModalHeader
+        currentStep={currentStep}
+        onBack={onBack}
+        onNext={handlePublish}
+        disabled={!canPublish}
+        onSubmitting={isSubmitting}
+      />
       <div className={s.contentPublication}>
         <div className={s.previewSection}>
           <div className={s.previewContainer}>
@@ -324,6 +330,7 @@ export const Publication = ({
             isCancelPrimary={false}
             onAction={handleSavePost}
           />
+          {isSubmitting && <Loader />}
         </div>
       </div>
       {uploadError && <Alert status="error" text={uploadError} position="bottom-left" />}

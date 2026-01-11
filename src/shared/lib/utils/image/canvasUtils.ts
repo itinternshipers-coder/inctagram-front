@@ -44,6 +44,6 @@ export default async function getCroppedImg(
       } else {
         reject(new Error('Failed to create blob from canvas'))
       }
-    }, 'image/png')
+    }, 'image/jpeg')
   })
 }

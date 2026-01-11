@@ -35,13 +35,23 @@ type UploadedPhotoType = {
   url: string
 }
 
-type PublicationProps = {
+type PublicationProps = UserPostType & {
   images: File[]
   onBack: () => void
   onNext?: () => void
   currentStep: ModalStep
   showModal: boolean
   onOpenChangeModal: (value: boolean) => void
+}
+
+export type UserPostType = {
+  id?: string
+  authorId?: string
+  userName?: string
+  description?: string
+  createdAt?: string
+  updatedAt?: string
+  photos?: PhotoType[]
 }
 
 // Модифицированная схема для формы (только описание)
@@ -58,18 +68,22 @@ export const Publication = ({
   currentStep,
   showModal,
   onOpenChangeModal,
+  id,
+  authorId,
 }: PublicationProps) => {
   const [photos, setPhotos] = useState<PhotoType[]>([])
   const [uploadedPhotos, setUploadedPhotos] = useState<UploadedPhotoType[]>([])
-  // const [isLoading, setIsLoading] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
 
   const submitButtonRef = useRef<HTMLButtonElement>(null)
 
-  const [createPost, { isLoading: isCreatingPost, error: createPostError }] = useCreatePostMutation()
+  const [createPost, { isLoading: isCreatingPost }] = useCreatePostMutation()
 
   const router = useRouter()
+
+  // Временно пока нет users
+  const userId = 'dd4b0337-9ffe-48c0-b10b-10fdf0263a23'
 
   // Форма с валидацией (только для описания)
   const {
@@ -89,7 +103,6 @@ export const Publication = ({
   useEffect(() => {
     if (!images || images.length === 0) {
       setPhotos([])
-      // setIsLoading(false)
       return
     }
 
@@ -127,7 +140,10 @@ export const Publication = ({
     try {
       const formData = new FormData()
       formData.append('photo', file)
-      formData.append('userId', 'dd4b0337-9ffe-48c0-b10b-10fdf0263a23')
+      formData.append('userId', userId)
+
+      // id из пропсов
+      // formData.append('userId', id)
 
       const response = await fetch('https://gateway.traineegramm.ru/api/v1/photos/upload', {
         method: 'POST',
@@ -264,8 +280,9 @@ export const Publication = ({
     }
   }
 
+  // Временная заглушка для author
   const author = {
-    id: '11212',
+    id: authorId,
     username: 'NoName',
     avatarUrl: 'https://cs13.pikabu.ru/avatars/7246/x7246765-497572027.png',
   }
@@ -330,7 +347,7 @@ export const Publication = ({
             isCancelPrimary={false}
             onAction={handleSavePost}
           />
-          {isSubmitting && <Loader />}
+          {isSubmitting && <Loader>Publication in progress</Loader>}
         </div>
       </div>
       {uploadError && <Alert status="error" text={uploadError} position="bottom-left" />}

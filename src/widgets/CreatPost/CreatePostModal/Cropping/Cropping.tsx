@@ -1,7 +1,9 @@
 'use client'
 
+import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'
 import getCroppedImg from '@/shared/lib/utils/image/canvasUtils'
+import { Typography } from '@/shared/ui/Typography/Typography'
 import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
 import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -16,8 +18,6 @@ type AspectRatio = {
 type PhotoType = {
   photoId: string
   file: File
-  // order?: number
-  // createdAt?: string
   originalUrl: string
   croppedUrl?: string
   isEdited?: boolean
@@ -60,11 +60,14 @@ export const Cropping = ({
   const [selectedAspect, setSelectedAspect] = useState<AspectRatio>(ASPECT_RATIOS[0])
   const [croppedPreviewUrl, setCroppedPreviewUrl] = useState<string | null>(null)
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const cropDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // console.log(photos)
+  const { file, error, onSelectFile } = useImageUpload({
+    maxSizeMB: 10, // Ограничение 10MB
+    allowedTypes: ['image/png', 'image/jpeg'],
+  })
+
   // Инициализация фотографий из пропса images
   useEffect(() => {
     const initializePhotos = async () => {
@@ -105,7 +108,7 @@ export const Cropping = ({
     if (!currentPhoto?.croppedAreaPixels || !currentPhoto.originalUrl) return
 
     setIsGeneratingPreview(true)
-    setError(null)
+    // setError(null)
 
     try {
       const croppedImageBlob = await getCroppedImg(currentPhoto.originalUrl, currentPhoto.croppedAreaPixels)
@@ -122,7 +125,6 @@ export const Cropping = ({
       )
     } catch (e) {
       console.error('Error updating preview:', e)
-      setError('Failed to generate preview')
     } finally {
       setIsGeneratingPreview(false)
     }
@@ -214,47 +216,92 @@ export const Cropping = ({
     [photos, currentIndex]
   )
 
-  const onSelectFile = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = Array.from(e.target.files || [])
-      if (files.length === 0) return
+  // const onUploadFile = useCallback(
+  //   (files: File | null) => {
+  //     const newFiles: File[] = Array.from(files)
+  //     // const files = [file]
+  //     // if (files.length === 0) return
+  //
+  //     // const totalCount = photos.length + files.length
+  //     // if (totalCount > MAX_IMAGES) {
+  //     //   setError(`Maximum ${MAX_IMAGES} images allowed`)
+  //     //   return
+  //     // }
+  //
+  //     const newPhotosPromises = newFiles.map(async (file, index) => {
+  //       const url = URL.createObjectURL(file)
+  //       return {
+  //         photoId: `${Date.now()}-${photos.length + index}`,
+  //         file,
+  //         originalUrl: url,
+  //         isEdited: false,
+  //       }
+  //     })
+  //
+  //     Promise.all(newPhotosPromises).then((newPhotos) => {
+  //       setPhotos((prev) => [...prev, ...newPhotos])
+  //       // Переключаемся на первое новое изображение
+  //       setCurrentIndex(photos.length)
+  //     })
+  //
+  //     // Оповещаем родительский компонент о новых файлах
+  //     if (onSelectFiles) {
+  //       onSelectFiles(newFiles)
+  //     }
+  //
+  //     // Сбрасываем input
+  //     // e.target.value = ''
+  //   },
+  //   [photos]
+  // )
+  //
+  // useEffect(() => {
+  //   if (file) {
+  //     onUploadFile(file)
+  //     console.log('файл загружен и провалидирован')
+  //   }
+  // }, [file, onSelectFile])
 
-      const totalCount = photos.length + files.length
-      if (totalCount > MAX_IMAGES) {
-        setError(`Maximum ${MAX_IMAGES} images allowed`)
-        return
+  const onUploadFile = useCallback(
+    (uploadedFile: File) => {
+      // Хук useImageUpload уже выполнил валидацию
+      if (!uploadedFile) return
+
+      const url = URL.createObjectURL(uploadedFile)
+
+      const newPhoto = {
+        photoId: `${Date.now()}-${photos.length}`,
+        file: uploadedFile,
+        originalUrl: url,
+        isEdited: false,
+        // Дополнительная информация, если нужно
+        name: uploadedFile.name,
+        size: uploadedFile.size,
+        type: uploadedFile.type,
       }
 
-      const newPhotosPromises = files.map(async (file, index) => {
-        const url = URL.createObjectURL(file)
-        return {
-          photoId: `${Date.now()}-${photos.length + index}`,
-          file,
-          originalUrl: url,
-          isEdited: false,
-        }
-      })
+      setPhotos((prev) => [...prev, newPhoto])
+      setCurrentIndex(photos.length)
 
-      Promise.all(newPhotosPromises).then((newPhotos) => {
-        setPhotos((prev) => [...prev, ...newPhotos])
-        // Переключаемся на первое новое изображение
-        setCurrentIndex(photos.length)
-      })
-
-      // Оповещаем родительский компонент о новых файлах
       if (onSelectFiles) {
-        onSelectFiles(files)
+        onSelectFiles([uploadedFile])
       }
 
-      // Сбрасываем input
-      e.target.value = ''
+      // Можно добавить уведомление об успешной загрузке
+      console.log(`Added photo: ${uploadedFile.name} (${(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)`)
     },
-    [photos, onSelectFiles]
+    [photos]
   )
+
+  // Обработка нового файла
+  useEffect(() => {
+    if (file) {
+      onUploadFile(file)
+    }
+  }, [file])
 
   const handleSaveCrop = useCallback(async () => {
     if (photos.length === 0) {
-      setError('No images to save')
       return
     }
 
@@ -268,7 +315,7 @@ export const Cropping = ({
         const croppedImageBlob = await getCroppedImg(photo.originalUrl, photo.croppedAreaPixels)
 
         return new File([croppedImageBlob], `cropped-${photo.file.name}`, {
-          type: croppedImageBlob.type || 'image/png',
+          type: croppedImageBlob.type,
           lastModified: Date.now(),
         })
       })
@@ -278,24 +325,25 @@ export const Cropping = ({
       onNext()
     } catch (err) {
       console.error('Error saving cropped images:', err)
-      setError('Failed to save cropped images')
     }
   }, [photos, onCropComplete, onNext])
 
   const currentPhoto = photos[currentIndex]
 
   const canSave = photos.length > 0
-  //  && !isGeneratingPreview && photos.some((photo) => photo.croppedAreaPixels || !photo.isEdited)
-
-  // if (photos.length === 0) {
-  //   setCroppedPreviewUrl('')
-  // }
 
   return (
     <>
       <ModalHeader currentStep={currentStep} onBack={onBack} onNext={handleSaveCrop} disabled={!canSave} />
 
-      <div className={s.contentAddPhoto}>
+      <div className={s.contentCropping}>
+        <div className={s.contentError}>
+          {error && (
+            <Typography variant={'bold_text_14'} className={s.error}>
+              {error}
+            </Typography>
+          )}
+        </div>
         <div className={s.controlsSection}>
           <div className={s.aspectSection}>
             <div className={s.aspectTitle}>Aspect Ratio</div>
@@ -324,7 +372,6 @@ export const Cropping = ({
               ) : (
                 currentPhoto?.originalUrl && <div className={s.previewPlaceholder}>Loading...</div>
               )}
-              {/*<ImageGallery photos={photos} />*/}
             </div>
           </div>
         </div>
@@ -361,7 +408,7 @@ export const Cropping = ({
             <label className={s.galleryItemAdd}>
               <input
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/jpeg,image/png"
                 onChange={onSelectFile}
                 className={s.hiddenInput}
                 multiple
@@ -373,7 +420,6 @@ export const Cropping = ({
         </div>
 
         <div className={s.zoomContent}>
-          {/*{error && <div className={s.error}>{error}</div>}*/}
           <h3>Crop and Zoom Controls</h3>
           <div className={s.imageSection}>
             <div className={s.imageContainer}>

@@ -15,7 +15,7 @@ type AddPhotoProps = {
 export const AddPhoto = ({ onSelectImage, onCloseModal }: AddPhotoProps) => {
   const { file, error, onSelectFile } = useImageUpload({
     maxSizeMB: 10, // Ограничение 10MB
-    allowedTypes: ['image/png', 'image/jpeg', 'image/webp'],
+    allowedTypes: ['image/png', 'image/jpeg'],
   })
   const { currentStep } = useModalSteps()
 
@@ -40,7 +40,7 @@ export const AddPhoto = ({ onSelectImage, onCloseModal }: AddPhotoProps) => {
           <ImageOutlineIcon size={48} />
         </div>
         <div className={s.container}>
-          <label className={s.fileInputLabel}>
+          <label>
             <input type="file" accept="image/jpeg,image/png" onChange={onSelectFile} className={s.hiddenInput} />
             <Button as="span" variant="primary" className={s.buttonSpan}>
               Select from Computer

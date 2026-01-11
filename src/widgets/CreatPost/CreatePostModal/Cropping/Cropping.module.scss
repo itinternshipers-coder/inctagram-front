@@ -5,7 +5,7 @@
 }
 
 /* Main Content */
-.contentAddPhoto {
+.contentCropping {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -412,4 +412,22 @@
   color: #6c757d;
   background: #e9ecef;
   border-radius: 4px;
+}
+
+// Errors add photo
+.contentError {
+  display: flex;
+  justify-content: center;
+}
+
+.error {
+  width: 445px;
+  min-height: 60px;
+  text-align: center;
+  border-radius: 2px;
+  padding: 6px 24px 6px 24px;
+  color: var(--light-100);
+  background-color: var(--danger-900);
+  //margin: 0 24px 24px 24px;
+  border: 1px solid var(--danger-500);
 }

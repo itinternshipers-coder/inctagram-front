@@ -1,9 +1,16 @@
 import s from './Loader.module.scss'
 
-export const Loader = () => {
+type LoaderProps = {
+  children?: React.ReactNode
+}
+
+export const Loader = ({ children }: LoaderProps) => {
   return (
     <div className={s.overlay}>
-      <span className={s.loader}></span>
+      <div className={s.contentLoader}>
+        <span className={s.loader}></span>
+        <p>{children}</p>
+      </div>
     </div>
   )
 }

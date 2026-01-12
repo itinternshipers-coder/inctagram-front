@@ -9,6 +9,7 @@ import { Modal } from '@/shared/ui/Modal/Modal'
 import { ImageGallery } from '@/shared/ui/PostModal/ImageGallery/ImageGallery'
 import TextArea from '@/shared/ui/TextArea/TextArea'
 import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
+import { uploadPhotoToServer } from '@/widgets/CreatPost/CreatePostModal/hooks/uploadPhotoToServer'
 import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SerializedError } from '@reduxjs/toolkit'
@@ -29,7 +30,7 @@ export type PhotoType = {
   createdAt: string
 }
 
-type UploadedPhotoType = {
+export type UploadedPhotoType = {
   photoId: string
   s3Key: string
   url: string
@@ -82,9 +83,6 @@ export const Publication = ({
 
   const router = useRouter()
 
-  // Временно пока нет users
-  const userId = 'dd4b0337-9ffe-48c0-b10b-10fdf0263a23'
-
   // Форма с валидацией (только для описания)
   const {
     register,
@@ -133,46 +131,6 @@ export const Publication = ({
       })
     }
   }, [images])
-
-  // Функция для загрузки фото на сервер
-  const uploadPhotoToServer = async (file: File, index: number): Promise<UploadedPhotoType> => {
-    // setIsLoading(true)
-    try {
-      const formData = new FormData()
-      formData.append('photo', file)
-      formData.append('userId', userId)
-
-      // id из пропсов
-      // formData.append('userId', id)
-
-      const response = await fetch('https://gateway.traineegramm.ru/api/v1/photos/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`Upload failed: ${response.status} - ${errorText}`)
-      }
-
-      const data = await response.json()
-      console.log('Upload response:', data)
-
-      if (!data.success || !data.photo) {
-        throw new Error('Invalid response structure from server')
-      }
-      // setIsLoading(false)
-      const { photo } = data
-      return {
-        photoId: photo.id,
-        s3Key: photo.s3Key,
-        url: photo.url,
-      }
-    } catch (error) {
-      console.error(`Error uploading photo ${index + 1}:`, error)
-      throw error
-    }
-  }
 
   // Загрузка всех фото на сервер
   const uploadAllPhotos = async (): Promise<UploadedPhotoType[]> => {

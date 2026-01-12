@@ -105,10 +105,13 @@ export const Cropping = ({
   // Обновление preview с дебаунсом
   const updateCroppedPreview = useCallback(async () => {
     const currentPhoto = photos[currentIndex]
+
+    // Явная проверка на существование фото
+    if (!currentPhoto) return
+
     if (!currentPhoto?.croppedAreaPixels || !currentPhoto.originalUrl) return
 
     setIsGeneratingPreview(true)
-    // setError(null)
 
     try {
       const croppedImageBlob = await getCroppedImg(currentPhoto.originalUrl, currentPhoto.croppedAreaPixels)
@@ -197,70 +200,31 @@ export const Cropping = ({
     setZoom(1)
   }, [])
 
-  const handleDeletePhoto = useCallback(
-    (index: number) => {
-      // Очищаем URL перед удалением
-      const photoToDelete = photos[index]
+  const handleDeletePhoto = useCallback((index: number) => {
+    setPhotos((prevPhotos) => {
+      const photoToDelete = prevPhotos[index]
+      if (!photoToDelete) return prevPhotos
+
+      // Очистка URL
       URL.revokeObjectURL(photoToDelete.originalUrl)
       if (photoToDelete.croppedUrl) {
         URL.revokeObjectURL(photoToDelete.croppedUrl)
       }
 
-      setPhotos((prev) => prev.filter((_, i) => i !== index))
+      const newPhotos = prevPhotos.filter((_, i) => i !== index)
 
-      // Корректируем currentIndex при необходимости
-      if (currentIndex >= index && currentIndex > 0) {
-        setCurrentIndex((prev) => prev - 1)
-      }
-    },
-    [photos, currentIndex]
-  )
+      // Обновление currentIndex
+      setCurrentIndex((prevIndex) => {
+        if (newPhotos.length === 0) return 0
+        if (prevIndex >= index && prevIndex > 0) {
+          return prevIndex - 1
+        }
+        return prevIndex
+      })
 
-  // const onUploadFile = useCallback(
-  //   (files: File | null) => {
-  //     const newFiles: File[] = Array.from(files)
-  //     // const files = [file]
-  //     // if (files.length === 0) return
-  //
-  //     // const totalCount = photos.length + files.length
-  //     // if (totalCount > MAX_IMAGES) {
-  //     //   setError(`Maximum ${MAX_IMAGES} images allowed`)
-  //     //   return
-  //     // }
-  //
-  //     const newPhotosPromises = newFiles.map(async (file, index) => {
-  //       const url = URL.createObjectURL(file)
-  //       return {
-  //         photoId: `${Date.now()}-${photos.length + index}`,
-  //         file,
-  //         originalUrl: url,
-  //         isEdited: false,
-  //       }
-  //     })
-  //
-  //     Promise.all(newPhotosPromises).then((newPhotos) => {
-  //       setPhotos((prev) => [...prev, ...newPhotos])
-  //       // Переключаемся на первое новое изображение
-  //       setCurrentIndex(photos.length)
-  //     })
-  //
-  //     // Оповещаем родительский компонент о новых файлах
-  //     if (onSelectFiles) {
-  //       onSelectFiles(newFiles)
-  //     }
-  //
-  //     // Сбрасываем input
-  //     // e.target.value = ''
-  //   },
-  //   [photos]
-  // )
-  //
-  // useEffect(() => {
-  //   if (file) {
-  //     onUploadFile(file)
-  //     console.log('файл загружен и провалидирован')
-  //   }
-  // }, [file, onSelectFile])
+      return newPhotos
+    })
+  }, [])
 
   const onUploadFile = useCallback(
     (uploadedFile: File) => {
@@ -287,8 +251,8 @@ export const Cropping = ({
         onSelectFiles([uploadedFile])
       }
 
-      // Можно добавить уведомление об успешной загрузке
-      console.log(`Added photo: ${uploadedFile.name} (${(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)`)
+      // Уведомление об успешной загрузке
+      // console.log(`Added photo: ${uploadedFile.name} (${(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)`)
     },
     [photos]
   )

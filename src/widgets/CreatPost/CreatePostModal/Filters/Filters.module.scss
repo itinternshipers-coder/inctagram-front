@@ -1,3 +1,17 @@
+.containerModalRectangularFilters {
+  z-index: 100000000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  width: 972px;
+  height: 564px;
+  background-color: var(--muted);
+  border-radius: 2px;
+}
+
 .contentFilters {
   display: flex;
   width: 100%;

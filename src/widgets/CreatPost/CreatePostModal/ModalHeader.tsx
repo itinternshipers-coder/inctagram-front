@@ -2,7 +2,7 @@ import { ArrowIosBackOutlineIcon, CloseOutlineIcon } from '@/shared/icons/svgCom
 import { Button } from '@/shared/ui/Button/Button'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
-import s from './CreatePostModal.module.scss'
+import s from './ModalHeader.module.scss'
 
 export const ModalHeader = ({
   currentStep,

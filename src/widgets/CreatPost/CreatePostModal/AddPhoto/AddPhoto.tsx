@@ -27,7 +27,7 @@ export const AddPhoto = ({ onSelectImage, onCloseModal }: AddPhotoProps) => {
   }, [file, onSelectImage])
 
   return (
-    <>
+    <div className={s.containerModalSquareAddPhoto}>
       <ModalHeader currentStep={currentStep} onClose={onCloseModal} />
       <div className={s.contentAddPhoto}>
         {error && (
@@ -51,6 +51,6 @@ export const AddPhoto = ({ onSelectImage, onCloseModal }: AddPhotoProps) => {
           </Button>
         </div>
       </div>
-    </>
+    </div>
   )
 }

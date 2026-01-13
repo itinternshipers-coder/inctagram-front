@@ -297,9 +297,8 @@ export const Cropping = ({
   const canSave = photos.length > 0
 
   return (
-    <>
+    <div className={s.containerModalSquareCropping}>
       <ModalHeader currentStep={currentStep} onBack={onBack} onNext={handleSaveCrop} disabled={!canSave} />
-
       <div className={s.contentCropping}>
         <div className={s.contentError}>
           {error && (
@@ -424,6 +423,6 @@ export const Cropping = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }

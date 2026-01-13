@@ -47,7 +47,7 @@ export default async function getCroppedImg(
         }
       },
       'image/jpeg',
-      0.3
+      0.5
     )
   })
 }

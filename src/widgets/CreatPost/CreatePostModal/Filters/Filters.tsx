@@ -284,9 +284,8 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
   const currentImage = processedImages[currentIndex]
 
   return (
-    <>
+    <div className={s.containerModalRectangularFilters}>
       <ModalHeader currentStep={currentStep} onBack={onBack} onNext={handleApplyFilters} disabled={isApplyingAll} />
-
       <div className={s.contentFilters}>
         {/* Image preview section with navigation */}
         <div className={s.previewSection}>
@@ -358,6 +357,6 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }

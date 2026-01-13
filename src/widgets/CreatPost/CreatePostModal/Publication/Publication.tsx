@@ -41,8 +41,8 @@ type PublicationProps = UserPostType & {
   onBack: () => void
   onNext?: () => void
   currentStep: ModalStep
-  showModal: boolean
-  onOpenChangeModal: (value: boolean) => void
+  // showModal: boolean
+  // onOpenChangeModal: (value: boolean) => void
 }
 
 export type UserPostType = {
@@ -67,8 +67,8 @@ export const Publication = ({
   onBack,
   onNext,
   currentStep,
-  showModal,
-  onOpenChangeModal,
+  // showModal,
+  // onOpenChangeModal,
   id,
   authorId,
 }: PublicationProps) => {
@@ -76,6 +76,7 @@ export const Publication = ({
   const [uploadedPhotos, setUploadedPhotos] = useState<UploadedPhotoType[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [showModal, setShowModal] = useState(false)
 
   const submitButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -256,59 +257,67 @@ export const Publication = ({
     router.push(ROUTES.PUBLIC.HOME)
   }
 
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      setShowModal(true)
+    }
+  }
+
   return (
-    <>
-      <ModalHeader
-        currentStep={currentStep}
-        onBack={onBack}
-        onNext={handlePublish}
-        disabled={!canPublish}
-        onSubmitting={isSubmitting}
-      />
-      <div className={s.contentPublication}>
-        <div className={s.previewSection}>
-          <div className={s.previewContainer}>
-            <ImageGallery photos={photos} />
-          </div>
-        </div>
-
-        <div className={s.publicationInfo}>
-          <div className={s.authorInfo}>
-            {author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />}
-            <strong>{author.username}</strong>
+    <div className={s.overlayModal} onClick={handleOverlayClick}>
+      <div className={s.containerModalRectangularPublication} onClick={(e) => e.stopPropagation()}>
+        <ModalHeader
+          currentStep={currentStep}
+          onBack={onBack}
+          onNext={handlePublish}
+          disabled={!canPublish}
+          onSubmitting={isSubmitting}
+        />
+        <div className={s.contentPublication}>
+          <div className={s.previewSection}>
+            <div className={s.previewContainer}>
+              <ImageGallery photos={photos} />
+            </div>
           </div>
 
-          <form onSubmit={handleSubmit(handleCreatePost)}>
-            <TextArea
-              label="Add publication descriptions"
-              id="description"
-              {...register('description')}
-              placeholder="Add a description..."
-              rows={4}
-              disabled={isSubmitting}
-              error={!!errors.description}
-              errorMessage={errors.description?.message}
-            />
-            <div className={s.countSymbol}>{description?.length || 0}/500</div>
-            {/* Скрытая кнопка submit для отправки формы */}
-            <button type="submit" ref={submitButtonRef} style={{ display: 'none' }} />
-          </form>
-          <Modal
-            open={showModal}
-            onOpenChange={onOpenChangeModal}
-            title="Close"
-            message="Do you really want to close the creation of a publication?
+          <div className={s.publicationInfo}>
+            <div className={s.authorInfo}>
+              {author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />}
+              <strong>{author.username}</strong>
+            </div>
+
+            <form onSubmit={handleSubmit(handleCreatePost)}>
+              <TextArea
+                label="Add publication descriptions"
+                id="description"
+                {...register('description')}
+                placeholder="Add a description..."
+                rows={4}
+                disabled={isSubmitting}
+                error={!!errors.description}
+                errorMessage={errors.description?.message}
+              />
+              <div className={s.countSymbol}>{description?.length || 0}/500</div>
+              {/* Скрытая кнопка submit для отправки формы */}
+              <button type="submit" ref={submitButtonRef} style={{ display: 'none' }} />
+            </form>
+            <Modal
+              open={showModal}
+              onOpenChange={setShowModal}
+              title="Close"
+              message="Do you really want to close the creation of a publication?
               If you close everything will be deleted"
-            confirmMode={true}
-            buttonText="Save draft"
-            cancelButtonText="Discard"
-            isCancelPrimary={false}
-            onAction={handleSavePost}
-          />
-          {isSubmitting && <Loader>Publication in progress</Loader>}
+              confirmMode={true}
+              buttonText="Save draft"
+              cancelButtonText="Discard"
+              isCancelPrimary={false}
+              onAction={handleSavePost}
+            />
+            {isSubmitting && <Loader>Publication in progress</Loader>}
+          </div>
         </div>
+        {uploadError && <Alert status="error" text={uploadError} position="bottom-left" />}
       </div>
-      {uploadError && <Alert status="error" text={uploadError} position="bottom-left" />}
-    </>
+    </div>
   )
 }

@@ -6,17 +6,12 @@ import { Filters } from '@/widgets/CreatPost/CreatePostModal/Filters/Filters'
 import { useModalSteps } from '@/widgets/CreatPost/CreatePostModal/hooks/useModalSteps'
 import { Publication } from '@/widgets/CreatPost/CreatePostModal/Publication/Publication'
 import React, { useState } from 'react'
-import s from './CreatePostModal.module.scss'
 
 export type ModalStep = 'add-photo' | 'cropping' | 'filters' | 'publication'
 
 export const CreatePostModal = () => {
   const [isOpen, setIsOpen] = useState(true)
-  const [showModal, setShowModal] = useState(false)
-
   const [images, setImages] = useState<File[]>([])
-
-  // console.log('Images:', images)
 
   const { currentStep, goNext, goBack } = useModalSteps()
 
@@ -54,16 +49,10 @@ export const CreatePostModal = () => {
 
   if (!isOpen) return null
 
-  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      setShowModal(true)
-    }
-  }
-
   return (
     <>
       {currentStep === 'add-photo' || currentStep === 'cropping' ? (
-        <div className={s.containerModalSquare} onClick={(e) => e.stopPropagation()}>
+        <>
           {currentStep === 'add-photo' && (
             <AddPhoto onSelectImage={handleImageSelect} onCloseModal={handleCloseModal} />
           )}
@@ -76,34 +65,21 @@ export const CreatePostModal = () => {
               onBack={goBack}
             />
           )}
-        </div>
+        </>
       ) : (
         <>
           {currentStep === 'filters' && images && (
-            <div className={s.containerModalRectangular}>
-              <Filters
-                images={images}
-                onFilterApply={handleFilterApply}
-                currentStep={currentStep}
-                onNext={goNext}
-                onBack={goBack}
-              />
-            </div>
+            <Filters
+              images={images}
+              onFilterApply={handleFilterApply}
+              currentStep={currentStep}
+              onNext={goNext}
+              onBack={goBack}
+            />
           )}
 
           {currentStep === 'publication' && images && (
-            <div className={s.overlayModal} onClick={handleOverlayClick}>
-              <div className={s.containerModalRectangular} onClick={(e) => e.stopPropagation()}>
-                <Publication
-                  images={images}
-                  onBack={goBack}
-                  currentStep={currentStep}
-                  onNext={handleCloseModal}
-                  showModal={showModal}
-                  onOpenChangeModal={setShowModal}
-                />
-              </div>
-            </div>
+            <Publication images={images} onBack={goBack} currentStep={currentStep} onNext={handleCloseModal} />
           )}
         </>
       )}

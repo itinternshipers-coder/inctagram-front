@@ -11,19 +11,19 @@ import s from './CreatePostModal.module.scss'
 export type ModalStep = 'add-photo' | 'cropping' | 'filters' | 'publication'
 
 export const CreatePostModal = () => {
-  const [selectedImages, setSelectedImages] = useState<File[]>([]) // Изменил на массив
   const [isOpen, setIsOpen] = useState(true)
-  const [croppedImages, setCroppedImages] = useState<File[] | null>(null)
-  const [filteredImages, setFilteredImages] = useState<File[] | null>(null)
-
   const [showModal, setShowModal] = useState(false)
+
+  const [images, setImages] = useState<File[]>([])
+
+  // console.log('Images:', images)
 
   const { currentStep, goNext, goBack } = useModalSteps()
 
-  // Обработчик выбора изображения (может принимать несколько файлов)
+  // Обработчик выбора изображения
   const handleImageSelect = (files: File | null) => {
     if (files) {
-      setSelectedImages([files])
+      setImages([files])
       goNext()
     }
   }
@@ -34,21 +34,21 @@ export const CreatePostModal = () => {
   }
 
   // Обработчик обработанного изображения (теперь принимает массив)
-  const handleCropComplete = (croppedFiles: File[]) => {
-    setCroppedImages(croppedFiles)
+  const handleCropComplete = (images: File[]) => {
+    setImages(images)
   }
 
   // Обработчик применения фильтров (может принимать массив или один файл)
-  const handleFilterApply = (files: File | File[] | null) => {
-    if (!files) {
-      setFilteredImages(null)
+  const handleFilterApply = (images: File | File[]) => {
+    if (!images) {
+      setImages(images)
       return
     }
 
-    if (Array.isArray(files)) {
-      setFilteredImages(files)
+    if (Array.isArray(images)) {
+      setImages(images)
     } else {
-      setFilteredImages([files])
+      setImages([images])
     }
   }
 
@@ -60,10 +60,6 @@ export const CreatePostModal = () => {
     }
   }
 
-  // console.log('AddPhoto:', selectedImages)
-  // console.log('Cropping:', croppedImages)
-  // console.log('Filters:', filteredImages)
-
   return (
     <>
       {currentStep === 'add-photo' || currentStep === 'cropping' ? (
@@ -71,9 +67,9 @@ export const CreatePostModal = () => {
           {currentStep === 'add-photo' && (
             <AddPhoto onSelectImage={handleImageSelect} onCloseModal={handleCloseModal} />
           )}
-          {currentStep === 'cropping' && selectedImages.length > 0 && (
+          {currentStep === 'cropping' && images.length > 0 && (
             <Cropping
-              images={selectedImages} // Передаем массив
+              images={images} // Передаем массив
               onCropComplete={handleCropComplete}
               currentStep={currentStep}
               onNext={goNext}
@@ -83,10 +79,10 @@ export const CreatePostModal = () => {
         </div>
       ) : (
         <>
-          {currentStep === 'filters' && croppedImages && (
+          {currentStep === 'filters' && images && (
             <div className={s.containerModalRectangular}>
               <Filters
-                images={croppedImages}
+                images={images}
                 onFilterApply={handleFilterApply}
                 currentStep={currentStep}
                 onNext={goNext}
@@ -95,11 +91,11 @@ export const CreatePostModal = () => {
             </div>
           )}
 
-          {currentStep === 'publication' && filteredImages && (
+          {currentStep === 'publication' && images && (
             <div className={s.overlayModal} onClick={handleOverlayClick}>
               <div className={s.containerModalRectangular} onClick={(e) => e.stopPropagation()}>
                 <Publication
-                  images={filteredImages}
+                  images={images}
                   onBack={goBack}
                   currentStep={currentStep}
                   onNext={handleCloseModal}

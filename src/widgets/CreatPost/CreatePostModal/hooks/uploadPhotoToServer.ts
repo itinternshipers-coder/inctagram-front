@@ -23,7 +23,7 @@ export const uploadPhotoToServer = async (file: File, index: number): Promise<Up
     }
 
     const data = await response.json()
-    console.log('Upload response:', data)
+    // console.log('Upload response:', data)
 
     if (!data.success || !data.photo) {
       throw new Error('Invalid response structure from server')

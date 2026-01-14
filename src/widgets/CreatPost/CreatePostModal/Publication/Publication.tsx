@@ -36,23 +36,11 @@ export type UploadedPhotoType = {
   url: string
 }
 
-type PublicationProps = UserPostType & {
+type PublicationProps = {
   images: File[]
   onBack: () => void
   onNext?: () => void
   currentStep: ModalStep
-  // showModal: boolean
-  // onOpenChangeModal: (value: boolean) => void
-}
-
-export type UserPostType = {
-  id?: string
-  authorId?: string
-  userName?: string
-  description?: string
-  createdAt?: string
-  updatedAt?: string
-  photos?: PhotoType[]
 }
 
 // Модифицированная схема для формы (только описание)
@@ -62,16 +50,7 @@ const CreatePostFormSchema = z.object({
 
 type CreatePostFormInput = z.infer<typeof CreatePostFormSchema>
 
-export const Publication = ({
-  images,
-  onBack,
-  onNext,
-  currentStep,
-  // showModal,
-  // onOpenChangeModal,
-  id,
-  authorId,
-}: PublicationProps) => {
+export const Publication = ({ images, onBack, onNext, currentStep }: PublicationProps) => {
   const [photos, setPhotos] = useState<PhotoType[]>([])
   const [uploadedPhotos, setUploadedPhotos] = useState<UploadedPhotoType[]>([])
   const [isUploading, setIsUploading] = useState(false)
@@ -143,13 +122,13 @@ export const Publication = ({
     setUploadError(null)
 
     try {
-      console.log(`Starting upload of ${images.length} photos...`)
+      // console.log(`Starting upload of ${images.length} photos...`)
 
       const uploadPromises = images.map((file, index) => uploadPhotoToServer(file, index))
 
       const uploaded = await Promise.all(uploadPromises)
 
-      console.log('Photos uploaded successfully:', uploaded)
+      // console.log('Photos uploaded successfully:', uploaded)
       setUploadedPhotos(uploaded)
       return uploaded
     } catch (error) {
@@ -164,14 +143,14 @@ export const Publication = ({
 
   // Функция создания поста
   const handleCreatePost = async (formData: CreatePostFormInput) => {
-    console.log('Starting post creation with data:', formData)
+    // console.log('Starting post creation with data:', formData)
 
     let photosToUse = uploadedPhotos
 
     try {
       // Если фото еще не загружены - загружаем их
       if (photosToUse.length === 0) {
-        console.log('No photos uploaded yet, uploading now...')
+        // console.log('No photos uploaded yet, uploading now...')
         photosToUse = await uploadAllPhotos()
 
         if (photosToUse.length === 0) {
@@ -180,7 +159,7 @@ export const Publication = ({
         }
       }
 
-      console.log('Creating post with photos:', photosToUse)
+      // console.log('Creating post with photos:', photosToUse)
 
       // Создаем полный объект поста
       const postData: CreatePostFormData = {
@@ -192,12 +171,12 @@ export const Publication = ({
         })),
       }
 
-      console.log('Sending post data:', postData)
+      // console.log('Sending post data:', postData)
 
       // Проверяем, что данные соответствуют схеме
       try {
         CreatePostSchema.parse(postData)
-        console.log('Post data validated successfully')
+        // console.log('Post data validated successfully')
       } catch (validationError) {
         console.error('Schema validation error:', validationError)
         setUploadError('Invalid post data')
@@ -229,8 +208,24 @@ export const Publication = ({
       let errorMessage = 'Неизвестная ошибка'
 
       if ('status' in error) {
-        const data = error.data as any
-        errorMessage = data?.message || data?.error || data?.detail || `Ошибка ${error.status}`
+        // Типизируем data как unknown и проверяем
+        const data = error.data as unknown
+
+        if (typeof data === 'object' && data !== null) {
+          const errorData = data as Record<string, unknown>
+
+          // Безопасно извлекаем строковые значения
+          errorMessage =
+            (typeof errorData.message === 'string' ? errorData.message : '') ||
+            (typeof errorData.error === 'string' ? errorData.error : '') ||
+            (typeof errorData.detail === 'string' ? errorData.detail : '') ||
+            `Ошибка ${error.status}`
+        } else if (typeof data === 'string') {
+          // Если data это просто строка
+          errorMessage = data
+        } else {
+          errorMessage = `Ошибка ${error.status}`
+        }
       } else if (error?.message) {
         errorMessage = error.message
       }
@@ -241,7 +236,7 @@ export const Publication = ({
 
   // Временная заглушка для author
   const author = {
-    id: authorId,
+    id: 'id',
     username: 'NoName',
     avatarUrl: 'https://cs13.pikabu.ru/avatars/7246/x7246765-497572027.png',
   }

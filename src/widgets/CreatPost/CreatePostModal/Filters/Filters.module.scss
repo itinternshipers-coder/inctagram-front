@@ -41,30 +41,16 @@
   transition: filter 0.3s ease;
 }
 
-.previewInfo {
-  p {
-    margin: 4px 0;
-    color: #495057;
-    font-size: 14px;
-
-    strong {
-      color: #212529;
-    }
-  }
-}
-
 .filtersSection {
   display: flex;
   flex-direction: column;
-  //justify-content: center;
   align-items: center;
-  //width: 300px;
   padding-top: 20px;
   flex: 1;
   h3 {
     margin: 0 0 16px 0;
     font-size: 18px;
-    color: #ffffff;
+    color: var(--foreground);
   }
 }
 
@@ -74,7 +60,6 @@
   flex-wrap: wrap;
   gap: 44px;
   padding: 0 16px;
-  //border: 1px solid red;
 }
 
 .filterButton {
@@ -83,20 +68,20 @@
   align-items: center;
   gap: 8px;
   padding: 12px;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--light-700);
   border-radius: 8px;
-  background: white;
+  background: var(--light-100);
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover:not(.active) {
-    border-color: #adb5bd;
+    border-color: var(--hover);
     transform: translateY(-2px);
   }
 
   &.active {
-    border-color: #007bff;
-    background: #f0f7ff;
+    border-color: var(--accent-500);
+    background: var(--light-700);
   }
 }
 
@@ -105,7 +90,7 @@
   height: 60px;
   border-radius: 4px;
   overflow: hidden;
-  background: #f8f9fa;
+  background: var(--light-700);
   position: relative;
 }
 
@@ -156,21 +141,7 @@
   color: #495057;
 
   .active & {
-    color: #007bff;
-  }
-}
-
-.noImage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 16px;
-
-  p {
-    color: #6c757d;
-    font-size: 16px;
+    color: var(--accent-500);
   }
 }
 
@@ -188,7 +159,7 @@
   top: 50%;
   transform: translateY(-50%);
   background: rgba(0, 0, 0, 0.5);
-  color: white;
+  color: var(--light-100);
   border: none;
   cursor: pointer;
   z-index: 10;
@@ -196,7 +167,7 @@
   height: 60px;
 }
 .navButton:hover {
-  color: white;
+  color: var(--light-100);
   background-color: rgb(0, 0, 0);
 }
 .prevButton {
@@ -222,5 +193,5 @@
   cursor: pointer;
 }
 .dot.active {
-  background: white;
+  background: var(--light-100);
 }

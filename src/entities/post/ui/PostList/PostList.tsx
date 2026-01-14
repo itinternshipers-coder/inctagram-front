@@ -8,7 +8,7 @@ type Props = {
   posts: Post[]
 }
 
-const PostList = ({ posts }: Props) => {
+export const PostList = ({ posts }: Props) => {
   return (
     <div className={s.postList}>
       {posts.map((post) => (
@@ -25,5 +25,3 @@ const PostList = ({ posts }: Props) => {
     </div>
   )
 }
-
-export default PostList

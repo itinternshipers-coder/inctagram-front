@@ -9,7 +9,7 @@ export const Loader = ({ children }: LoaderProps) => {
     <div className={s.overlay}>
       <div className={s.contentLoader}>
         <span className={s.loader}></span>
-        <p>{children}</p>
+        <p className={s.childrenContent}>{children}</p>
       </div>
     </div>
   )

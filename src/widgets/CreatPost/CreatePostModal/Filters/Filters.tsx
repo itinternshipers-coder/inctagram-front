@@ -2,7 +2,6 @@
 
 import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
-import { PhotoType } from '@/shared/ui/PostModal/PostModal'
 import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
 import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
 import { useCallback, useEffect, useState } from 'react'
@@ -16,8 +15,9 @@ type FiltersProps = {
   currentStep: ModalStep
 }
 
-type ExtendedPhotoType = PhotoType & {
+type ExtendedPhotoType = {
   file: File
+  url: string
   originalUrl: string
   filteredUrl?: string
   selectedFilter: string
@@ -47,15 +47,12 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
 
     const initializeImages = async () => {
       const newProcessedImages: ExtendedPhotoType[] = await Promise.all(
-        images.map(async (file, index) => {
+        images.map(async (file) => {
           const url = URL.createObjectURL(file)
           return {
-            photoId: `${Date.now()}-${index}`,
             file,
             url,
             originalUrl: url,
-            order: index,
-            createdAt: new Date().toISOString(),
             selectedFilter: 'none',
             isProcessing: false,
           }
@@ -139,7 +136,7 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
 
         // Конвертируем canvas в Blob
         const blob = await new Promise<Blob>((resolve) => {
-          canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.95)
+          canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.5)
         })
 
         // Создаем URL для предпросмотра
@@ -243,7 +240,7 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
         ctx.drawImage(img, 0, 0)
 
         const blob = await new Promise<Blob>((resolve) => {
-          canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.95)
+          canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.5)
         })
 
         return new File([blob], `filtered-${imageData.file.name}`, {

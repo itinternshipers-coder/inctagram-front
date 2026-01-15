@@ -2,20 +2,35 @@
 
 import React from 'react'
 import clsx from 'clsx'
-import s from './AuthWrapper.module.scss'
 import Sidebar from '@/widgets/Sidebar/Sidebar'
 import { Header } from '@/widgets/header/Header'
-import { useAuth } from '@/features/auth/lib/use-auth'
 import { useAuthInit } from '@/features/auth/lib/use-auth-init'
+import { useMeQuery } from '@/features/auth/api/auth-api'
+import { Card } from '@/shared/ui/Card/Card'
+import { Typography } from '@/shared/ui/Typography/Typography'
+
+import s from './AuthWrapper.module.scss'
 
 type Props = {
   children: React.ReactNode
 }
 
 export const AuthWrapper = ({ children }: Props) => {
-  const { accessToken } = useAuth()
-  const isLoggedIn = !!accessToken
   useAuthInit()
+  const { data: user, isLoading } = useMeQuery()
+
+  const isLoggedIn = !!user
+
+  if (isLoading) {
+    return (
+      <div className={s.loader}>
+        <Card className={s.card}>
+          <Typography variant="regular_text_16">...loading</Typography>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <>
       <Header isLoginIn={isLoggedIn} />

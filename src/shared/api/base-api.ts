@@ -1,14 +1,20 @@
+// src/shared/api/baseApi.ts
+
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { RootState } from '@/store/store'
 import { setAccessToken, logout } from '@/features/auth/model/auth-slice'
+import { Mutex } from 'async-mutex'
+
+// 🔒 Создаём экземпляр мьютекса
+const mutex = new Mutex()
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_BASE_API_URL,
+  // baseUrl: process.env.NEXT_PUBLIC_BASE_API_URL,
+  baseUrl: '/api/v1',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
-    const state = getState() as RootState
-    const token = state.auth.accessToken
+    const token = (getState() as RootState).auth.accessToken
     if (token) {
       headers.set('authorization', `Bearer ${token}`)
     }
@@ -24,27 +30,35 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   let result = await baseQuery(args, api, extraOptions)
 
   // Автоматический refresh при 401 ошибке
-  if (result.error && result.error.status === 401) {
-    // Пытаемся обновить токен
-    const refreshResult = await baseQuery(
-      {
-        url: API_ENDPOINTS.AUTH.REFRESH_TOKEN,
-        method: 'POST',
-      },
-      api,
-      extraOptions
-    )
+  if (result.error?.status === 401) {
+    if (!mutex.isLocked()) {
+      const release = await mutex.acquire()
 
-    if (refreshResult.data) {
-      // Сохраняем новый access token
-      const { accessToken } = refreshResult.data as { accessToken: string }
-      api.dispatch(setAccessToken(accessToken))
+      try {
+        const refreshResult = await baseQuery(
+          { url: API_ENDPOINTS.AUTH.REFRESH_TOKEN, method: 'POST' },
+          api,
+          extraOptions
+        )
 
-      // Повторяем оригинальный запрос
-      result = await baseQuery(args, api, extraOptions)
+        if (refreshResult.data) {
+          // Сохраняем новый access token
+          const { accessToken } = refreshResult.data as { accessToken: string }
+          api.dispatch(setAccessToken(accessToken))
+
+          result = await baseQuery(args, api, extraOptions)
+        } else {
+          api.dispatch(logout())
+        }
+      } catch (error) {
+        api.dispatch(logout())
+      } finally {
+        release()
+      }
     } else {
-      // Не удалось обновить - разлогиниваем
-      api.dispatch(logout())
+      await mutex.waitForUnlock()
+
+      result = await baseQuery(args, api, extraOptions)
     }
   }
 

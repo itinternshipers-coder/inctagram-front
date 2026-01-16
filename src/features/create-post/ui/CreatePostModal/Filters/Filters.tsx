@@ -2,10 +2,10 @@
 
 import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
-import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
-import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
+import { ModalStep } from '@/features/create-post/ui/CreatePostModal/CreatePostModal'
+import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useCallback, useEffect, useState } from 'react'
-import s from 'src/widgets/CreatPost/CreatePostModal/Filters/Filters.module.scss'
+import s from '@/features/create-post/ui/CreatePostModal/Filters/Filters.module.scss'
 
 type FiltersProps = {
   images: File[]

@@ -1,10 +1,10 @@
 'use client'
 
-import { AddPhoto } from '@/widgets/CreatPost/CreatePostModal/AddPhoto/AddPhoto'
-import { Cropping } from '@/widgets/CreatPost/CreatePostModal/Cropping/Cropping'
-import { Filters } from '@/widgets/CreatPost/CreatePostModal/Filters/Filters'
-import { useModalSteps } from '@/widgets/CreatPost/CreatePostModal/hooks/useModalSteps'
-import { Publication } from '@/widgets/CreatPost/CreatePostModal/Publication/Publication'
+import { AddPhoto } from '@/features/create-post/ui/CreatePostModal/AddPhoto/AddPhoto'
+import { Cropping } from '@/features/create-post/ui/CreatePostModal/Cropping/Cropping'
+import { Filters } from '@/features/create-post/ui/CreatePostModal/Filters/Filters'
+import { useModalSteps } from '@/features/create-post/model/lib/useModalSteps'
+import { Publication } from '@/features/create-post/ui/CreatePostModal/Publication/Publication'
 import React, { useState } from 'react'
 
 export type ModalStep = 'add-photo' | 'cropping' | 'filters' | 'publication'

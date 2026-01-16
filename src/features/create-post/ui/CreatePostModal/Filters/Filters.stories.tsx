@@ -1,4 +1,4 @@
-import { Filters } from '@/widgets/CreatPost/CreatePostModal/Filters/Filters'
+import { Filters } from '@/features/create-post/ui/CreatePostModal/Filters/Filters'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 // Создаем пустые изображения или с минимальными данными

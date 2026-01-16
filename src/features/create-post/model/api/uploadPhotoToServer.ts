@@ -1,4 +1,4 @@
-import { UploadedPhotoType } from '@/widgets/CreatPost/CreatePostModal/Publication/Publication'
+import { UploadedPhotoType } from '@/features/create-post/ui/CreatePostModal/Publication/Publication'
 
 export const uploadPhotoToServer = async (file: File, index: number): Promise<UploadedPhotoType> => {
   // Временно пока нет users

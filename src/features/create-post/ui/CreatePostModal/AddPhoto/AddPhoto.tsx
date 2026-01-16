@@ -2,10 +2,10 @@ import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { ImageOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import { useModalSteps } from '@/widgets/CreatPost/CreatePostModal/hooks/useModalSteps'
-import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
+import { useModalSteps } from '@/features/create-post/model/lib/useModalSteps'
+import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useEffect } from 'react'
-import s from 'src/widgets/CreatPost/CreatePostModal/AddPhoto/AddPhoto.module.scss'
+import s from '@/features/create-post/ui/CreatePostModal/AddPhoto/AddPhoto.module.scss'
 
 type AddPhotoProps = {
   onSelectImage: (file: File | null) => void

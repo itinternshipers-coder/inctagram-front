@@ -1,0 +1,105 @@
+// SkeletonGrid
+.container {
+  width: 100vw;
+  overflow-x: auto;
+  -ms-overflow-style: none; // IE/Edge
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome/Safari
+  }
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.item {
+  scroll-snap-align: start;
+}
+
+// Skeleton
+.skeleton-card {
+  width: 100%;
+  min-width: 234px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background-color: var(--background-element);
+  animation: pulse 1.5s infinite ease-in-out;
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  .image-placeholder {
+    position: relative;
+    width: 100%;
+    min-height: 240px;
+    padding-top: 75%;
+    background-color: var(--muted);
+
+    .dots {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--hover);
+        &.active {
+          background-color: var(--light-300);
+        }
+      }
+    }
+  }
+
+  .content {
+    padding: 12px 0;
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--muted);
+      }
+
+      .name {
+        height: 16px;
+        width: 80px;
+        border-radius: 4px;
+        background-color: var(--muted);
+      }
+    }
+
+    .text-line {
+      height: 12px;
+      border-radius: 4px;
+      background-color: var(--muted);
+      margin-bottom: 6px;
+
+      &:last-child {
+        margin-bottom: 0;
+        width: 60%;
+      }
+    }
+  }
+}

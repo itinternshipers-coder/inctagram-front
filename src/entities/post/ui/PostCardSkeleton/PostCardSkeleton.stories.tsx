@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import PostCardSkeleton from './PostCardSkeleton'
+import { PostCardSkeleton } from './PostCardSkeleton'
 
 const meta: Meta<typeof PostCardSkeleton> = {
   title: 'Entities/Post/PostCardSkeleton',

@@ -1,10 +1,14 @@
 import s from './PostCardSkeleton.module.scss'
 
-const PostCardSkeleton = () => {
+type Props = {
+  postCardCount?: number
+}
+
+export const PostCardSkeleton = ({ postCardCount = 10 }: Props) => {
   return (
     <div className={s.container}>
       <div className={s.grid}>
-        {[...Array(10)].map((_, i) => (
+        {[...Array(postCardCount)].map((_, i) => (
           <div key={i} className={s.item}>
             <div className={s['skeleton-card']}>
               {/* Изображение с навигацией */}
@@ -33,5 +37,3 @@ const PostCardSkeleton = () => {
     </div>
   )
 }
-
-export default PostCardSkeleton

@@ -2,13 +2,13 @@
 
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'
-import getCroppedImg from '@/shared/lib/utils/image/canvasUtils'
+import getCroppedImg from '@/shared/lib/image/canvasUtils'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
-import { ModalHeader } from '@/widgets/CreatPost/CreatePostModal/ModalHeader'
+import { ModalStep } from '@/features/create-post/ui/CreatePostModal/CreatePostModal'
+import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
-import s from 'src/widgets/CreatPost/CreatePostModal/Cropping/Cropping.module.scss'
+import s from '@/features/create-post/ui/CreatePostModal/Cropping/Cropping.module.scss'
 
 type AspectRatio = {
   value: number | undefined

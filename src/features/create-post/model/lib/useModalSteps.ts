@@ -1,4 +1,4 @@
-import { ModalStep } from '@/widgets/CreatPost/CreatePostModal/CreatePostModal'
+import { ModalStep } from '@/features/create-post/ui/CreatePostModal/CreatePostModal'
 import { useState } from 'react'
 
 export const useModalSteps = () => {

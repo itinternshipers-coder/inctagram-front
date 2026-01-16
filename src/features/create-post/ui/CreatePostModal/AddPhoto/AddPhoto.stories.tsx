@@ -1,12 +1,12 @@
-import { Cropping } from '@/widgets/CreatPost/CreatePostModal/Cropping/Cropping'
+import { AddPhoto } from '@/features/create-post/ui/CreatePostModal/AddPhoto/AddPhoto'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { action } from 'storybook/actions'
 
 const meta = {
-  title: 'widgets/CreatePost/CreatePostModal/Cropping',
-  component: Cropping,
+  title: 'widgets/CreatePost/CreatePostModal/AddPhoto',
+  component: AddPhoto,
   argTypes: {},
-} satisfies Meta<typeof Cropping>
+} satisfies Meta<typeof AddPhoto>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -14,8 +14,8 @@ type Story = StoryObj<typeof meta>
 // Базовое состояние
 export const Default: Story = {
   args: {
-    currentStep: 'cropping',
-    images: [],
+    onSelectImage: action('Изображение выбрано'),
+    onCloseModal: action('Модальное окно закрыто'),
   },
 }
 

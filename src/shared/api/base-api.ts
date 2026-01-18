@@ -1,3 +1,5 @@
+// src/shared/api/baseApi.ts
+
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { RootState } from '@/store/store'

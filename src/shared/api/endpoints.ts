@@ -24,6 +24,11 @@ export const API_ENDPOINTS = {
     BY_USER: '/posts/user/{userId}',
     PUBLIC_STATS: '/posts/public/stats',
   },
+  PROFILE: {
+    BASE: '/profile',
+    BY_ID: '/profile/{userId}',
+    AVATAR: '/profile/upload-avatar',
+  },
 } as const
 
 // Хелперы для динамических путей
@@ -37,5 +42,8 @@ export const EndpointHelpers = {
   },
   oAuth: {
     byProvider: (provider: string) => `/auth/oauth/${provider}`,
+  },
+  profile: {
+    byId: (id: string) => `/profile/${id}`,
   },
 }

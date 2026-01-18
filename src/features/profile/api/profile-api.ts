@@ -1,33 +1,14 @@
+import { AvatarMutation, Profile } from '@/features/profile/model/type'
 import { baseApi } from '@/shared/api/base-api'
 import { API_ENDPOINTS, EndpointHelpers } from '@/shared/api/endpoints'
 
-type ProfileType = {
-  userId: string
-  username: string
-  firstName: string
-  lastName: string
-  dateOfBirth: string
-  country: string
-  city: string
-  aboutMe: string
-}
-
-type AvatarVersion = {
-  userId: string
-  url: string
-  width: number
-  height: number
-}
-
-type UserAvatars = AvatarVersion[]
-
 export const profileApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getProfile: build.query<ProfileType, string>({
+    getProfile: build.query<Profile['response'], Profile['request']>({
       query: (userId) => EndpointHelpers.profile.byId(userId),
       providesTags: ['Profile'],
     }),
-    addProfile: build.mutation<ProfileType, FormData>({
+    addProfile: build.mutation<Profile['response'], FormData>({
       query: (formData) => ({
         url: API_ENDPOINTS.PROFILE.BASE,
         method: 'POST',
@@ -35,7 +16,7 @@ export const profileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Profile'],
     }),
-    updateProfile: build.mutation<ProfileType, FormData>({
+    updateProfile: build.mutation<Profile['response'], FormData>({
       query: (formData) => ({
         url: API_ENDPOINTS.PROFILE.BASE,
         method: 'PATCH',
@@ -43,7 +24,7 @@ export const profileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Profile'],
     }),
-    setAvatar: build.mutation<UserAvatars, File>({
+    setAvatar: build.mutation<AvatarMutation['response'], AvatarMutation['request']>({
       query: (file) => {
         const formData = new FormData()
         formData.append('avatar', file)

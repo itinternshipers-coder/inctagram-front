@@ -1,11 +1,11 @@
 'use client'
 
+import { useModalSteps } from '@/features/create-post/model/lib/useModalSteps'
+import React, { useState } from 'react'
 import { AddPhoto } from './AddPhoto/AddPhoto'
 import { Cropping } from './Cropping/Cropping'
 import { Filters } from './Filters/Filters'
-import { useModalSteps } from '@/features/create-post/model/lib/useModalSteps'
 import { Publication } from './Publication/Publication'
-import React, { useState } from 'react'
 
 export const CreatePostModal = () => {
   const [isOpen, setIsOpen] = useState(true)
@@ -32,17 +32,8 @@ export const CreatePostModal = () => {
   }
 
   // Обработчик применения фильтров (может принимать массив или один файл)
-  const handleFilterApply = (images: File | File[]) => {
-    if (!images) {
-      setImages(images)
-      return
-    }
-
-    if (Array.isArray(images)) {
-      setImages(images)
-    } else {
-      setImages([images])
-    }
+  const handleFilterApply = (images: File[]) => {
+    setImages(images)
   }
 
   if (!isOpen) return null

@@ -1,8 +1,9 @@
 'use client'
 
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
-import { useCroppingHandlers } from '@/features/create-post/ui/CreatePostModal/Cropping/hooks/useCroppingHandlers'
-import { useUploadPhotoToCropping } from '@/features/create-post/ui/CreatePostModal/Cropping/hooks/useUploadPhotoToCropping'
+import { useCroppingHandlers } from './hooks/useCroppingHandlers'
+import { useUploadPhotoToCropping } from './hooks/useUploadPhotoToCropping'
+import { photoDelete } from './utils/photoDeleteUtils'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'
@@ -35,8 +36,6 @@ export const Cropping = ({
   const [zoom, setZoom] = useState(1)
   const [selectedAspect, setSelectedAspect] = useState<AspectRatio>(ASPECT_RATIO_OPTIONS[0])
   const [croppedPreviewUrl, setCroppedPreviewUrl] = useState<string | null>(null)
-  const [isGeneratingPreview, setIsGeneratingPreview] = useState(false)
-
   const cropDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { ZOOM, UI } = CROPPING_IMAGES_CONSTANTS
@@ -45,13 +44,11 @@ export const Cropping = ({
     maxSizeMB: 10, // Ограничение 10MB
     allowedTypes: ['image/png', 'image/jpeg'],
   })
-
   const { handleSaveCrop } = useCroppingHandlers({
     photos,
     onCropComplete,
     onNext,
   })
-
   const { uploadFile } = useUploadPhotoToCropping({
     photos,
     setPhotos,
@@ -116,7 +113,6 @@ export const Cropping = ({
       )
     } catch (e) {
       console.error('Error updating preview:', e)
-    } finally {
     }
   }, [photos, currentIndex])
 
@@ -185,31 +181,14 @@ export const Cropping = ({
     setZoom(1)
   }, [])
 
-  const handleDeletePhoto = useCallback((index: number) => {
-    setPhotos((prevPhotos) => {
-      const photoToDelete = prevPhotos[index]
-      if (!photoToDelete) return prevPhotos
-
-      // Очистка URL
-      URL.revokeObjectURL(photoToDelete.originalUrl)
-      if (photoToDelete.croppedUrl) {
-        URL.revokeObjectURL(photoToDelete.croppedUrl)
-      }
-
-      const newPhotos = prevPhotos.filter((_, i) => i !== index)
-
-      // Обновление currentIndex
-      setCurrentIndex((prevIndex) => {
-        if (newPhotos.length === 0) return 0
-        if (prevIndex >= index && prevIndex > 0) {
-          return prevIndex - 1
-        }
-        return prevIndex
-      })
-
-      return newPhotos
-    })
-  }, [])
+  const handleDeletePhoto = useCallback(
+    (index: number) => {
+      const { newPhotos, newCurrentIndex } = photoDelete(photos, index, currentIndex)
+      setPhotos(newPhotos)
+      setCurrentIndex(newCurrentIndex)
+    },
+    [photos, currentIndex, setPhotos, setCurrentIndex]
+  )
 
   // Обработка нового файла
   useEffect(() => {
@@ -219,7 +198,6 @@ export const Cropping = ({
   }, [file])
 
   const currentPhoto = photos[currentIndex]
-
   const canSave = photos.length > 0
 
   return (

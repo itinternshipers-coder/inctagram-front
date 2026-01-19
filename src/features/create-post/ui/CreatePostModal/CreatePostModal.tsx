@@ -1,6 +1,8 @@
 'use client'
 
 import { useModalSteps } from '@/features/create-post/model/lib/useModalSteps'
+import { ROUTES } from '@/shared/config/routes'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { AddPhoto } from './AddPhoto/AddPhoto'
 import { Cropping } from './Cropping/Cropping'
@@ -13,6 +15,8 @@ export const CreatePostModal = () => {
 
   const { currentStep, goNext, goBack } = useModalSteps()
 
+  const router = useRouter()
+
   // Обработчик выбора изображения
   const handleImageSelect = (files: File | null) => {
     if (files) {
@@ -24,6 +28,7 @@ export const CreatePostModal = () => {
   // Обработчик закрытия модалки
   const handleCloseModal = () => {
     setIsOpen(false)
+    router.push(ROUTES.PUBLIC.HOME)
   }
 
   // Обработчик обработанного изображения (теперь принимает массив)

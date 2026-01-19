@@ -1,8 +1,8 @@
 'use client'
 
+import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
-import { ModalStep } from '@/features/create-post/ui/CreatePostModal/CreatePostModal'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useCallback, useEffect, useState } from 'react'
 import s from '@/features/create-post/ui/CreatePostModal/Filters/Filters.module.scss'
@@ -12,7 +12,7 @@ type FiltersProps = {
   onFilterApply?: (filteredImages: File[]) => void
   onBack?: () => void
   onNext?: () => void
-  currentStep: ModalStep
+  currentStep: ModalSteps
 }
 
 type ExtendedPhotoType = {

@@ -1,8 +1,8 @@
-import { ModalStep } from '@/features/create-post/ui/CreatePostModal/CreatePostModal'
+import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { useState } from 'react'
 
 export const useModalSteps = () => {
-  const [currentStep, setCurrentStep] = useState<ModalStep>('add-photo')
+  const [currentStep, setCurrentStep] = useState<ModalSteps>('add-photo')
 
   const modalSteps = ['add-photo', 'cropping', 'filters', 'publication'] as const
 

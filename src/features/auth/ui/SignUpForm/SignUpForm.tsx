@@ -8,9 +8,10 @@ import { CheckBox } from '@/shared/ui/CheckBox/CheckBox'
 import { Input } from '@/shared/ui/Input/Input'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { Modal } from '@/shared/ui/Modal/Modal'
+import { useSignUpForm } from '../../lib/use-signup-form'
 import Link from 'next/link'
 import s from './SignUpForm.module.scss'
-import { useSignUpForm } from '../../lib/use-signup-form'
+import Loader from '@/shared/ui/Loader/Loader'
 
 export const SignUpForm = () => {
   const {
@@ -26,11 +27,7 @@ export const SignUpForm = () => {
   } = useSignUpForm()
 
   if (isLoading) {
-    return (
-      <Card className={s.card}>
-        <Typography variant="regular_text_16">...loading</Typography>
-      </Card>
-    )
+    return <Loader />
   }
 
   return (
@@ -85,11 +82,11 @@ export const SignUpForm = () => {
           <div className={s.agreementBlock}>
             <CheckBox checked={agreementField.value} onCheckedChange={agreementField.onChange} />
             <Typography variant="small_text" as="span" className={s.typography}>
-              I agree to the{' '}
+              I agree to the
               <Typography variant="small_link" as={Link} href={ROUTES.PUBLIC.TERMS} className={s.link}>
                 Terms of Service
-              </Typography>{' '}
-              and{' '}
+              </Typography>
+              and
               <Typography variant="small_link" as={Link} href={ROUTES.PUBLIC.PRIVACY} className={s.link}>
                 Privacy Policy
               </Typography>

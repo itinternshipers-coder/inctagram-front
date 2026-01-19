@@ -10,6 +10,7 @@ import { Card } from '@/shared/ui/Card/Card'
 import { Typography } from '@/shared/ui/Typography/Typography'
 
 import s from './AuthWrapper.module.scss'
+import Loader from '@/shared/ui/Loader/Loader'
 
 type Props = {
   children: React.ReactNode
@@ -22,13 +23,7 @@ export const AuthWrapper = ({ children }: Props) => {
   const isLoggedIn = !!user
 
   if (isLoading) {
-    return (
-      <div className={s.loader}>
-        <Card className={s.card}>
-          <Typography variant="regular_text_16">...loading</Typography>
-        </Card>
-      </div>
-    )
+    return <Loader />
   }
 
   return (

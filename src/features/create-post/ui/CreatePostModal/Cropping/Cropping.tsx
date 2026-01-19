@@ -1,28 +1,16 @@
 'use client'
 
+import { ModalStep } from '@/features/create-post/model/types/modalStep'
+import s from './Cropping.module.scss'
+import { AspectRatio, PhotoType } from './types'
+import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'
 import getCroppedImg from '@/shared/lib/image/canvasUtils'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import { ModalStep } from '@/features/create-post/ui/CreatePostModal/CreatePostModal'
-import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
-import s from '@/features/create-post/ui/CreatePostModal/Cropping/Cropping.module.scss'
-
-type AspectRatio = {
-  value: number | undefined
-  label: string
-}
-
-type PhotoType = {
-  photoId: string
-  file: File
-  originalUrl: string
-  croppedUrl?: string
-  isEdited?: boolean
-  croppedAreaPixels?: Area
-}
+import { ASPECT_RATIO_OPTIONS, CROPPING_IMAGES_CONSTANTS } from './constants'
 
 type CroppingProps = {
   images: File[] // Массив изображений
@@ -32,18 +20,6 @@ type CroppingProps = {
   currentStep: ModalStep
   onSelectFiles?: (files: File[]) => void
 }
-
-const ASPECT_RATIOS: AspectRatio[] = [
-  { value: undefined, label: 'Original' },
-  { value: 1, label: '1:1' },
-  { value: 4 / 5, label: '4:5' },
-  { value: 16 / 9, label: '16:9' },
-]
-
-const MIN_ZOOM = 1
-const MAX_ZOOM = 3
-const ZOOM_STEP = 0.1
-const MAX_IMAGES = 10
 
 export const Cropping = ({
   images,
@@ -57,11 +33,13 @@ export const Cropping = ({
   const [currentIndex, setCurrentIndex] = useState(0)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
-  const [selectedAspect, setSelectedAspect] = useState<AspectRatio>(ASPECT_RATIOS[0])
+  const [selectedAspect, setSelectedAspect] = useState<AspectRatio>(ASPECT_RATIO_OPTIONS[0])
   const [croppedPreviewUrl, setCroppedPreviewUrl] = useState<string | null>(null)
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false)
 
   const cropDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const { ZOOM, UI } = CROPPING_IMAGES_CONSTANTS
 
   const { file, error, onSelectFile } = useImageUpload({
     maxSizeMB: 10, // Ограничение 10MB
@@ -186,11 +164,11 @@ export const Cropping = ({
   )
 
   const handleZoomIn = useCallback(() => {
-    setZoom((prev) => Math.min(prev + ZOOM_STEP, MAX_ZOOM))
+    setZoom((prev) => Math.min(prev + ZOOM.STEP, ZOOM.MAX))
   }, [])
 
   const handleZoomOut = useCallback(() => {
-    setZoom((prev) => Math.max(prev - ZOOM_STEP, MIN_ZOOM))
+    setZoom((prev) => Math.max(prev - ZOOM.STEP, ZOOM.MIN))
   }, [])
 
   const handleSelectPhoto = useCallback((index: number) => {
@@ -311,7 +289,7 @@ export const Cropping = ({
           <div className={s.aspectSection}>
             <div className={s.aspectTitle}>Aspect Ratio</div>
             <div className={s.aspectButtons}>
-              {ASPECT_RATIOS.map((ratio) => (
+              {ASPECT_RATIO_OPTIONS.map((ratio) => (
                 <button
                   key={ratio.label}
                   className={`${s.aspectButton} ${selectedAspect.value === ratio.value ? s.active : ''}`}
@@ -367,7 +345,7 @@ export const Cropping = ({
             </div>
           ))}
 
-          {photos.length < MAX_IMAGES && (
+          {photos.length < UI.LIMITS.MAX_IMAGES && (
             <label className={s.galleryItemAdd}>
               <input
                 type="file"
@@ -377,7 +355,7 @@ export const Cropping = ({
                 multiple
               />
               <PlusCircleIcon className={s.uploadIcon} />
-              <span>Upload ({MAX_IMAGES - photos.length} left)</span>
+              <span>Upload ({UI.LIMITS.MAX_IMAGES - photos.length} left)</span>
             </label>
           )}
         </div>
@@ -403,19 +381,19 @@ export const Cropping = ({
             <div className={s.zoomControls}>
               <div className={s.zoomLabel}>Zoom: {zoom.toFixed(1)}x</div>
               <div className={s.zoomSliderWrapper}>
-                <button className={s.zoomButton} onClick={handleZoomOut} disabled={zoom <= MIN_ZOOM}>
+                <button className={s.zoomButton} onClick={handleZoomOut} disabled={zoom <= ZOOM.MIN}>
                   −
                 </button>
                 <input
                   type="range"
-                  min={MIN_ZOOM}
-                  max={MAX_ZOOM}
-                  step={ZOOM_STEP}
+                  min={ZOOM.MIN}
+                  max={ZOOM.MAX}
+                  step={ZOOM.STEP}
                   value={zoom}
                   onChange={handleZoomChange}
                   className={s.zoomSlider}
                 />
-                <button className={s.zoomButton} onClick={handleZoomIn} disabled={zoom >= MAX_ZOOM}>
+                <button className={s.zoomButton} onClick={handleZoomIn} disabled={zoom >= ZOOM.MAX}>
                   +
                 </button>
               </div>

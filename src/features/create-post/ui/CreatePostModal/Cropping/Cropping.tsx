@@ -1,6 +1,6 @@
 'use client'
 
-import { ModalStep } from '@/features/create-post/model/types/modalStep'
+import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import s from './Cropping.module.scss'
 import { AspectRatio, PhotoType } from './types'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
@@ -17,7 +17,7 @@ type CroppingProps = {
   onCropComplete?: (croppedImages: File[]) => void
   onNext?: () => void
   onBack?: () => void
-  currentStep: ModalStep
+  currentStep: ModalSteps
   onSelectFiles?: (files: File[]) => void
 }
 

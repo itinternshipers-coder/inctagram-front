@@ -2,13 +2,13 @@
 
 import { useCreatePostMutation } from '@/entities/post/api/posts-api'
 import { CreatePostSchema } from '@/entities/post/model'
+import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { ROUTES } from '@/shared/config/routes'
 import { Alert } from '@/shared/ui/Alert/Alert'
 import Loader from '@/shared/ui/Loader/Loader'
 import { Modal } from '@/shared/ui/Modal/Modal'
 import { ImageGallery } from '@/shared/ui/PostModal/ImageGallery/ImageGallery'
 import TextArea from '@/shared/ui/TextArea/TextArea'
-import { ModalStep } from '@/features/create-post/ui/CreatePostModal/CreatePostModal'
 import { uploadPhotoToServer } from '@/features/create-post/model/api/uploadPhotoToServer'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -40,7 +40,7 @@ type PublicationProps = {
   images: File[]
   onBack: () => void
   onNext?: () => void
-  currentStep: ModalStep
+  currentStep: ModalSteps
 }
 
 // Модифицированная схема для формы (только описание)

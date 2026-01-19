@@ -1,7 +1,7 @@
+import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { ArrowIosBackOutlineIcon, CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import { ModalStep } from '@/features/create-post/ui/CreatePostModal/CreatePostModal'
 import s from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader.module.scss'
 
 export const ModalHeader = ({
@@ -12,14 +12,14 @@ export const ModalHeader = ({
   disabled,
   onSubmitting,
 }: {
-  currentStep: ModalStep
+  currentStep: ModalSteps
   onBack?: () => void
   onNext?: () => void
   onClose?: () => void
   disabled?: boolean
   onSubmitting?: boolean
 }) => {
-  const stepTitles: Record<ModalStep, string> = {
+  const stepTitles: Record<ModalSteps, string> = {
     'add-photo': 'Add Photo',
     cropping: 'Cropping',
     filters: 'Filters',

@@ -1,4 +1,4 @@
-import { AvatarMutation, Profile } from '@/features/profile/model/type'
+import { AvatarMutation, DeleteAvatar, Profile } from '@/features/profile/model/type'
 import { baseApi } from '@/shared/api/base-api'
 import { API_ENDPOINTS, EndpointHelpers } from '@/shared/api/endpoints'
 
@@ -29,11 +29,19 @@ export const profileApi = baseApi.injectEndpoints({
         const formData = new FormData()
         formData.append('avatar', file)
         return {
-          url: API_ENDPOINTS.PROFILE.AVATAR,
+          url: API_ENDPOINTS.PROFILE.UPLOAD_AVATAR,
           method: 'POST',
           body: formData,
         }
       },
+      invalidatesTags: ['Profile'],
+    }),
+    deleteAvatar: build.mutation<DeleteAvatar['response'], DeleteAvatar['request']>({
+      query: () => ({
+        url: API_ENDPOINTS.PROFILE.DELETE_AVATAR,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Profile'],
     }),
   }),
 })

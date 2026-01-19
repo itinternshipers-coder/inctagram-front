@@ -27,7 +27,8 @@ export const API_ENDPOINTS = {
   PROFILE: {
     BASE: '/profile',
     BY_ID: '/profile/{userId}',
-    AVATAR: '/profile/upload-avatar',
+    UPLOAD_AVATAR: '/profile/upload-avatar',
+    DELETE_AVATAR: '/profile/avatar',
   },
 } as const
 

@@ -25,3 +25,9 @@ export type AvatarMutation = {
   }[]
   error: ErrorResponse
 }
+
+export type DeleteAvatar = {
+  request: void
+  response: void
+  error: ErrorResponse
+}

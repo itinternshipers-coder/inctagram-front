@@ -2,8 +2,7 @@
 
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { useCroppingHandlers } from '@/features/create-post/ui/CreatePostModal/Cropping/hooks/useCroppingHandlers'
-import s from './Cropping.module.scss'
-import { AspectRatio, PhotoType } from './types'
+import { useUploadPhotoToCropping } from '@/features/create-post/ui/CreatePostModal/Cropping/hooks/useUploadPhotoToCropping'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'
@@ -12,6 +11,8 @@ import { Typography } from '@/shared/ui/Typography/Typography'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
 import { ASPECT_RATIO_OPTIONS, CROPPING_IMAGES_CONSTANTS } from './constants'
+import s from './Cropping.module.scss'
+import { AspectRatio, PhotoType } from './types'
 
 type CroppingProps = {
   images: File[] // Массив изображений
@@ -19,7 +20,6 @@ type CroppingProps = {
   onNext?: () => void
   onBack?: () => void
   currentStep: ModalSteps
-  onSelectFiles?: (files: File[]) => void
 }
 
 export const Cropping = ({
@@ -28,7 +28,6 @@ export const Cropping = ({
   onNext = () => {},
   onBack = () => {},
   currentStep,
-  onSelectFiles,
 }: CroppingProps) => {
   const [photos, setPhotos] = useState<PhotoType[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -51,6 +50,12 @@ export const Cropping = ({
     photos,
     onCropComplete,
     onNext,
+  })
+
+  const { uploadFile } = useUploadPhotoToCropping({
+    photos,
+    setPhotos,
+    setCurrentIndex,
   })
 
   // Инициализация фотографий из пропса images
@@ -119,13 +124,11 @@ export const Cropping = ({
     if (cropDebounceRef.current) {
       clearTimeout(cropDebounceRef.current)
     }
-
     cropDebounceRef.current = setTimeout(() => {
       if (photos[currentIndex]?.croppedAreaPixels) {
         updateCroppedPreview()
       }
     }, 300)
-
     return () => {
       if (cropDebounceRef.current) {
         clearTimeout(cropDebounceRef.current)
@@ -208,38 +211,10 @@ export const Cropping = ({
     })
   }, [])
 
-  const onUploadFile = useCallback(
-    (uploadedFile: File) => {
-      // Хук useImageUpload уже выполнил валидацию
-      if (!uploadedFile) return
-
-      const url = URL.createObjectURL(uploadedFile)
-
-      const newPhoto = {
-        photoId: `${Date.now()}-${photos.length}`,
-        file: uploadedFile,
-        originalUrl: url,
-        isEdited: false,
-        // Дополнительная информация, если нужно
-        name: uploadedFile.name,
-        size: uploadedFile.size,
-        type: uploadedFile.type,
-      }
-
-      setPhotos((prev) => [...prev, newPhoto])
-      setCurrentIndex(photos.length)
-
-      if (onSelectFiles) {
-        onSelectFiles([uploadedFile])
-      }
-    },
-    [photos]
-  )
-
   // Обработка нового файла
   useEffect(() => {
     if (file) {
-      onUploadFile(file)
+      uploadFile(file)
     }
   }, [file])
 

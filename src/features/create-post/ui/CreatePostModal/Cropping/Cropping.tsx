@@ -1,6 +1,7 @@
 'use client'
 
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
+import { useCroppingHandlers } from '@/features/create-post/ui/CreatePostModal/Cropping/hooks/useCroppingHandlers'
 import s from './Cropping.module.scss'
 import { AspectRatio, PhotoType } from './types'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
@@ -46,6 +47,12 @@ export const Cropping = ({
     allowedTypes: ['image/png', 'image/jpeg'],
   })
 
+  const { handleSaveCrop } = useCroppingHandlers({
+    photos,
+    onCropComplete,
+    onNext,
+  })
+
   // Инициализация фотографий из пропса images
   useEffect(() => {
     const initializePhotos = async () => {
@@ -89,8 +96,6 @@ export const Cropping = ({
 
     if (!currentPhoto?.croppedAreaPixels || !currentPhoto.originalUrl) return
 
-    setIsGeneratingPreview(true)
-
     try {
       const croppedImageBlob = await getCroppedImg(currentPhoto.originalUrl, currentPhoto.croppedAreaPixels)
       const previewUrl = URL.createObjectURL(croppedImageBlob)
@@ -107,7 +112,6 @@ export const Cropping = ({
     } catch (e) {
       console.error('Error updating preview:', e)
     } finally {
-      setIsGeneratingPreview(false)
     }
   }, [photos, currentIndex])
 
@@ -228,9 +232,6 @@ export const Cropping = ({
       if (onSelectFiles) {
         onSelectFiles([uploadedFile])
       }
-
-      // Уведомление об успешной загрузке
-      // console.log(`Added photo: ${uploadedFile.name} (${(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)`)
     },
     [photos]
   )
@@ -241,34 +242,6 @@ export const Cropping = ({
       onUploadFile(file)
     }
   }, [file])
-
-  const handleSaveCrop = useCallback(async () => {
-    if (photos.length === 0) {
-      return
-    }
-
-    try {
-      const croppedImagesPromises = photos.map(async (photo) => {
-        if (!photo.croppedAreaPixels) {
-          // Если фото не редактировалось, возвращаем оригинал
-          return photo.file
-        }
-
-        const croppedImageBlob = await getCroppedImg(photo.originalUrl, photo.croppedAreaPixels)
-
-        return new File([croppedImageBlob], `cropped-${photo.file.name}`, {
-          type: croppedImageBlob.type,
-          lastModified: Date.now(),
-        })
-      })
-
-      const croppedImages = await Promise.all(croppedImagesPromises)
-      onCropComplete(croppedImages)
-      onNext()
-    } catch (err) {
-      console.error('Error saving cropped images:', err)
-    }
-  }, [photos, onCropComplete, onNext])
 
   const currentPhoto = photos[currentIndex]
 

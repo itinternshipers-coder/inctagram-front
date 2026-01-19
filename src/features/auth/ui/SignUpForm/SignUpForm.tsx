@@ -7,42 +7,23 @@ import { Card } from '@/shared/ui/Card/Card'
 import { CheckBox } from '@/shared/ui/CheckBox/CheckBox'
 import { Input } from '@/shared/ui/Input/Input'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useController, useForm } from 'react-hook-form'
 import { Modal } from '@/shared/ui/Modal/Modal'
-import { useState } from 'react'
-import { ErrorResponse } from '@/shared/api/types'
-import { useSignupMutation } from '../../api/auth-api'
 import Link from 'next/link'
 import s from './SignUpForm.module.scss'
-import { SignUpFormData, SignUpSchema } from '../../lib/schemas/signup-schema'
+import { useSignUpForm } from '../../lib/use-signup-form'
 
 export const SignUpForm = () => {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors, isSubmitting, isValid },
-    setError,
-    reset,
-  } = useForm<SignUpFormData>({
-    resolver: zodResolver(SignUpSchema),
-    mode: 'onTouched',
-    defaultValues: {
-      agreeToTerms: false,
-    },
-  })
-
-  const { field: agreementField } = useController({
-    name: 'agreeToTerms',
-    control,
-    defaultValue: false,
-  })
-
-  const [showAgreementModal, setShowAgreementModal] = useState(false)
-  const [emailForModal, setEmailForModal] = useState('')
-
-  const [signup, { isLoading }] = useSignupMutation()
+    agreementField,
+    showAgreementModal,
+    setShowAgreementModal,
+    emailForModal,
+    isLoading,
+    onSubmit,
+  } = useSignUpForm()
 
   if (isLoading) {
     return (
@@ -52,37 +33,6 @@ export const SignUpForm = () => {
     )
   }
 
-  const agreementValue = agreementField.value
-  const handleAgreementChange = agreementField.onChange
-
-  const onSubmit = async (data: SignUpFormData) => {
-    try {
-      const { agreeToTerms, passwordConfirmation, ...signUpData } = data
-      await signup(signUpData).unwrap()
-
-      setShowAgreementModal(true)
-      setEmailForModal(signUpData.email)
-      reset()
-    } catch (error: unknown) {
-      if (error && typeof error === 'object' && 'data' in error) {
-        const responseData = error.data as ErrorResponse
-        if (responseData.message === 'Username is already taken') {
-          setError('username', { message: 'This username is already taken' })
-        } else if (responseData.message === 'User with this email already exists') {
-          setError('email', { message: 'This email is already taken' })
-        } else if (responseData.errorsMessages && responseData.errorsMessages.length > 0) {
-          responseData.errorsMessages.forEach((err) => {
-            setError(err.field as keyof SignUpFormData, { message: err.message })
-          })
-        } else {
-          setError('root', { message: responseData.message || 'Registration failed' })
-        }
-      } else {
-        setError('root', { message: 'Network error' })
-      }
-    }
-  }
-
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -90,11 +40,11 @@ export const SignUpForm = () => {
           <Typography variant="h3">Sign Up</Typography>
 
           <div className={s.socialSignUp}>
-            <Button href={''} as={Link} variant="link" disabled={isSubmitting}>
-              <GoogleIcon height={'36px'} width={'36px'} />
+            <Button href="" as={Link} variant="link" disabled={isSubmitting}>
+              <GoogleIcon height="36px" width="36px" />
             </Button>
-            <Button href={''} as={Link} variant="link" disabled={isSubmitting}>
-              <GithubIcon height={'36px'} width={'36px'} className={s.githubIcon} />
+            <Button href="" as={Link} variant="link" disabled={isSubmitting}>
+              <GithubIcon height="36px" width="36px" className={s.githubIcon} />
             </Button>
           </div>
 
@@ -133,21 +83,20 @@ export const SignUpForm = () => {
           </div>
 
           <div className={s.agreementBlock}>
-            <CheckBox checked={agreementValue} onCheckedChange={handleAgreementChange} />
-
+            <CheckBox checked={agreementField.value} onCheckedChange={agreementField.onChange} />
             <Typography variant="small_text" as="span" className={s.typography}>
-              I agree to the
+              I agree to the{' '}
               <Typography variant="small_link" as={Link} href={ROUTES.PUBLIC.TERMS} className={s.link}>
                 Terms of Service
-              </Typography>
-              and
+              </Typography>{' '}
+              and{' '}
               <Typography variant="small_link" as={Link} href={ROUTES.PUBLIC.PRIVACY} className={s.link}>
                 Privacy Policy
               </Typography>
             </Typography>
           </div>
 
-          <Button variant="primary" fullWidth={true} type="submit" disabled={!isValid || isSubmitting}>
+          <Button variant="primary" fullWidth type="submit" disabled={!isValid || isSubmitting}>
             Sign Up
           </Button>
 
@@ -159,6 +108,7 @@ export const SignUpForm = () => {
           </div>
         </Card>
       </form>
+
       <Modal
         open={showAgreementModal}
         onOpenChange={setShowAgreementModal}

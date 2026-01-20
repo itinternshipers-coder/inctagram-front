@@ -16,11 +16,11 @@ export const profileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Profile'],
     }),
-    updateProfile: build.mutation<Profile['response'], FormData>({
-      query: (formData) => ({
+    updateProfile: build.mutation<Profile['response'], Partial<Profile['response']>>({
+      query: (data) => ({
         url: API_ENDPOINTS.PROFILE.BASE,
         method: 'PATCH',
-        body: formData,
+        body: data,
       }),
       invalidatesTags: ['Profile'],
     }),
@@ -45,3 +45,11 @@ export const profileApi = baseApi.injectEndpoints({
     }),
   }),
 })
+
+export const {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useAddProfileMutation,
+  useSetAvatarMutation,
+  useDeleteAvatarMutation,
+} = profileApi

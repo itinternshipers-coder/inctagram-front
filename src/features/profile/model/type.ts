@@ -1,5 +1,12 @@
 import { ErrorResponse } from '@/shared/api/types'
 
+export type Avatar = {
+  userId: string
+  url: string
+  width: number
+  height: number
+}
+
 export type Profile = {
   request: string
   response: {
@@ -11,18 +18,14 @@ export type Profile = {
     country: string
     city: string
     aboutMe: string
+    avatar: Avatar[]
   }
   error: ErrorResponse
 }
 
 export type AvatarMutation = {
   request: File
-  response: {
-    userId: string
-    url: string
-    width: number
-    height: number
-  }[]
+  response: Avatar[]
   error: ErrorResponse
 }
 

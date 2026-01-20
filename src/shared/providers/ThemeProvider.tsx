@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 
 type Theme = 'light' | 'dark'
 
@@ -12,18 +12,17 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark')
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'dark'
 
-  useEffect(() => {
     const saved = localStorage.getItem('theme') as Theme
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-
     const initialTheme = saved || (systemPrefersDark ? 'dark' : 'dark')
-    setTheme(initialTheme)
-    document.documentElement.setAttribute('data-theme', initialTheme)
-  }, [])
 
-  // Функция переключения темы
+    document.documentElement.setAttribute('data-theme', initialTheme)
+    return initialTheme
+  })
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
     setTheme(newTheme)
@@ -31,11 +30,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.setAttribute('data-theme', newTheme)
   }
 
-  // Провайдер делает тему и toggleTheme доступными для всех дочерних компонентов
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
 }
 
-// Хук для удобного доступа к контексту темы
+// Хук для доступа к контексту темы
 export function useTheme() {
   const context = useContext(ThemeContext)
   if (context === undefined) {

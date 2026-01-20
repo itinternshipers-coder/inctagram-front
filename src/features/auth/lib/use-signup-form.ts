@@ -1,5 +1,3 @@
-// src/features/auth/hooks/useSignUpForm.ts
-
 import { useState } from 'react'
 import { useForm, useController } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'

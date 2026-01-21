@@ -1,3 +1,4 @@
+import { ROUTES } from '@/shared/config/routes'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
@@ -34,7 +35,7 @@ export const useAuth = () => {
     } catch (e) {
     } finally {
       dispatch(logout())
-      router.push('/login')
+      router.push(ROUTES.PUBLIC.SIGN_IN)
     }
   }, [dispatch, logoutMutation, router])
 

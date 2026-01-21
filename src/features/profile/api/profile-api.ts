@@ -8,14 +8,6 @@ export const profileApi = baseApi.injectEndpoints({
       query: (userId) => EndpointHelpers.profile.byId(userId),
       providesTags: ['Profile'],
     }),
-    addProfile: build.mutation<Profile['response'], FormData>({
-      query: (formData) => ({
-        url: API_ENDPOINTS.PROFILE.BASE,
-        method: 'POST',
-        body: formData,
-      }),
-      invalidatesTags: ['Profile'],
-    }),
     updateProfile: build.mutation<Profile['response'], Partial<Profile['response']>>({
       query: (data) => ({
         url: API_ENDPOINTS.PROFILE.BASE,
@@ -24,7 +16,7 @@ export const profileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Profile'],
     }),
-    setAvatar: build.mutation<AvatarMutation['response'], AvatarMutation['request']>({
+    uploadAvatar: build.mutation<AvatarMutation['response'], AvatarMutation['request']>({
       query: (file) => {
         const formData = new FormData()
         formData.append('avatar', file)
@@ -46,10 +38,5 @@ export const profileApi = baseApi.injectEndpoints({
   }),
 })
 
-export const {
-  useGetProfileQuery,
-  useUpdateProfileMutation,
-  useAddProfileMutation,
-  useSetAvatarMutation,
-  useDeleteAvatarMutation,
-} = profileApi
+export const { useGetProfileQuery, useUpdateProfileMutation, useUploadAvatarMutation, useDeleteAvatarMutation } =
+  profileApi

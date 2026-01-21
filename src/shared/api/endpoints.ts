@@ -45,6 +45,6 @@ export const EndpointHelpers = {
     byProvider: (provider: string) => `/auth/oauth/${provider}`,
   },
   profile: {
-    byId: (id: string) => `/profile/${id}`,
+    byId: (userId: string) => `/profile/${userId}`,
   },
 }

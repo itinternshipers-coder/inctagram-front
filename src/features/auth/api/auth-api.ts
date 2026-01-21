@@ -10,12 +10,14 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Auth'],
     }),
     logout: builder.mutation<Logout['response'], Logout['request']>({
       query: () => ({
         url: API_ENDPOINTS.AUTH.SIGN_OUT,
         method: 'POST',
       }),
+      invalidatesTags: ['Auth'],
     }),
     signup: builder.mutation<SignUp['response'], SignUp['request']>({
       query: (body) => ({
@@ -46,6 +48,7 @@ export const authApi = baseApi.injectEndpoints({
     }),
     me: builder.query<Me['response'], Me['request']>({
       query: () => API_ENDPOINTS.AUTH.ME,
+      providesTags: ['Auth'],
     }),
   }),
 })

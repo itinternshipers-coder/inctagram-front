@@ -18,7 +18,7 @@ export type Profile = {
     country: string
     city: string
     aboutMe: string
-    avatar: Avatar[]
+    avatar?: Avatar[]
   }
   error: ErrorResponse
 }

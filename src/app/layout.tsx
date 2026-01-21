@@ -1,4 +1,3 @@
-'use client'
 import { AuthProvider } from '@/features/auth/providers/AuthProvider'
 import { StoreProvider } from '@/shared/providers/StoreProvider'
 import { ThemeProvider } from '@/shared/providers/ThemeProvider'

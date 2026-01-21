@@ -30,7 +30,7 @@ export type AvatarMutation = {
 }
 
 export type DeleteAvatar = {
-  request: void
+  request: { userId: string }
   response: void
   error: ErrorResponse
 }

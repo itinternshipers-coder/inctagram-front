@@ -37,6 +37,7 @@ export const Cropping = ({
   const [selectedAspect, setSelectedAspect] = useState<AspectRatio>(ASPECT_RATIO_OPTIONS[0])
   const [croppedPreviewUrl, setCroppedPreviewUrl] = useState<string | null>(null)
   const cropDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const photosRef = useRef<PhotoType[]>([])
 
   const { ZOOM, UI } = CROPPING_IMAGES_CONSTANTS
 
@@ -58,6 +59,18 @@ export const Cropping = ({
   // Инициализация фотографий из пропса images
   useEffect(() => {
     const initializePhotos = async () => {
+      // Очищаем предыдущие URL перед созданием новых
+      photosRef.current.forEach((photo) => {
+        try {
+          URL.revokeObjectURL(photo.originalUrl)
+          if (photo.croppedUrl) {
+            URL.revokeObjectURL(photo.croppedUrl)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке уже удаленных URL
+        }
+      })
+
       const newPhotos: PhotoType[] = await Promise.all(
         images.map(async (file, index) => {
           const url = URL.createObjectURL(file)
@@ -70,6 +83,7 @@ export const Cropping = ({
         })
       )
 
+      photosRef.current = newPhotos
       setPhotos(newPhotos)
       if (newPhotos.length > 0) {
         setCurrentIndex(0)
@@ -79,19 +93,24 @@ export const Cropping = ({
     initializePhotos()
 
     return () => {
-      // Очистка URL при размонтировании
-      photos.forEach((photo) => {
-        URL.revokeObjectURL(photo.originalUrl)
-        if (photo.croppedUrl) {
-          URL.revokeObjectURL(photo.croppedUrl)
+      // Очистка URL при размонтировании или изменении images
+      photosRef.current.forEach((photo) => {
+        try {
+          URL.revokeObjectURL(photo.originalUrl)
+          if (photo.croppedUrl) {
+            URL.revokeObjectURL(photo.croppedUrl)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке уже удаленных URL
         }
       })
+      photosRef.current = []
     }
-  }, [])
+  }, [images])
 
   // Обновление preview с дебаунсом
   const updateCroppedPreview = useCallback(async () => {
-    const currentPhoto = photos[currentIndex]
+    const currentPhoto = photosRef.current[currentIndex]
 
     // Явная проверка на существование фото
     if (!currentPhoto) return
@@ -103,39 +122,63 @@ export const Cropping = ({
       const previewUrl = URL.createObjectURL(croppedImageBlob)
 
       setCroppedPreviewUrl((prev) => {
-        if (prev) URL.revokeObjectURL(prev)
+        if (prev) {
+          try {
+            URL.revokeObjectURL(prev)
+          } catch (e) {
+            // Игнорируем ошибки при очистке
+          }
+        }
         return previewUrl
       })
 
       // Обновляем фото с croppedUrl
-      setPhotos((prev) =>
-        prev.map((photo, index) => (index === currentIndex ? { ...photo, croppedUrl: previewUrl } : photo))
-      )
+      setPhotos((prev) => {
+        const updated = prev.map((photo, index) =>
+          index === currentIndex ? { ...photo, croppedUrl: previewUrl } : photo
+        )
+        photosRef.current = updated
+        return updated
+      })
     } catch (e) {
       console.error('Error updating preview:', e)
     }
-  }, [photos, currentIndex])
+  }, [currentIndex])
 
   useEffect(() => {
     if (cropDebounceRef.current) {
       clearTimeout(cropDebounceRef.current)
     }
     cropDebounceRef.current = setTimeout(() => {
-      if (photos[currentIndex]?.croppedAreaPixels) {
+      if (photosRef.current[currentIndex]?.croppedAreaPixels) {
         updateCroppedPreview()
       }
     }, 300)
     return () => {
       if (cropDebounceRef.current) {
         clearTimeout(cropDebounceRef.current)
+        cropDebounceRef.current = null
       }
     }
   }, [photos, currentIndex, updateCroppedPreview])
 
+  // Очистка croppedPreviewUrl при размонтировании
+  useEffect(() => {
+    return () => {
+      if (croppedPreviewUrl) {
+        try {
+          URL.revokeObjectURL(croppedPreviewUrl)
+        } catch (e) {
+          // Игнорируем ошибки при очистке
+        }
+      }
+    }
+  }, [croppedPreviewUrl])
+
   const onCropCompleteHandler = useCallback(
     (_: Area, croppedAreaPixels: Area) => {
-      setPhotos((prev) =>
-        prev.map((photo, index) =>
+      setPhotos((prev) => {
+        const updated = prev.map((photo, index) =>
           index === currentIndex
             ? {
                 ...photo,
@@ -144,7 +187,9 @@ export const Cropping = ({
               }
             : photo
         )
-      )
+        photosRef.current = updated
+        return updated
+      })
     },
     [currentIndex]
   )
@@ -159,9 +204,13 @@ export const Cropping = ({
       setCrop({ x: 0, y: 0 })
 
       // Сбрасываем croppedAreaPixels для текущего фото
-      setPhotos((prev) =>
-        prev.map((photo, index) => (index === currentIndex ? { ...photo, croppedAreaPixels: undefined } : photo))
-      )
+      setPhotos((prev) => {
+        const updated = prev.map((photo, index) =>
+          index === currentIndex ? { ...photo, croppedAreaPixels: undefined } : photo
+        )
+        photosRef.current = updated
+        return updated
+      })
     },
     [currentIndex]
   )
@@ -184,10 +233,11 @@ export const Cropping = ({
   const handleDeletePhoto = useCallback(
     (index: number) => {
       const { newPhotos, newCurrentIndex } = photoDelete(photos, index, currentIndex)
+      photosRef.current = newPhotos
       setPhotos(newPhotos)
       setCurrentIndex(newCurrentIndex)
     },
-    [photos, currentIndex, setPhotos, setCurrentIndex]
+    [photos, currentIndex]
   )
 
   // Обработка нового файла
@@ -229,15 +279,19 @@ export const Cropping = ({
 
           <div className={s.previewSection}>
             <div className={s.previewContainer}>
-              {croppedPreviewUrl ? (
-                <img
-                  src={croppedPreviewUrl}
-                  alt="Cropped preview"
-                  className={s.previewImage}
-                  style={{ aspectRatio: selectedAspect.value }}
-                />
+              {photos.length > 0 ? (
+                currentPhoto.originalUrl && croppedPreviewUrl ? (
+                  <img
+                    src={croppedPreviewUrl}
+                    alt=" Loading... Image preview"
+                    className={s.previewImage}
+                    style={{ aspectRatio: selectedAspect.value }}
+                  />
+                ) : (
+                  currentPhoto?.originalUrl && <div className={s.previewPlaceholder}>Loading...</div>
+                )
               ) : (
-                currentPhoto?.originalUrl && <div className={s.previewPlaceholder}>Loading...</div>
+                <div className={s.previewPlaceholder}>No photos uploaded</div>
               )}
             </div>
           </div>
@@ -250,11 +304,7 @@ export const Cropping = ({
               className={`${s.galleryItem} ${index === currentIndex ? s.active : ''}`}
               onClick={() => handleSelectPhoto(index)}
             >
-              <img
-                src={photo.croppedUrl || photo.originalUrl}
-                alt={`Preview ${index + 1}`}
-                className={s.galleryImage}
-              />
+              <img src={photo.originalUrl} alt={`Preview ${index + 1}`} className={s.galleryImage} />
               <div className={s.galleryOverlay}>
                 <div className={s.photoNumber}>{index + 1}</div>
                 {photo.isEdited && <div className={s.editedBadge}>✓</div>}

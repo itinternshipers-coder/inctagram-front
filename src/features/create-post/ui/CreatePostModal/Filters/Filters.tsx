@@ -4,7 +4,7 @@ import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import s from '@/features/create-post/ui/CreatePostModal/Filters/Filters.module.scss'
 
 type FiltersProps = {
@@ -37,15 +37,50 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
   const [processedImages, setProcessedImages] = useState<ExtendedPhotoType[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isApplyingAll, setIsApplyingAll] = useState(false)
+  const processedImagesRef = useRef<ExtendedPhotoType[]>([])
 
   // Инициализация изображений
   useEffect(() => {
     if (!images || images.length === 0) {
+      // Очищаем предыдущие URL перед очисткой состояния
+      processedImagesRef.current.forEach((img) => {
+        try {
+          if (img.url?.startsWith('blob:')) {
+            URL.revokeObjectURL(img.url)
+          }
+          if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
+            URL.revokeObjectURL(img.originalUrl)
+          }
+          if (img.filteredUrl?.startsWith('blob:')) {
+            URL.revokeObjectURL(img.filteredUrl)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке
+        }
+      })
+      processedImagesRef.current = []
       setProcessedImages([])
       return
     }
 
     const initializeImages = async () => {
+      // Очищаем предыдущие URL перед созданием новых
+      processedImagesRef.current.forEach((img) => {
+        try {
+          if (img.url?.startsWith('blob:')) {
+            URL.revokeObjectURL(img.url)
+          }
+          if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
+            URL.revokeObjectURL(img.originalUrl)
+          }
+          if (img.filteredUrl?.startsWith('blob:')) {
+            URL.revokeObjectURL(img.filteredUrl)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке
+        }
+      })
+
       const newProcessedImages: ExtendedPhotoType[] = await Promise.all(
         images.map(async (file) => {
           const url = URL.createObjectURL(file)
@@ -59,6 +94,7 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
         })
       )
 
+      processedImagesRef.current = newProcessedImages
       setProcessedImages(newProcessedImages)
       setCurrentIndex(0)
     }
@@ -66,18 +102,23 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
     initializeImages()
 
     return () => {
-      // Очистка URL при размонтировании
-      processedImages.forEach((img) => {
-        if (img.url?.startsWith('blob:')) {
-          URL.revokeObjectURL(img.url)
-        }
-        if (img.originalUrl?.startsWith('blob:')) {
-          URL.revokeObjectURL(img.originalUrl)
-        }
-        if (img.filteredUrl?.startsWith('blob:')) {
-          URL.revokeObjectURL(img.filteredUrl)
+      // Очистка URL при размонтировании или изменении images
+      processedImagesRef.current.forEach((img) => {
+        try {
+          if (img.url?.startsWith('blob:')) {
+            URL.revokeObjectURL(img.url)
+          }
+          if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
+            URL.revokeObjectURL(img.originalUrl)
+          }
+          if (img.filteredUrl?.startsWith('blob:')) {
+            URL.revokeObjectURL(img.filteredUrl)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке
         }
       })
+      processedImagesRef.current = []
     }
   }, [images])
 
@@ -102,10 +143,14 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
   // Применение фильтра к конкретному изображению
   const applyFilterToImage = useCallback(
     async (index: number, filterId: string) => {
-      const imageData = processedImages[index]
+      const imageData = processedImagesRef.current[index]
       if (!imageData) return null
 
-      setProcessedImages((prev) => prev.map((img, i) => (i === index ? { ...img, isProcessing: true } : img)))
+      setProcessedImages((prev) => {
+        const updated = prev.map((img, i) => (i === index ? { ...img, isProcessing: true } : img))
+        processedImagesRef.current = updated
+        return updated
+      })
 
       try {
         // Создаем canvas для применения фильтра
@@ -118,9 +163,21 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
 
         // Загружаем ОРИГИНАЛЬНОЕ изображение (всегда из originalUrl)
         const img = new Image()
-        await new Promise((resolve, reject) => {
-          img.onload = resolve
-          img.onerror = reject
+        await new Promise<void>((resolve, reject) => {
+          const handleLoad = () => {
+            cleanup()
+            resolve()
+          }
+          const handleError = (error: Event | string) => {
+            cleanup()
+            reject(error)
+          }
+          const cleanup = () => {
+            img.removeEventListener('load', handleLoad)
+            img.removeEventListener('error', handleError)
+          }
+          img.addEventListener('load', handleLoad)
+          img.addEventListener('error', handleError)
           img.src = imageData.originalUrl
         })
 
@@ -147,8 +204,8 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
           URL.revokeObjectURL(imageData.filteredUrl)
         }
 
-        setProcessedImages((prev) =>
-          prev.map((imgData, i) => {
+        setProcessedImages((prev) => {
+          const updated = prev.map((imgData, i) => {
             if (i === index) {
               // Определяем какой URL использовать для отображения
               const displayUrl = filterId !== 'none' ? filteredUrl : imgData.originalUrl
@@ -163,27 +220,33 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
             }
             return imgData
           })
-        )
+          processedImagesRef.current = updated
+          return updated
+        })
 
         return filteredUrl
       } catch (error) {
         console.error('Error applying filter:', error)
-        setProcessedImages((prev) =>
-          prev.map((imgData, i) => (i === index ? { ...imgData, isProcessing: false } : imgData))
-        )
+        setProcessedImages((prev) => {
+          const updated = prev.map((imgData, i) => (i === index ? { ...imgData, isProcessing: false } : imgData))
+          processedImagesRef.current = updated
+          return updated
+        })
         return null
       }
     },
-    [processedImages, getFilterCSS]
+    [getFilterCSS]
   )
 
   // Обработчик выбора фильтра
   const handleSelectFilter = useCallback(
     async (filterId: string) => {
       // Сначала обновляем selectedFilter
-      setProcessedImages((prev) =>
-        prev.map((img, i) => (i === currentIndex ? { ...img, selectedFilter: filterId } : img))
-      )
+      setProcessedImages((prev) => {
+        const updated = prev.map((img, i) => (i === currentIndex ? { ...img, selectedFilter: filterId } : img))
+        processedImagesRef.current = updated
+        return updated
+      })
 
       // Затем применяем фильтр
       await applyFilterToImage(currentIndex, filterId)
@@ -193,7 +256,7 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
 
   // Применение фильтров ко всем изображениям и переход дальше
   const handleApplyFilters = async () => {
-    if (processedImages.length === 0) {
+    if (processedImagesRef.current.length === 0) {
       if (onNext) onNext()
       return
     }
@@ -202,7 +265,7 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
 
     try {
       // Применяем фильтры ко всем изображениям
-      const filteredFilesPromises = processedImages.map(async (imageData) => {
+      const filteredFilesPromises = processedImagesRef.current.map(async (imageData) => {
         if (imageData.selectedFilter === 'none') {
           // Если фильтр не выбран, возвращаем оригинал
           return imageData.file
@@ -226,9 +289,21 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
         if (!ctx) throw new Error('Canvas context not available')
 
         const img = new Image()
-        await new Promise((resolve, reject) => {
-          img.onload = resolve
-          img.onerror = reject
+        await new Promise<void>((resolve, reject) => {
+          const handleLoad = () => {
+            cleanup()
+            resolve()
+          }
+          const handleError = (error: Event | string) => {
+            cleanup()
+            reject(error)
+          }
+          const cleanup = () => {
+            img.removeEventListener('load', handleLoad)
+            img.removeEventListener('error', handleError)
+          }
+          img.addEventListener('load', handleLoad)
+          img.addEventListener('error', handleError)
           img.src = imageData.originalUrl
         })
 
@@ -269,14 +344,14 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
 
   // Функции для перелистывания изображений
   const goToPrevImage = useCallback(() => {
-    if (processedImages.length <= 1) return
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : processedImages.length - 1))
-  }, [processedImages.length])
+    if (processedImagesRef.current.length <= 1) return
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : processedImagesRef.current.length - 1))
+  }, [])
 
   const goToNextImage = useCallback(() => {
-    if (processedImages.length <= 1) return
-    setCurrentIndex((prev) => (prev < processedImages.length - 1 ? prev + 1 : 0))
-  }, [processedImages.length])
+    if (processedImagesRef.current.length <= 1) return
+    setCurrentIndex((prev) => (prev < processedImagesRef.current.length - 1 ? prev + 1 : 0))
+  }, [])
 
   const currentImage = processedImages[currentIndex]
 

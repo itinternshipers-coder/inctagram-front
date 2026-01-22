@@ -58,6 +58,7 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
   const [showModal, setShowModal] = useState(false)
 
   const submitButtonRef = useRef<HTMLButtonElement>(null)
+  const photosRef = useRef<PhotoType[]>([])
 
   const [createPost, { isLoading: isCreatingPost }] = useCreatePostMutation()
 
@@ -80,11 +81,33 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
   // Преобразование File[] в PhotoType[] для предпросмотра
   useEffect(() => {
     if (!images || images.length === 0) {
+      // Очищаем предыдущие URL перед очисткой состояния
+      photosRef.current.forEach((photo) => {
+        try {
+          if (photo.url.startsWith('blob:')) {
+            URL.revokeObjectURL(photo.url)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке
+        }
+      })
+      photosRef.current = []
       setPhotos([])
       return
     }
 
     const convertFilesToPhotos = async () => {
+      // Очищаем предыдущие URL перед созданием новых
+      photosRef.current.forEach((photo) => {
+        try {
+          if (photo.url.startsWith('blob:')) {
+            URL.revokeObjectURL(photo.url)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке
+        }
+      })
+
       const convertedPhotos: PhotoType[] = await Promise.all(
         images.map(async (file, index) => {
           const url = URL.createObjectURL(file)
@@ -98,17 +121,24 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
         })
       )
 
+      photosRef.current = convertedPhotos
       setPhotos(convertedPhotos)
     }
 
     convertFilesToPhotos()
 
     return () => {
-      photos.forEach((photo) => {
-        if (photo.url.startsWith('blob:')) {
-          URL.revokeObjectURL(photo.url)
+      // Очистка URL при размонтировании или изменении images
+      photosRef.current.forEach((photo) => {
+        try {
+          if (photo.url.startsWith('blob:')) {
+            URL.revokeObjectURL(photo.url)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке
         }
       })
+      photosRef.current = []
     }
   }, [images])
 
@@ -186,14 +216,22 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
       // Отправляем запрос на создание поста
       const result = await createPost(postData).unwrap()
 
-      console.log('Post created successfully:', result)
+      // Логирование только в development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Post created successfully:', result)
+      }
 
       // Очистка временных URL
-      photos.forEach((photo) => {
-        if (photo.url.startsWith('blob:')) {
-          URL.revokeObjectURL(photo.url)
+      photosRef.current.forEach((photo) => {
+        try {
+          if (photo.url.startsWith('blob:')) {
+            URL.revokeObjectURL(photo.url)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке
         }
       })
+      photosRef.current = []
 
       // Очистка формы
       reset()

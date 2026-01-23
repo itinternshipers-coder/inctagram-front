@@ -5,33 +5,26 @@ import { AuthContext } from './auth-context'
 import { Loader } from '@/shared/ui/Loader/Loader'
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { data, isLoading, error } = useMeQuery(undefined, {
-    // Если в запросе произошла ошибка (любая, включая 401),
-    // возвращаем null вместо данных пользователя
-    selectFromResult: ({ data, isLoading, error }) => ({
-      data: error ? null : data,
-      isLoading,
-      error,
-    }),
-  })
+  const { data, isLoading, isFetching, error } = useMeQuery()
 
-  const user = data || null
-  const isLoggedIn = !!user
-
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <Loader />
   }
-
-  if (error && 'status' in error && error.status !== 401) {
-    console.error('Auth error:', error)
-  }
+  // Пояснение:
+  // - error === true означает, что последний запрос завершился с ошибкой
+  // - isFetching === false означает, что в текущий момент нет активных запросов для этого hook
+  // Если есть ошибка и в данный момент нет активных фетчей — это финальная ошибка (final error).
+  // В этом случае мы не должны опираться на застаревший data из кеша, а считать пользователя гостем.
+  const isFinalError = !!error && !isFetching
+  const user = isFinalError ? null : (data ?? null)
+  const isLoggedIn = !!user
 
   return (
     <AuthContext.Provider
       value={{
         user,
         isLoggedIn,
-        isLoading: false,
+        isLoading,
       }}
     >
       {children}

@@ -137,7 +137,7 @@ const Sidebar = ({ role }: SidebarProps) => {
               ActiveIcon={<PlusSquareIcon />}
               InactiveIcon={<PlusSquareOutlineIcon />}
               isActive={isActive(ROUTES.MODALS.CREATE_POST)}
-              disabled={isDisabled(MOCK_ROUTES.plus)}
+              disabled={isDisabled(ROUTES.MODALS.CREATE_POST)}
               onClick={() => handleClick(ROUTES.MODALS.CREATE_POST)}
             />
             <SidebarLinkItem

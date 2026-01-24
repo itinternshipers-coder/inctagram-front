@@ -1,5 +1,5 @@
 import { ExtendedPhotoType } from '@/features/create-post/ui/CreatePostModal/Filters/types'
-import s from 'src/features/create-post/ui/CreatePostModal/Filters/Filters.module.scss'
+import s from '@/features/create-post/ui/CreatePostModal/Filters/Filters.module.scss'
 
 export const FILTERS = [
   { id: 'none', name: 'Original', className: s.filterNone },

@@ -1,12 +1,12 @@
 'use client'
 
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
-import s from '@/features/create-post/ui/CreatePostModal/Filters/Filters.module.scss'
-import { applyFilterToImage } from '@/features/create-post/ui/CreatePostModal/Filters/utils/applyFilterToImage'
-import { FiltersToImage } from '@/features/create-post/ui/CreatePostModal/Filters/utils/FiltersToImage'
-import { ExtendedPhotoType } from '@/features/create-post/ui/CreatePostModal/Filters/types'
-import { getFilterCSS } from '@/features/create-post/ui/CreatePostModal/Filters/utils/getFilters'
-import { SlideViewerImage } from '@/features/create-post/ui/CreatePostModal/Filters/utils/SlideViewerImage'
+import s from './Filters.module.scss'
+import { applyFilterToImage } from './utils/applyFilterToImage'
+import { FiltersToImage } from './FiltersToImage'
+import { ExtendedPhotoType } from './types'
+import { getFilterCSS } from './utils/getFilters'
+import { SlideViewerImage } from './SlideViewerImage'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useCallback, useEffect, useRef, useState } from 'react'
 

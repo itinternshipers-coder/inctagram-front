@@ -1,30 +1,17 @@
 'use client'
-
-import React from 'react'
+import React, { useContext } from 'react'
 import clsx from 'clsx'
-import Sidebar from '@/widgets/Sidebar/Sidebar'
 import { Header } from '@/widgets/header/Header'
-import { useAuthInit } from '@/features/auth/lib/use-auth-init'
-import { useMeQuery } from '@/features/auth/api/auth-api'
-import { Card } from '@/shared/ui/Card/Card'
-import { Typography } from '@/shared/ui/Typography/Typography'
-
+import Sidebar from '@/widgets/Sidebar/Sidebar'
+import { AuthContext } from '@/features/auth/providers/auth-context'
 import s from './AuthWrapper.module.scss'
-import Loader from '@/shared/ui/Loader/Loader'
 
 type Props = {
   children: React.ReactNode
 }
 
 export const AuthWrapper = ({ children }: Props) => {
-  useAuthInit()
-  const { data: user, isLoading } = useMeQuery()
-
-  const isLoggedIn = !!user
-
-  if (isLoading) {
-    return <Loader />
-  }
+  const { isLoggedIn } = useContext(AuthContext)
 
   return (
     <>

@@ -1,13 +1,13 @@
+import { ROUTES } from '@/shared/config/routes'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import { useLoginMutation, useLogoutMutation } from '../api/auth-api'
-import { logout, setAccessToken, setUser } from '../model/auth-slice'
-import { authApi } from '../api/auth-api'
+import { logout, setAccessToken } from '../model/auth-slice'
 
 export const useAuth = () => {
   const dispatch = useAppDispatch()
-  const route = useRouter()
+  const router = useRouter()
   const auth = useAppSelector((state) => state.auth)
 
   const [loginMutation] = useLoginMutation()
@@ -19,12 +19,6 @@ export const useAuth = () => {
         const result = await loginMutation(credentials).unwrap()
 
         dispatch(setAccessToken(result.accessToken))
-
-        const userResult = await dispatch(authApi.endpoints.me.initiate(undefined, { forceRefetch: true })).unwrap()
-
-        if (userResult) {
-          dispatch(setUser(userResult))
-        }
 
         return result
       } catch (error) {
@@ -41,9 +35,9 @@ export const useAuth = () => {
     } catch (e) {
     } finally {
       dispatch(logout())
-      route.push('/login')
+      router.push(ROUTES.PUBLIC.SIGN_IN)
     }
-  }, [dispatch, logoutMutation, route])
+  }, [dispatch, logoutMutation, router])
 
   return {
     ...auth,

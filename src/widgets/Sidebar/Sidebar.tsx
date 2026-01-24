@@ -1,10 +1,8 @@
 'use client'
 
 import { useAuth } from '@/features/auth/lib/use-auth'
+import { AuthContext } from '@/features/auth/providers/auth-context'
 import { ROUTES } from '@/shared/config/routes'
-import { useAppSelector } from '@/shared/lib/hooks'
-import React, { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
 import {
   BookmarkIcon,
   BookmarkOutlineIcon,
@@ -24,10 +22,12 @@ import {
   SearchOutlineIcon,
   TrendingUpOutlineIcon,
 } from '@/shared/icons/svgComponents'
+import { Modal } from '@/shared/ui/Modal/Modal'
+import { usePathname } from 'next/navigation'
+import React, { useContext, useState } from 'react'
+import s from './Sidebar.module.scss'
 import SidebarLinkItem from './SidebarLinkItem'
 import '@/styles/base/_mixins.scss'
-import s from './Sidebar.module.scss'
-import { Modal } from '@/shared/ui/Modal/Modal'
 
 type SidebarProps = {
   role: 'user' | 'admin'
@@ -47,20 +47,21 @@ export const MOCK_ROUTES = {
 const Sidebar = ({ role }: SidebarProps) => {
   const pathname = usePathname()
   const { logout } = useAuth()
-  const email = useAppSelector((state) => state.auth.user?.email)
+  const { user } = useContext(AuthContext)
+  const email = user?.email
   const [openModal, setOpenModal] = useState(false)
-  const [disabledLink, setDisabledLink] = useState<string | null>(null)
+  const [clickedLink, setClickedLink] = useState<string | null>(null)
 
-  useEffect(() => {
-    setDisabledLink(null)
-  }, [pathname])
-
-  const handleClick = async (href: string) => {
-    if (href !== pathname) {
-      setDisabledLink(href)
+  const handleClick = (href: string) => {
+    if (href === pathname) {
+      return
     }
+    setClickedLink(href)
+    setTimeout(() => setClickedLink(null), 1000)
   }
+
   const isActive = (href: string) => pathname === href
+  const isDisabled = (href: string) => clickedLink === href
 
   const openCloseModal = () => {
     setOpenModal(!openModal)
@@ -85,7 +86,7 @@ const Sidebar = ({ role }: SidebarProps) => {
             ActiveIcon={<PersonIcon />}
             InactiveIcon={<PersonOutlineIcon />}
             isActive={isActive(MOCK_ROUTES.usersList)}
-            disabled={disabledLink === MOCK_ROUTES.usersList}
+            disabled={isDisabled(MOCK_ROUTES.usersList)}
             onClick={() => handleClick(MOCK_ROUTES.usersList)}
           />
           <SidebarLinkItem
@@ -94,7 +95,7 @@ const Sidebar = ({ role }: SidebarProps) => {
             ActiveIcon={<TrendingUpOutlineIcon />}
             InactiveIcon={<TrendingUpOutlineIcon />}
             isActive={isActive(MOCK_ROUTES.statistics)}
-            disabled={disabledLink === MOCK_ROUTES.statistics}
+            disabled={isDisabled(MOCK_ROUTES.statistics)}
             onClick={() => handleClick(MOCK_ROUTES.statistics)}
           />
 
@@ -104,7 +105,7 @@ const Sidebar = ({ role }: SidebarProps) => {
             ActiveIcon={<CreditCardIcon />}
             InactiveIcon={<CreditCardOutlineIcon />}
             isActive={isActive(MOCK_ROUTES.paymentsList)}
-            disabled={disabledLink === MOCK_ROUTES.paymentsList}
+            disabled={isDisabled(MOCK_ROUTES.paymentsList)}
             onClick={() => handleClick(MOCK_ROUTES.paymentsList)}
           />
 
@@ -114,7 +115,7 @@ const Sidebar = ({ role }: SidebarProps) => {
             ActiveIcon={<ImageIcon />}
             InactiveIcon={<ImageOutlineIcon />}
             isActive={isActive(MOCK_ROUTES.postsList)}
-            disabled={disabledLink === MOCK_ROUTES.postsList}
+            disabled={isDisabled(MOCK_ROUTES.postsList)}
             onClick={() => handleClick(MOCK_ROUTES.postsList)}
           />
         </div>
@@ -127,7 +128,7 @@ const Sidebar = ({ role }: SidebarProps) => {
               ActiveIcon={<HomeIcon className="" />}
               InactiveIcon={<HomeOutlineIcon />}
               isActive={isActive(ROUTES.PUBLIC.HOME)}
-              disabled={disabledLink === ROUTES.PUBLIC.HOME}
+              disabled={isDisabled(ROUTES.PUBLIC.HOME)}
               onClick={() => handleClick(ROUTES.PUBLIC.HOME)}
             />
             <SidebarLinkItem
@@ -136,7 +137,7 @@ const Sidebar = ({ role }: SidebarProps) => {
               ActiveIcon={<PlusSquareIcon />}
               InactiveIcon={<PlusSquareOutlineIcon />}
               isActive={isActive(MOCK_ROUTES.plus)}
-              disabled={disabledLink === MOCK_ROUTES.plus}
+              disabled={isDisabled(MOCK_ROUTES.plus)}
               onClick={() => handleClick(MOCK_ROUTES.plus)}
             />
             <SidebarLinkItem
@@ -145,7 +146,7 @@ const Sidebar = ({ role }: SidebarProps) => {
               ActiveIcon={<PersonIcon />}
               InactiveIcon={<PersonOutlineIcon />}
               isActive={isActive(ROUTES.PROTECTED.PROFILE)}
-              disabled={disabledLink === ROUTES.PROTECTED.PROFILE}
+              disabled={isDisabled(ROUTES.PROTECTED.PROFILE)}
               onClick={() => handleClick(ROUTES.PROTECTED.PROFILE)}
             />
             <SidebarLinkItem
@@ -154,7 +155,7 @@ const Sidebar = ({ role }: SidebarProps) => {
               ActiveIcon={<MessageCircleIcon />}
               InactiveIcon={<MessageCircleOutlineIcon />}
               isActive={isActive(MOCK_ROUTES.message)}
-              disabled={disabledLink === MOCK_ROUTES.message}
+              disabled={isDisabled(MOCK_ROUTES.message)}
               onClick={() => handleClick(MOCK_ROUTES.message)}
             />
             <SidebarLinkItem
@@ -163,7 +164,7 @@ const Sidebar = ({ role }: SidebarProps) => {
               ActiveIcon={<SearchOutlineIcon />}
               InactiveIcon={<SearchOutlineIcon />}
               isActive={isActive(MOCK_ROUTES.search)}
-              disabled={disabledLink === MOCK_ROUTES.search}
+              disabled={isDisabled(MOCK_ROUTES.search)}
               onClick={() => handleClick(MOCK_ROUTES.search)}
             />
           </div>
@@ -175,7 +176,7 @@ const Sidebar = ({ role }: SidebarProps) => {
               ActiveIcon={<TrendingUpOutlineIcon />}
               InactiveIcon={<TrendingUpOutlineIcon />}
               isActive={isActive(MOCK_ROUTES.statistics)}
-              disabled={disabledLink === MOCK_ROUTES.statistics}
+              disabled={isDisabled(MOCK_ROUTES.statistics)}
               onClick={() => handleClick(MOCK_ROUTES.statistics)}
             />
             <SidebarLinkItem
@@ -184,7 +185,7 @@ const Sidebar = ({ role }: SidebarProps) => {
               ActiveIcon={<BookmarkIcon />}
               InactiveIcon={<BookmarkOutlineIcon />}
               isActive={isActive(MOCK_ROUTES.favorites)}
-              disabled={disabledLink === MOCK_ROUTES.favorites}
+              disabled={isDisabled(MOCK_ROUTES.favorites)}
               onClick={() => handleClick(MOCK_ROUTES.favorites)}
             />
           </div>

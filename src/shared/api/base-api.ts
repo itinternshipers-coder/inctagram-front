@@ -1,5 +1,3 @@
-// src/shared/api/baseApi.ts
-
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { RootState } from '@/store/store'
@@ -10,7 +8,6 @@ import { Mutex } from 'async-mutex'
 const mutex = new Mutex()
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: process.env.NEXT_PUBLIC_BASE_API_URL,
   baseUrl: '/api/v1',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
@@ -68,6 +65,6 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ['Post', 'Posts', 'Sessions'],
+  tagTypes: ['Post', 'Posts', 'Sessions', 'Auth'],
   endpoints: () => ({}),
 })

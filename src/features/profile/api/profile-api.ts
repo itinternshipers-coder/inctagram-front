@@ -1,3 +1,4 @@
+import { AvatarMutation, DeleteAvatar, Profile } from '@/features/profile/model/type'
 import { baseApi } from '@/shared/api/base-api'
 import { API_ENDPOINTS, EndpointHelpers } from '@/shared/api/endpoints'
 

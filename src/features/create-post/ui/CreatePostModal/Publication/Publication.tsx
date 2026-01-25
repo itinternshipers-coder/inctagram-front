@@ -3,38 +3,22 @@
 import { useCreatePostMutation } from '@/entities/post/api/posts-api'
 import { CreatePostSchema } from '@/entities/post/model'
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
+import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
+import { uploadAllPhotos } from '@/features/create-post/ui/CreatePostModal/Publication/lib/uploadAllPhotos'
+import s from '@/features/create-post/ui/CreatePostModal/Publication/Publication.module.scss'
+import { PhotoType, UploadedPhotoType } from '@/features/create-post/ui/CreatePostModal/Publication/types'
+import { handleApiError } from '@/features/create-post/ui/CreatePostModal/Publication/utils/handleApiError'
 import { ROUTES } from '@/shared/config/routes'
 import { Alert } from '@/shared/ui/Alert/Alert'
 import Loader from '@/shared/ui/Loader/Loader'
 import { Modal } from '@/shared/ui/Modal/Modal'
 import { ImageGallery } from '@/shared/ui/PostModal/ImageGallery/ImageGallery'
 import TextArea from '@/shared/ui/TextArea/TextArea'
-import { uploadPhotoToServer } from '@/features/create-post/model/api/uploadPhotoToServer'
-import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SerializedError } from '@reduxjs/toolkit'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import s from '@/features/create-post/ui/CreatePostModal/Publication/Publication.module.scss'
 import { z } from 'zod'
-
-// Нужно вывести тип из схемы
-type CreatePostFormData = z.infer<typeof CreatePostSchema>
-
-export type PhotoType = {
-  photoId: string
-  url: string
-  order: number
-  createdAt: string
-}
-
-export type UploadedPhotoType = {
-  photoId: string
-  s3Key: string
-  url: string
-}
 
 type PublicationProps = {
   images: File[]
@@ -42,6 +26,8 @@ type PublicationProps = {
   onNext?: () => void
   currentStep: ModalSteps
 }
+
+type CreatePostFormData = z.infer<typeof CreatePostSchema>
 
 // Модифицированная схема для формы (только описание)
 const CreatePostFormSchema = z.object({
@@ -142,54 +128,21 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
     }
   }, [images])
 
-  // Загрузка всех фото на сервер
-  const uploadAllPhotos = async (): Promise<UploadedPhotoType[]> => {
-    if (images.length === 0) {
-      return []
-    }
-
-    setIsUploading(true)
-    setUploadError(null)
-
-    try {
-      // console.log(`Starting upload of ${images.length} photos...`)
-
-      const uploadPromises = images.map((file, index) => uploadPhotoToServer(file, index))
-
-      const uploaded = await Promise.all(uploadPromises)
-
-      // console.log('Photos uploaded successfully:', uploaded)
-      setUploadedPhotos(uploaded)
-      return uploaded
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to upload photos'
-      setUploadError(errorMessage)
-      console.error('Error uploading photos:', error)
-      throw error
-    } finally {
-      setIsUploading(false)
-    }
-  }
-
   // Функция создания поста
   const handleCreatePost = async (formData: CreatePostFormInput) => {
-    // console.log('Starting post creation with data:', formData)
-
     let photosToUse = uploadedPhotos
 
     try {
       // Если фото еще не загружены - загружаем их
       if (photosToUse.length === 0) {
         // console.log('No photos uploaded yet, uploading now...')
-        photosToUse = await uploadAllPhotos()
+        photosToUse = await uploadAllPhotos(images, setIsUploading, setUploadError, setUploadedPhotos)
 
         if (photosToUse.length === 0) {
           setUploadError('No photos were uploaded')
           return
         }
       }
-
-      // console.log('Creating post with photos:', photosToUse)
 
       // Создаем полный объект поста
       const postData: CreatePostFormData = {
@@ -200,8 +153,6 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
           url: photo.url,
         })),
       }
-
-      // console.log('Sending post data:', postData)
 
       // Проверяем, что данные соответствуют схеме
       try {
@@ -242,41 +193,8 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
         onNext()
       }
     } catch (err) {
-      const error = err as FetchBaseQueryError | SerializedError
-      let errorMessage = 'Неизвестная ошибка'
-
-      if ('status' in error) {
-        // Типизируем data как unknown и проверяем
-        const data = error.data as unknown
-
-        if (typeof data === 'object' && data !== null) {
-          const errorData = data as Record<string, unknown>
-
-          // Безопасно извлекаем строковые значения
-          errorMessage =
-            (typeof errorData.message === 'string' ? errorData.message : '') ||
-            (typeof errorData.error === 'string' ? errorData.error : '') ||
-            (typeof errorData.detail === 'string' ? errorData.detail : '') ||
-            `Ошибка ${error.status}`
-        } else if (typeof data === 'string') {
-          // Если data это просто строка
-          errorMessage = data
-        } else {
-          errorMessage = `Ошибка ${error.status}`
-        }
-      } else if (error?.message) {
-        errorMessage = error.message
-      }
-
-      setUploadError(errorMessage)
+      handleApiError(err, setUploadError)
     }
-  }
-
-  // Временная заглушка для author
-  const author = {
-    id: 'id',
-    username: 'NoName',
-    avatarUrl: 'https://cs13.pikabu.ru/avatars/7246/x7246765-497572027.png',
   }
 
   const isSubmitting = isUploading || isCreatingPost
@@ -315,8 +233,13 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
 
           <div className={s.publicationInfo}>
             <div className={s.authorInfo}>
-              {author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />}
-              <strong>{author.username}</strong>
+              {/*{author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />}*/}
+              <img
+                src={'https://cs13.pikabu.ru/avatars/7246/x7246765-497572027.png'}
+                alt={'NoName'}
+                className={s.authorAvatar}
+              />
+              <strong>{'NoName'}</strong>
             </div>
 
             <form onSubmit={handleSubmit(handleCreatePost)}>

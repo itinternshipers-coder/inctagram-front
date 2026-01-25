@@ -1,6 +1,5 @@
-import { Cropping } from '@/features/create-post/ui/CreatePostModal/Cropping/Cropping'
+import { Cropping } from './Cropping'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { action } from 'storybook/actions'
 
 const meta = {
   title: 'widgets/CreatePost/CreatePostModal/Cropping',

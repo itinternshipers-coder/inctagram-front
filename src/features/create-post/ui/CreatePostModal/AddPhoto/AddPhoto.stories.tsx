@@ -1,4 +1,4 @@
-import { AddPhoto } from '@/features/create-post/ui/CreatePostModal/AddPhoto/AddPhoto'
+import { AddPhoto } from './AddPhoto'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { action } from 'storybook/actions'
 

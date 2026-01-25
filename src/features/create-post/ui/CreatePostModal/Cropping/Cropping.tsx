@@ -3,7 +3,7 @@
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { useCroppingHandlers } from './hooks/useCroppingHandlers'
 import { useUploadPhotoToCropping } from './hooks/useUploadPhotoToCropping'
-import { photoDelete } from './utils/photoDeleteUtils'
+import { photoDelete } from './lib/photoDeleteUtils'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'

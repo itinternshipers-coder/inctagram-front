@@ -1,3 +1,5 @@
+// src/shared/api/baseApi.ts
+
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { RootState } from '@/store/store'
@@ -65,6 +67,6 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ['Post', 'Posts', 'Sessions', 'Auth'],
+  tagTypes: ['Post', 'Posts', 'Sessions', 'Profile', 'Auth'],
   endpoints: () => ({}),
 })

@@ -1,4 +1,4 @@
-import { Publication, PhotoType } from '@/features/create-post/ui/CreatePostModal/Publication/Publication'
+import { Publication } from './Publication'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 // Создаем мок-данные для изображений

@@ -1,11 +1,11 @@
 'use client'
 
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
+import { handleApplyFilters } from './lib/handleApplyFilters'
 import s from './Filters.module.scss'
-import { applyFilterToImage } from './utils/applyFilterToImage'
+import { applyFilterToImage } from './lib/applyFilterToImage'
 import { FiltersToImage } from './FiltersToImage'
 import { ExtendedPhotoType } from './types'
-import { getFilterCSS } from './utils/getFilters'
 import { SlideViewerImage } from './SlideViewerImage'
 import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -22,11 +22,94 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isApplyingAll, setIsApplyingAll] = useState(false)
   const processedImagesRef = useRef<ExtendedPhotoType[]>([])
+
   // Инициализация изображений
+  // useEffect(() => {
+  //   if (!images || images.length === 0) {
+  //     // Очищаем предыдущие URL перед очисткой состояния
+  //     processedImagesRef.current.forEach((img) => {
+  //       try {
+  //         if (img.url?.startsWith('blob:')) {
+  //           URL.revokeObjectURL(img.url)
+  //         }
+  //         if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
+  //           URL.revokeObjectURL(img.originalUrl)
+  //         }
+  //         if (img.filteredUrl?.startsWith('blob:')) {
+  //           URL.revokeObjectURL(img.filteredUrl)
+  //         }
+  //       } catch (e) {
+  //         // Игнорируем ошибки при очистке
+  //       }
+  //     })
+  //     processedImagesRef.current = []
+  //     setProcessedImages([])
+  //     return
+  //   }
+  //
+  //   const initializeImages = async () => {
+  //     // Очищаем предыдущие URL перед созданием новых
+  //     processedImagesRef.current.forEach((img) => {
+  //       try {
+  //         if (img.url?.startsWith('blob:')) {
+  //           URL.revokeObjectURL(img.url)
+  //         }
+  //         if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
+  //           URL.revokeObjectURL(img.originalUrl)
+  //         }
+  //         if (img.filteredUrl?.startsWith('blob:')) {
+  //           URL.revokeObjectURL(img.filteredUrl)
+  //         }
+  //       } catch (e) {
+  //         // Игнорируем ошибки при очистке
+  //       }
+  //     })
+  //
+  //     const newProcessedImages: ExtendedPhotoType[] = await Promise.all(
+  //       images.map(async (file) => {
+  //         const url = URL.createObjectURL(file)
+  //         return {
+  //           file,
+  //           url,
+  //           originalUrl: url,
+  //           selectedFilter: 'none',
+  //           isProcessing: false,
+  //         }
+  //       })
+  //     )
+  //
+  //     processedImagesRef.current = newProcessedImages
+  //     setProcessedImages(newProcessedImages)
+  //     setCurrentIndex(0)
+  //   }
+  //
+  //   initializeImages()
+  //
+  //   return () => {
+  //     // Очистка URL при размонтировании или изменении images
+  //     processedImagesRef.current.forEach((img) => {
+  //       try {
+  //         if (img.url?.startsWith('blob:')) {
+  //           URL.revokeObjectURL(img.url)
+  //         }
+  //         if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
+  //           URL.revokeObjectURL(img.originalUrl)
+  //         }
+  //         if (img.filteredUrl?.startsWith('blob:')) {
+  //           URL.revokeObjectURL(img.filteredUrl)
+  //         }
+  //       } catch (e) {
+  //         // Игнорируем ошибки при очистке
+  //       }
+  //     })
+  //     processedImagesRef.current = []
+  //   }
+  // }, [images])
+
   useEffect(() => {
-    if (!images || images.length === 0) {
-      // Очищаем предыдущие URL перед очисткой состояния
-      processedImagesRef.current.forEach((img) => {
+    // Функция очистки URL
+    const cleanupImages = (imagesToClean: ExtendedPhotoType[]) => {
+      imagesToClean.forEach((img) => {
         try {
           if (img.url?.startsWith('blob:')) {
             URL.revokeObjectURL(img.url)
@@ -41,29 +124,38 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
           // Игнорируем ошибки при очистке
         }
       })
+    }
+
+    // Если нет изображений - очищаем
+    if (!images || images.length === 0) {
+      const previousImages = [...processedImagesRef.current]
       processedImagesRef.current = []
-      setProcessedImages([])
+
+      // Используем setTimeout для асинхронной очистки
+      Promise.resolve().then(() => {
+        setProcessedImages([])
+      })
+
+      // Отложенная очистка URL
+      requestAnimationFrame(() => {
+        cleanupImages(previousImages)
+      })
+
       return
     }
 
+    // Инициализация изображений
     const initializeImages = async () => {
-      // Очищаем предыдущие URL перед созданием новых
-      processedImagesRef.current.forEach((img) => {
-        try {
-          if (img.url?.startsWith('blob:')) {
-            URL.revokeObjectURL(img.url)
-          }
-          if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
-            URL.revokeObjectURL(img.originalUrl)
-          }
-          if (img.filteredUrl?.startsWith('blob:')) {
-            URL.revokeObjectURL(img.filteredUrl)
-          }
-        } catch (e) {
-          // Игнорируем ошибки при очистке
-        }
-      })
+      // Сохраняем старые изображения для очистки
+      const oldImages = [...processedImagesRef.current]
 
+      // Очищаем ref перед созданием новых
+      processedImagesRef.current = []
+
+      // Очищаем состояние перед созданием новых изображений
+      setProcessedImages([])
+
+      // Создаем новые изображения
       const newProcessedImages: ExtendedPhotoType[] = await Promise.all(
         images.map(async (file) => {
           const url = URL.createObjectURL(file)
@@ -77,31 +169,28 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
         })
       )
 
+      // Устанавливаем новые значения
       processedImagesRef.current = newProcessedImages
       setProcessedImages(newProcessedImages)
       setCurrentIndex(0)
+
+      // Очищаем старые URL после создания новых
+      requestAnimationFrame(() => {
+        cleanupImages(oldImages)
+      })
     }
 
     initializeImages()
 
+    // Cleanup при размонтировании
     return () => {
-      // Очистка URL при размонтировании или изменении images
-      processedImagesRef.current.forEach((img) => {
-        try {
-          if (img.url?.startsWith('blob:')) {
-            URL.revokeObjectURL(img.url)
-          }
-          if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
-            URL.revokeObjectURL(img.originalUrl)
-          }
-          if (img.filteredUrl?.startsWith('blob:')) {
-            URL.revokeObjectURL(img.filteredUrl)
-          }
-        } catch (e) {
-          // Игнорируем ошибки при очистке
-        }
-      })
+      const currentImages = [...processedImagesRef.current]
       processedImagesRef.current = []
+
+      // Отложенная очистка URL
+      requestAnimationFrame(() => {
+        cleanupImages(currentImages)
+      })
     }
   }, [images])
 
@@ -121,99 +210,16 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
     [currentIndex]
   )
 
-  // Применение фильтров ко всем изображениям и переход дальше
-  const handleApplyFilters = async () => {
-    if (processedImagesRef.current.length === 0) {
-      if (onNext) onNext()
-      return
-    }
-
-    setIsApplyingAll(true)
-
-    try {
-      // Применяем фильтры ко всем изображениям
-      const filteredFilesPromises = processedImagesRef.current.map(async (imageData) => {
-        if (imageData.selectedFilter === 'none') {
-          // Если фильтр не выбран, возвращаем оригинал
-          return imageData.file
-        }
-
-        // Если уже есть filteredUrl, создаем файл из него
-        if (imageData.filteredUrl) {
-          const response = await fetch(imageData.filteredUrl)
-          const blob = await response.blob()
-
-          return new File([blob], `filtered-${imageData.file.name}`, {
-            type: 'image/jpeg',
-            lastModified: Date.now(),
-          })
-        }
-
-        // Иначе применяем фильтр заново (на случай если filteredUrl был очищен)
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
-
-        if (!ctx) throw new Error('Canvas context not available')
-
-        const img = new Image()
-        await new Promise<void>((resolve, reject) => {
-          const handleLoad = () => {
-            cleanup()
-            resolve()
-          }
-          const handleError = (error: Event | string) => {
-            cleanup()
-            reject(error)
-          }
-          const cleanup = () => {
-            img.removeEventListener('load', handleLoad)
-            img.removeEventListener('error', handleError)
-          }
-          img.addEventListener('load', handleLoad)
-          img.addEventListener('error', handleError)
-          img.src = imageData.originalUrl
-        })
-
-        canvas.width = img.width
-        canvas.height = img.height
-        ctx.drawImage(img, 0, 0)
-
-        ctx.filter = getFilterCSS(imageData.selectedFilter)
-        ctx.drawImage(img, 0, 0)
-
-        const blob = await new Promise<Blob>((resolve) => {
-          canvas.toBlob((b) => resolve(b!), 'image/jpeg', 0.5)
-        })
-
-        return new File([blob], `filtered-${imageData.file.name}`, {
-          type: 'image/jpeg',
-          lastModified: Date.now(),
-        })
-      })
-
-      const filteredFiles = await Promise.all(filteredFilesPromises)
-
-      // Передаем отфильтрованные файлы родителю
-      if (onFilterApply) {
-        onFilterApply(filteredFiles)
-      }
-
-      // Переход к следующему шагу
-      if (onNext) {
-        onNext()
-      }
-    } catch (error) {
-      console.error('Error applying filters:', error)
-    } finally {
-      setIsApplyingAll(false)
-    }
-  }
-
   const currentImage = processedImages[currentIndex]
 
   return (
     <div className={s.containerModalRectangularFilters}>
-      <ModalHeader currentStep={currentStep} onBack={onBack} onNext={handleApplyFilters} disabled={isApplyingAll} />
+      <ModalHeader
+        currentStep={currentStep}
+        onBack={onBack}
+        onNext={() => handleApplyFilters(processedImagesRef, setIsApplyingAll, onNext, onFilterApply)}
+        disabled={isApplyingAll}
+      />
       <div className={s.contentFilters}>
         {/* Image preview section with navigation */}
         <div className={s.previewSection}>

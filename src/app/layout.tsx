@@ -1,5 +1,4 @@
-'use client'
-
+import { AuthProvider } from '@/features/auth/providers/AuthProvider'
 import { StoreProvider } from '@/shared/providers/StoreProvider'
 import { ThemeProvider } from '@/shared/providers/ThemeProvider'
 import { AuthWrapper } from '@/widgets/layout/AuthWrapper/AuthWrapper'
@@ -19,9 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <StoreProvider>
           <ThemeProvider>
-            <AuthWrapper>
-              <main>{children}</main>
-            </AuthWrapper>
+            <AuthProvider>
+              <AuthWrapper>
+                <main>{children}</main>
+              </AuthWrapper>
+            </AuthProvider>
           </ThemeProvider>
         </StoreProvider>
       </body>

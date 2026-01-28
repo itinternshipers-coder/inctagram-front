@@ -1,5 +1,5 @@
 import { ROUTES } from '@/shared/config/routes'
-import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import { useAppDispatch } from '@/shared/lib/hooks'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import { useLoginMutation, useLogoutMutation } from '../api/auth-api'
@@ -8,7 +8,7 @@ import { logout, setAccessToken } from '../model/auth-slice'
 export const useAuth = () => {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const auth = useAppSelector((state) => state.auth)
+  // const accessToken = useAppSelector((state) => state.auth.accessToken)
 
   const [loginMutation] = useLoginMutation()
   const [logoutMutation] = useLogoutMutation()
@@ -40,7 +40,7 @@ export const useAuth = () => {
   }, [dispatch, logoutMutation, router])
 
   return {
-    ...auth,
+    // accessToken,
     login,
     logout: logoutUser,
   }

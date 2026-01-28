@@ -1,5 +1,5 @@
 import { ROUTES } from '@/shared/config/routes'
-import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import { useAppDispatch } from '@/shared/lib/hooks'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import { useLoginMutation, useLogoutMutation } from '../api/auth-api'

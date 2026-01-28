@@ -8,7 +8,7 @@ import { logout, setAccessToken } from '../model/auth-slice'
 export const useAuth = () => {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const accessToken = useAppSelector((state) => state.auth.accessToken)
+  // const accessToken = useAppSelector((state) => state.auth.accessToken)
 
   const [loginMutation] = useLoginMutation()
   const [logoutMutation] = useLogoutMutation()

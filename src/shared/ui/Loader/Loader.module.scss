@@ -91,3 +91,13 @@
     background-size: 80px 80px;
   }
 }
+
+.contentLoader {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.childrenContent {
+  color: var(--light-100);
+}

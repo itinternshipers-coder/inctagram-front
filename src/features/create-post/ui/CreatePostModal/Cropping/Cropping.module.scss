@@ -1,0 +1,365 @@
+.containerModalSquareCropping {
+  z-index: 100000000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  width: 492px;
+  min-height: 564px;
+  background-color: var(--muted);
+  border-radius: 2px;
+}
+
+.cropperContainer {
+  display: flex;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+/* Main Content */
+.contentCropping {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+}
+
+/* Zoom Content */
+.zoomContent {
+  border: 1px solid var(--dark-100);
+  text-align: center;
+}
+/* Image Section */
+.imageSection {
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+}
+
+/* Zoom Controls */
+.zoomControls {
+  padding: 8px;
+  background: var(--light-100);
+  border-radius: 4px;
+}
+
+.zoomLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark-500);
+  text-align: center;
+}
+
+.zoomSliderWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zoomButton {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  border: 1px solid var(--light-700);
+  background: var(--light-100);
+  color: var(--dark-500);
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent-500);
+    color: var(--accent-500);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.zoomSlider {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--light-700);
+  outline: none;
+  -webkit-appearance: none;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-500);
+    cursor: pointer;
+    border: 2px solid var(--light-100);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-500);
+    cursor: pointer;
+    border: 2px solid var(--light-100);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Right Side - Controls */
+.controlsSection {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+/* Preview */
+.previewSection {
+  display: flex;
+  width: 400px;
+  height: 300px;
+  border: 1px solid var(--dark-100);
+
+  .previewContainer {
+    width: 100%;
+    flex-grow: 1;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+  }
+
+  .previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .previewPlaceholder {
+    color: var(--light-900);
+  }
+}
+
+.hiddenInput {
+  display: none; /* Полностью убирает элемент из потока */
+}
+
+/* Aspect Ratio */
+.aspectSection {
+  border: 1px solid var(--dark-100);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .aspectTitle {
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .aspectButtons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.aspectButton {
+  width: 75px;
+  padding: 12px 0;
+  border-radius: 4px;
+  color: var(--dark-500);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+
+  &:hover {
+    border-color: var(--accent-500);
+    background: var(--light-100);
+  }
+
+  &.active {
+    border-color: var(--accent-500);
+    background: var(--accent-500);
+    color: var(--light-100);
+  }
+}
+
+.galleryContainer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.galleryItem {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+
+  &.active {
+    border-color: var(--accent-500);
+  }
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.galleryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.galleryOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  .galleryItem:hover & {
+    opacity: 1;
+  }
+}
+
+.photoNumber {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--light-100);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.editedBadge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: var(--success-700);
+  color: var(--light-100);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.deleteButton {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: var(--danger-700);
+  color: var(--light-100);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: var(--danger-500);
+  }
+}
+
+.galleryItemAdd {
+  width: 80px;
+  height: 80px;
+  border: 2px dashed var(--accent-500);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--accent-500);
+  font-size: 12px;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f0f8ff;
+    border-color: var(--accent-700);
+  }
+
+  .uploadIcon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+  }
+}
+
+.aspectButton {
+  padding: 8px 12px;
+  border: 1px solid var(--light-100);
+  border-radius: 4px;
+  background: var(--light-100);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--accent-500);
+  }
+
+  &.active {
+    background: var(--accent-500);
+    color: var(--light-100);
+    border-color: var(--accent-500);
+  }
+}
+
+// Errors add photo
+.contentError {
+  display: flex;
+  justify-content: center;
+}
+
+.error {
+  width: 445px;
+  min-height: 60px;
+  text-align: center;
+  border-radius: 2px;
+  padding: 6px 24px 6px 24px;
+  color: var(--light-100);
+  background-color: var(--danger-900);
+  border: 1px solid var(--danger-500);
+}

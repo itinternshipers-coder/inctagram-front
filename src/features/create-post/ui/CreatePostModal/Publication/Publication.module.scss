@@ -1,0 +1,72 @@
+.containerModalRectangularPublication {
+  z-index: 100000000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  width: 972px;
+  height: 564px;
+  background-color: var(--muted);
+  border-radius: 2px;
+}
+
+.overlayModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.contentPublication {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.previewSection {
+  display: flex;
+  justify-content: center;
+  width: 490px;
+  height: 504px;
+  border-right: 1px solid var(--border);
+}
+
+.previewContainer {
+  display: flex;
+  width: 100%;
+}
+
+.publicationInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 24px;
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.authorAvatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.countSymbol {
+  font-size: 14px;
+  color: var(--light-900);
+  display: flex;
+  justify-content: flex-end;
+}

@@ -10,7 +10,7 @@ export const UserNameSchema = z
 export const EmailSchema = z
   .string()
   .min(1, 'Email is required')
-  .max(254, 'Maximum number of characters254')
+  .max(254, 'Maximum number of characters 254')
   .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'The email must match the format example@example.com')
 
 export const PasswordSchema = z

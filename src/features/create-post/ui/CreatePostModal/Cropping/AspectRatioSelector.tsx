@@ -1,4 +1,4 @@
-import { ASPECT_RATIO_OPTIONS } from '@/features/create-post/ui/CreatePostModal/Cropping/constants'
+import { ASPECT_RATIO_OPTIONS } from './constants'
 import { AspectRatio } from './types'
 import s from './Cropping.module.scss'
 

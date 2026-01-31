@@ -1,10 +1,11 @@
 'use client'
 
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
+import { AspectRatioSelector } from './AspectRatioSelector'
 import { useCroppingHandlers } from './hooks/useCroppingHandlers'
 import { useUploadPhotoToCropping } from './hooks/useUploadPhotoToCropping'
 import { photoDelete } from './lib/photoDeleteUtils'
-import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
+import { ModalHeader } from '../ModalHeader/ModalHeader'
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'
 import getCroppedImg from '@/shared/lib/image/canvasUtils'
@@ -262,21 +263,7 @@ export const Cropping = ({
           )}
         </div>
         <div className={s.controlsSection}>
-          <div className={s.aspectSection}>
-            <div className={s.aspectTitle}>Aspect Ratio</div>
-            <div className={s.aspectButtons}>
-              {ASPECT_RATIO_OPTIONS.map((ratio) => (
-                <button
-                  key={ratio.label}
-                  className={`${s.aspectButton} ${selectedAspect.value === ratio.value ? s.active : ''}`}
-                  onClick={() => handleAspectChange(ratio)}
-                >
-                  {ratio.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
+          <AspectRatioSelector selectedAspect={selectedAspect} onChange={handleAspectChange} />
           <div className={s.previewSection}>
             <div className={s.previewContainer}>
               {photos.length > 0 ? (

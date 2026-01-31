@@ -1,19 +1,19 @@
 'use client'
 
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
-import { AspectRatioSelector } from './AspectRatioSelector'
-import { useCroppingHandlers } from './hooks/useCroppingHandlers'
-import { useUploadPhotoToCropping } from './hooks/useUploadPhotoToCropping'
-import { photoDelete } from './lib/photoDeleteUtils'
-import { ModalHeader } from '../ModalHeader/ModalHeader'
+import { GalleryImagesContainer } from './GalleryImagesContainer'
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
-import { PlusCircleIcon } from '@/shared/icons/svgComponents'
 import getCroppedImg from '@/shared/lib/image/canvasUtils'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
+import { ModalHeader } from '../ModalHeader/ModalHeader'
+import { AspectRatioSelector } from './AspectRatioSelector'
 import { ASPECT_RATIO_OPTIONS, CROPPING_IMAGES_CONSTANTS } from './constants'
 import s from './Cropping.module.scss'
+import { useCroppingHandlers } from './hooks/useCroppingHandlers'
+import { useUploadPhotoToCropping } from './hooks/useUploadPhotoToCropping'
+import { photoDelete } from './lib/photoDeleteUtils'
 import { AspectRatio, PhotoType } from './types'
 
 type CroppingProps = {
@@ -40,7 +40,7 @@ export const Cropping = ({
   const cropDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const photosRef = useRef<PhotoType[]>([])
 
-  const { ZOOM, UI } = CROPPING_IMAGES_CONSTANTS
+  const { ZOOM } = CROPPING_IMAGES_CONSTANTS
 
   const { file, error, onSelectFile } = useImageUpload({
     maxSizeMB: 10, // Ограничение 10MB
@@ -285,42 +285,13 @@ export const Cropping = ({
         </div>
 
         <div className={s.galleryContainer}>
-          {photos.map((photo, index) => (
-            <div
-              key={photo.photoId}
-              className={`${s.galleryItem} ${index === currentIndex ? s.active : ''}`}
-              onClick={() => handleSelectPhoto(index)}
-            >
-              <img src={photo.originalUrl} alt={`Preview ${index + 1}`} className={s.galleryImage} />
-              <div className={s.galleryOverlay}>
-                <div className={s.photoNumber}>{index + 1}</div>
-                {photo.isEdited && <div className={s.editedBadge}>✓</div>}
-                <button
-                  className={s.deleteButton}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleDeletePhoto(index)
-                  }}
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-          ))}
-
-          {photos.length < UI.LIMITS.MAX_IMAGES && (
-            <label className={s.galleryItemAdd}>
-              <input
-                type="file"
-                accept="image/jpeg,image/png"
-                onChange={onSelectFile}
-                className={s.hiddenInput}
-                multiple
-              />
-              <PlusCircleIcon className={s.uploadIcon} />
-              <span>Upload ({UI.LIMITS.MAX_IMAGES - photos.length} left)</span>
-            </label>
-          )}
+          <GalleryImagesContainer
+            photos={photos}
+            currentIndex={currentIndex}
+            onChangeSelectPhoto={handleSelectPhoto}
+            onChangeDeletePhoto={handleDeletePhoto}
+            onSelectFile={onSelectFile}
+          />
         </div>
 
         <div className={s.zoomContent}>

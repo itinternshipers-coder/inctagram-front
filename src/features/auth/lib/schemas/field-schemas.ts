@@ -8,7 +8,7 @@ export const UserNameSchema = z
   .regex(/^[a-zA-Z0-9_-]+$/, 'Username can only contain letters, numbers, _ and -')
 
 export const EmailSchema = z
-  .string()
+  .email()
   .min(1, 'Email is required')
   .max(254, 'Maximum number of characters 254')
   .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'The email must match the format example@example.com')
@@ -18,6 +18,9 @@ export const PasswordSchema = z
   .min(1, 'Password is required')
   .min(6, 'Minimum number of characters 6')
   .max(20, 'Maximum number of characters 20')
+  .refine((value) => !/\s/.test(value), {
+    message: 'Password must not contain spaces',
+  })
   .regex(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]).+$/,
     'Password must contain a-z, A-Z, 0-9 and special characters'

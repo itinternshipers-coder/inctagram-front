@@ -14,6 +14,7 @@ import { GalleryImagesContainer } from './GalleryImagesContainer'
 import { useCroppingHandlers } from './hooks/useCroppingHandlers'
 import { useUploadPhotoToCropping } from './hooks/useUploadPhotoToCropping'
 import { photoDelete } from './lib/photoDeleteUtils'
+import { PreviewContainer } from './PreviewContainer'
 import { AspectRatio, PhotoType } from './types'
 import { ZoomControls } from './ZoomControls'
 
@@ -254,24 +255,12 @@ export const Cropping = ({
         </div>
         <div className={s.controlsSection}>
           <AspectRatioSelector selectedAspect={selectedAspect} onChange={handleAspectChange} />
-          <div className={s.previewSection}>
-            <div className={s.previewContainer}>
-              {photos.length > 0 ? (
-                currentPhoto.originalUrl && croppedPreviewUrl ? (
-                  <img
-                    src={croppedPreviewUrl}
-                    alt=" Loading... Image preview"
-                    className={s.previewImage}
-                    style={{ aspectRatio: selectedAspect.value }}
-                  />
-                ) : (
-                  currentPhoto?.originalUrl && <div className={s.previewPlaceholder}>Loading...</div>
-                )
-              ) : (
-                <div className={s.previewPlaceholder}>No photos uploaded</div>
-              )}
-            </div>
-          </div>
+          <PreviewContainer
+            photos={photos}
+            currentPhoto={currentPhoto}
+            croppedPreviewUrl={croppedPreviewUrl}
+            selectedAspect={selectedAspect}
+          />
         </div>
 
         <div className={s.galleryContainer}>

@@ -1,20 +1,21 @@
 'use client'
 
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
-import { GalleryImagesContainer } from './GalleryImagesContainer'
 import { useImageUpload } from '@/features/uploadImage/useImageUpload'
 import getCroppedImg from '@/shared/lib/image/canvasUtils'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
 import { ModalHeader } from '../ModalHeader/ModalHeader'
 import { AspectRatioSelector } from './AspectRatioSelector'
-import { ASPECT_RATIO_OPTIONS, CROPPING_IMAGES_CONSTANTS } from './constants'
+import { ASPECT_RATIO_OPTIONS } from './constants'
 import s from './Cropping.module.scss'
+import { GalleryImagesContainer } from './GalleryImagesContainer'
 import { useCroppingHandlers } from './hooks/useCroppingHandlers'
 import { useUploadPhotoToCropping } from './hooks/useUploadPhotoToCropping'
 import { photoDelete } from './lib/photoDeleteUtils'
 import { AspectRatio, PhotoType } from './types'
+import { ZoomControls } from './ZoomControls'
 
 type CroppingProps = {
   images: File[] // Массив изображений
@@ -39,8 +40,6 @@ export const Cropping = ({
   const [croppedPreviewUrl, setCroppedPreviewUrl] = useState<string | null>(null)
   const cropDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const photosRef = useRef<PhotoType[]>([])
-
-  const { ZOOM } = CROPPING_IMAGES_CONSTANTS
 
   const { file, error, onSelectFile } = useImageUpload({
     maxSizeMB: 10, // Ограничение 10MB
@@ -215,15 +214,6 @@ export const Cropping = ({
     },
     [currentIndex]
   )
-
-  const handleZoomIn = useCallback(() => {
-    setZoom((prev) => Math.min(prev + ZOOM.STEP, ZOOM.MAX))
-  }, [])
-
-  const handleZoomOut = useCallback(() => {
-    setZoom((prev) => Math.max(prev - ZOOM.STEP, ZOOM.MIN))
-  }, [])
-
   const handleSelectPhoto = useCallback((index: number) => {
     setCurrentIndex(index)
     // Сбрасываем состояние кропа для нового изображения
@@ -313,24 +303,7 @@ export const Cropping = ({
             </div>
 
             <div className={s.zoomControls}>
-              <div className={s.zoomLabel}>Zoom: {zoom.toFixed(1)}x</div>
-              <div className={s.zoomSliderWrapper}>
-                <button className={s.zoomButton} onClick={handleZoomOut} disabled={zoom <= ZOOM.MIN}>
-                  −
-                </button>
-                <input
-                  type="range"
-                  min={ZOOM.MIN}
-                  max={ZOOM.MAX}
-                  step={ZOOM.STEP}
-                  value={zoom}
-                  onChange={handleZoomChange}
-                  className={s.zoomSlider}
-                />
-                <button className={s.zoomButton} onClick={handleZoomIn} disabled={zoom >= ZOOM.MAX}>
-                  +
-                </button>
-              </div>
+              <ZoomControls zoomControls={zoom} setZoom={setZoom} onZoomChange={handleZoomChange} />
             </div>
           </div>
         </div>

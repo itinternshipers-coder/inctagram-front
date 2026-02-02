@@ -3,9 +3,9 @@ import { ImageOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { useModalSteps } from '@/features/create-post/model/lib/useModalSteps'
-import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
+import { ModalHeader } from '../ModalHeader/ModalHeader'
 import { useEffect } from 'react'
-import s from '@/features/create-post/ui/CreatePostModal/AddPhoto/AddPhoto.module.scss'
+import s from './AddPhoto.module.scss'
 
 type AddPhotoProps = {
   onSelectImage: (file: File | null) => void

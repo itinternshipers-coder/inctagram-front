@@ -1,4 +1,4 @@
-import { AspectRatio } from '@/features/create-post/ui/CreatePostModal/Cropping/types'
+import { AspectRatio } from './types'
 
 export const CROPPING_IMAGES_CONSTANTS = {
   ZOOM: {

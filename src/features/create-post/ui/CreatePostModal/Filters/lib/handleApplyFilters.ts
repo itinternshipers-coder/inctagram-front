@@ -1,7 +1,8 @@
 // Применение фильтров ко всем изображениям и переход дальше
 
-import { ExtendedPhotoType } from '@/features/create-post/ui/CreatePostModal/Filters/types'
-import { getFilterCSS } from '@/features/create-post/ui/CreatePostModal/Filters/utils/getFilters'
+import { ExtendedPhotoType } from '../types'
+import { getFilterCSS } from '../utils/getFilters'
+import React from 'react'
 
 export const handleApplyFilters = async (
   processedImagesRef: React.RefObject<ExtendedPhotoType[]>,

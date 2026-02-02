@@ -7,7 +7,7 @@ import { applyFilterToImage } from './lib/applyFilterToImage'
 import { FiltersToImage } from './FiltersToImage'
 import { ExtendedPhotoType } from './types'
 import { SlideViewerImage } from './SlideViewerImage'
-import { ModalHeader } from '@/features/create-post/ui/CreatePostModal/ModalHeader/ModalHeader'
+import { ModalHeader } from '../ModalHeader/ModalHeader'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 type FiltersProps = {

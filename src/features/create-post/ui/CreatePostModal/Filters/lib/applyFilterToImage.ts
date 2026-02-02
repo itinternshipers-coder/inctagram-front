@@ -1,6 +1,7 @@
 // Применение фильтра к конкретному изображению
-import { ExtendedPhotoType } from 'src/features/create-post/ui/CreatePostModal/Filters/types'
-import { getFilterCSS } from 'src/features/create-post/ui/CreatePostModal/Filters/utils/getFilters'
+import React from 'react'
+import { ExtendedPhotoType } from '../types'
+import { getFilterCSS } from '../utils/getFilters'
 
 export const applyFilterToImage = async (
   index: number,

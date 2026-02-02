@@ -1,4 +1,4 @@
-import { PhotoType } from '@/features/create-post/ui/CreatePostModal/Cropping/types'
+import { PhotoType } from '../types'
 import getCroppedImg from '@/shared/lib/image/canvasUtils'
 import { useCallback } from 'react'
 

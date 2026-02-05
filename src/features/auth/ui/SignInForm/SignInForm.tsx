@@ -79,7 +79,9 @@ export default function SignInForm() {
 
   return (
     <Card className={s.form}>
-      <Typography variant="h1" className={s.title} title="Sign In"></Typography>
+      <Typography className={s.title} variant="h2">
+        Sign In
+      </Typography>
 
       <div className={s.socialButtons}>
         <Button as={Link} variant="link" href={ROUTES.PUBLIC.SIGN_IN} className="socialButton">

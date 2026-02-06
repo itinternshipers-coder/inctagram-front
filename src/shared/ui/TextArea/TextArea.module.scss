@@ -1,5 +1,5 @@
 .textAreaContainer {
-  background-color: var(--dark-700);
+  background-color: var(--background);
   display: flex;
   flex-direction: column;
 
@@ -12,7 +12,7 @@
   }
 
   textarea {
-    background-color: var(--dark-500);
+    background-color: var(--background-element);
     border: 1px solid var(--dark-100);
     border-radius: 2px;
     box-sizing: border-box;

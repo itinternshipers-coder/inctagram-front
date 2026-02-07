@@ -2,7 +2,7 @@ import PostModalClient from './PostModalClient'
 
 export default function PostModalPage() {
   return (
-    <div className="post-modal">
+    <div>
       <PostModalClient />
     </div>
   )

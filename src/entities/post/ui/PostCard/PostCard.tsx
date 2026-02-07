@@ -5,6 +5,7 @@ import { ImageGallery } from '@/shared/ui/PostModal/ImageGallery/ImageGallery'
 import clsx from 'clsx'
 import s from './PostCard.module.scss'
 import { PostPhoto } from '../../model'
+import { useRouter } from 'next/navigation'
 
 export type Props = {
   photos: PostPhoto[]
@@ -12,17 +13,26 @@ export type Props = {
   userName: string
   timeAgo: string
   description: string
+  postId: string
 }
 
 const MAX_LENGTH = 80
 
-export const PostCard = ({ photos, userProfileImage, userName, timeAgo, description }: Props) => {
+export const PostCard = ({ photos, userProfileImage, userName, timeAgo, description, postId }: Props) => {
   const [showMore, setShowMore] = useState(false)
   const truncatedContent = description.length > MAX_LENGTH ? description.slice(0, MAX_LENGTH) + '...' : description
   const shouldShowGallery = !showMore && photos.length > 1
+  const router = useRouter()
 
+  const handleClick = (postId: string) => {
+    router.push(`/post/${postId}`)
+  }
+  const handleShowMoreClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setShowMore((prev) => !prev)
+  }
   return (
-    <div className={s.post}>
+    <div className={s.post} onClick={() => handleClick(postId)}>
       <div className={clsx(s.postImage, showMore ? s.collapsed : '')}>
         {shouldShowGallery ? (
           <ImageGallery photos={photos} />
@@ -47,12 +57,7 @@ export const PostCard = ({ photos, userProfileImage, userName, timeAgo, descript
             {showMore ? description : truncatedContent}
           </Typography>
           {description.length > MAX_LENGTH && (
-            <Typography
-              className={s.showMoreBtn}
-              as="button"
-              variant="regular_link"
-              onClick={() => setShowMore(!showMore)}
-            >
+            <Typography className={s.showMoreBtn} as="button" variant="regular_link" onClick={handleShowMoreClick}>
               {showMore ? 'Hide' : 'Show more'}
             </Typography>
           )}

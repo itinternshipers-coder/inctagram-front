@@ -1,4 +1,5 @@
 'use client'
+
 import { formatTimeAgo } from '@/shared/lib/formatTimeAgo'
 import { Post } from '../../model'
 import { PostCard } from '../PostCard/PostCard'
@@ -20,6 +21,7 @@ export const PostList = ({ posts }: Props) => {
           userName={'userName'}
           timeAgo={formatTimeAgo(post.createdAt)}
           description={post.description}
+          postId={post.id}
         />
       ))}
     </div>

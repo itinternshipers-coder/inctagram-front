@@ -22,34 +22,3 @@
   border-radius: 50%;
   object-fit: cover;
 }
-
-.menuButton {
-  color: white !important;
-  min-width: 24px !important;
-  min-height: 24px !important;
-  padding: 0 !important;
-  border: none !important;
-}
-
-.dropdownContent {
-  z-index: 999999;
-}
-
-.dropdownItem {
-  padding: 12px;
-  width: 137px;
-  height: 45px;
-  cursor: pointer;
-  font-size: 14px;
-  color: white;
-  outline: none;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background-color: #171717;
-}
-
-.dropdownItem:hover,
-.dropdownItem:focus {
-  background-color: #555;
-}

@@ -46,7 +46,7 @@ export const PostEditHeader = ({ author, postDataId }: PostEditHeaderProps) => {
             <div className={s.charCount}>{value.length}/500</div>
           </div>
           <div className={s.editFooter}>
-            <Button onClick={() => dispatch(openEditModal(postDataId))}>Save chage </Button>
+            <Button onClick={() => dispatch(openEditModal(postDataId))}>Save change </Button>
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
-import { useMeQuery } from '@/features/auth/api/auth-api'
+import { useAuthContext } from '@/features/auth/lib/use-auth-context'
 import { useGetProfileQuery } from '@/features/profile/api/profile-api'
 
 export const usePostAuthor = (authorId: string, username?: string) => {
   const { data: profileData } = useGetProfileQuery(authorId)
-  const { data: me } = useMeQuery()
+  const { user } = useAuthContext()
 
   const author = {
     id: authorId,
@@ -11,7 +11,7 @@ export const usePostAuthor = (authorId: string, username?: string) => {
     avatarUrl: profileData?.avatar?.[1]?.url ?? '',
   }
 
-  const isAuthor = me?.userId === authorId
+  const isAuthor = user?.userId === authorId
 
   return { author, isAuthor }
 }

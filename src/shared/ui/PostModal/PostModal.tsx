@@ -17,16 +17,16 @@ import { PostFooter } from './PostFooter/PostFooter'
 import { closeCreateModal, closeEditModal } from '@/entities/post/model/post-slice'
 import { PostActionsMenu } from './PostHeader/PostActionsMenu/PostActionsMenu'
 import { usePostModal, usePostAuthor, usePostActions } from '@/features/post/lib'
+import { useAuthContext } from '@/features/auth/lib/use-auth-context'
 
 const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) => {
   const displayDate = new Date(postData.createdAt).toLocaleDateString()
   // const comments = postData.comments || []
   const photos = postData.photos || []
-
   const postModal = usePostModal(postData.id, postData.description ?? '')
   const { author, isAuthor } = usePostAuthor(postData.authorId, postData.userName)
   const { isSubscribed, handleToggleSubscribe, handleShare } = usePostActions()
-
+  const { isLoggedIn, user } = useAuthContext()
   const dispatch = useAppDispatch()
 
   return (
@@ -45,17 +45,19 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
                   <PostHeader
                     author={author}
                     actionsMenu={
-                      <PostActionsMenu>
-                        {isAuthor ? (
-                          <AuthorMenuItems onEdit={postModal.handleEditPost} onDelete={postModal.handleDeletePost} />
-                        ) : (
-                          <ViewerMenuItems
-                            onCopy={handleShare}
-                            onToggleSubscribe={handleToggleSubscribe}
-                            isSubscribed={isSubscribed}
-                          />
-                        )}
-                      </PostActionsMenu>
+                      isLoggedIn && (
+                        <PostActionsMenu>
+                          {isAuthor ? (
+                            <AuthorMenuItems onEdit={postModal.handleEditPost} onDelete={postModal.handleDeletePost} />
+                          ) : (
+                            <ViewerMenuItems
+                              onCopy={handleShare}
+                              onToggleSubscribe={handleToggleSubscribe}
+                              isSubscribed={isSubscribed}
+                            />
+                          )}
+                        </PostActionsMenu>
+                      )
                     }
                   />
                 )}

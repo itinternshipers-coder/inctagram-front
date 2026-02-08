@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import s from './page.module.scss'
 import { PostView } from '@/shared/ui/PostView/PostView'
+import Link from 'next/link'
 
 type PageProps = {
   params: Promise<{ postId: string }>

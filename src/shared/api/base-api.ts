@@ -1,12 +1,9 @@
-// src/shared/api/baseApi.ts
-
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { RootState } from '@/store/store'
 import { setAccessToken, logout } from '@/features/auth/model/auth-slice'
 import { Mutex } from 'async-mutex'
 
-// 🔒 Создаём экземпляр мьютекса
 const mutex = new Mutex()
 
 const baseQuery = fetchBaseQuery({
@@ -26,6 +23,8 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   api,
   extraOptions
 ) => {
+  await mutex.waitForUnlock()
+
   let result = await baseQuery(args, api, extraOptions)
 
   // Автоматический refresh при 401 ошибке

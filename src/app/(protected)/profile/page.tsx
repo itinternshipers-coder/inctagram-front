@@ -1,7 +1,23 @@
+'use client'
+
+import { AuthContext } from '@/features/auth/providers/auth-context'
 import { ROUTES } from '@/shared/config/routes'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useContext, useEffect } from 'react'
 
 export default function ProfileRedirect() {
-  // TODO: Получить userId из auth и сделать redirect
-  redirect(ROUTES.DYNAMIC.PROFILE('1')) // Временный редирект
+  const { user, isLoading } = useContext(AuthContext)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isLoading) return
+
+    if (user?.userId) {
+      router.replace(ROUTES.DYNAMIC.PROFILE(user.userId))
+    } else {
+      router.replace(ROUTES.PUBLIC.SIGN_IN)
+    }
+  }, [user, isLoading, router])
+
+  return null // Или минимальный loader
 }

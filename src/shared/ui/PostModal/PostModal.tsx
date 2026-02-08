@@ -26,7 +26,7 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
   const postModal = usePostModal(postData.id, postData.description ?? '')
   const { author, isAuthor } = usePostAuthor(postData.authorId, postData.userName)
   const { isSubscribed, handleToggleSubscribe, handleShare } = usePostActions()
-  const { isLoggedIn, user } = useAuthContext()
+  const { isLoggedIn } = useAuthContext()
   const dispatch = useAppDispatch()
 
   return (

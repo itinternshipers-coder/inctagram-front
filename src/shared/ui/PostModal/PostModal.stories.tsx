@@ -2,8 +2,8 @@ import { Meta, StoryFn } from '@storybook/nextjs-vite'
 import { Provider } from 'react-redux'
 import { store } from '@/store/store'
 import React, { useState } from 'react'
-
-import PostModal, { UserPostType, CommentType, Author, PhotoType, PostModalProps } from './PostModal'
+import PostModal from './PostModal'
+import { Author, CommentType, PhotoType, PostModalProps, UserPostType } from '@/features/post/model/type'
 
 const mockAuthor: Author = {
   id: 'user-uuid-1',

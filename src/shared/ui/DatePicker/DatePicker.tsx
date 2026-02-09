@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { DayPicker, type DateRange } from 'react-day-picker'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import { CalendarIcon, CalendarOutlineIcon } from '@/shared/icons/svgComponents'
 import 'react-day-picker/dist/style.css'
 import s from './DatePicker.module.scss'
@@ -12,12 +12,13 @@ export type DatePickerMode = 'single' | 'range'
 
 export type Props = {
   mode?: DatePickerMode
-  value?: Date | DateRange
-  onChange?: (value: Date | DateRange | undefined) => void
+  value?: string
+  onChange?: (value: string | undefined) => void
   label?: string
   placeholder?: string
   error?: string
   disabled?: boolean
+  dateFormat?: string
   format?: string
   minDate?: Date
   maxDate?: Date
@@ -33,7 +34,7 @@ export const DatePicker = ({
   placeholder = 'Select date',
   error,
   disabled = false,
-  format: dateFormat = 'dd/MM/yyyy',
+  dateFormat = 'dd.MM.yyyy',
   minDate,
   maxDate,
   fullWidth,
@@ -51,7 +52,21 @@ export const DatePicker = ({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSelect = (val: Date | DateRange | undefined) => onChange?.(val)
+  // Преобразуем входную строку в Date для календаря
+  const dateValue = value ? parse(value, dateFormat, new Date()) : undefined
+
+  // При выборе даты — преобразуем обратно в строку
+  const handleSelect = (val: Date | undefined) => {
+    if (val) {
+      onChange?.(format(val, dateFormat))
+    } else {
+      onChange?.(undefined)
+    }
+  }
+
+  const formatDisplayValue = (v: Date | undefined) => {
+    return v ? format(v, dateFormat) : ''
+  }
 
   const formatValue = (v: Date | DateRange | undefined) => {
     if (!v) return ''
@@ -104,15 +119,15 @@ export const DatePicker = ({
           readOnly
           disabled={disabled}
           placeholder={placeholder}
-          value={formatValue(value)}
+          value={formatDisplayValue(dateValue)}
           className={s.input}
           onClick={() => setOpen((prev) => !prev)}
         />
         <span className={s.icon}>
           {open ? (
-            <CalendarIcon color={error ? '#cc1439' : undefined} />
+            <CalendarIcon color={error ? 'var(--danger-500)' : undefined} />
           ) : (
-            <CalendarOutlineIcon color={error ? '#cc1439' : undefined} />
+            <CalendarOutlineIcon color={error ? 'var(--danger-500)' : undefined} />
           )}
         </span>
       </div>

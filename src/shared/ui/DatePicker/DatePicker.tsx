@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { DayPicker, type DateRange } from 'react-day-picker'
+import { DayPicker } from 'react-day-picker'
 import { format, parse } from 'date-fns'
 import { CalendarIcon, CalendarOutlineIcon } from '@/shared/icons/svgComponents'
 import 'react-day-picker/dist/style.css'
@@ -27,7 +27,6 @@ export type Props = {
 }
 
 export const DatePicker = ({
-  mode = 'single',
   value,
   onChange,
   label,
@@ -42,7 +41,6 @@ export const DatePicker = ({
 }: Props) => {
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const isRange = mode === 'range'
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -66,17 +64,6 @@ export const DatePicker = ({
 
   const formatDisplayValue = (v: Date | undefined) => {
     return v ? format(v, dateFormat) : ''
-  }
-
-  const formatValue = (v: Date | DateRange | undefined) => {
-    if (!v) return ''
-    if (isRange) {
-      const { from, to } = v as DateRange
-      if (from && to) return `${format(from, dateFormat)} - ${format(to, dateFormat)}`
-      if (from) return format(from, dateFormat)
-      return ''
-    }
-    return v instanceof Date ? format(v, dateFormat) : ''
   }
 
   const modifiers = {
@@ -136,21 +123,12 @@ export const DatePicker = ({
 
       {open && !disabled && (
         <div className={s.calendarWrapper}>
-          {isRange ? (
-            <DayPicker
-              {...commonProps}
-              mode="range"
-              selected={value as DateRange | undefined}
-              onSelect={(val) => handleSelect(val as DateRange | undefined)}
-            />
-          ) : (
-            <DayPicker
-              {...commonProps}
-              mode="single"
-              selected={value as Date | undefined}
-              onSelect={(val) => handleSelect(val as Date | undefined)}
-            />
-          )}
+          <DayPicker
+            {...commonProps}
+            mode="single"
+            selected={value as Date | undefined}
+            onSelect={(val) => handleSelect(val as Date | undefined)}
+          />
         </div>
       )}
     </div>

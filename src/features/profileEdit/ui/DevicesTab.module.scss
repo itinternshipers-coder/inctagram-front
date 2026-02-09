@@ -1,0 +1,65 @@
+.loadingContainer {
+  justify-content: center;
+  padding: 84px;
+  display: flex;
+}
+
+.currentDeviceCard {
+  display: flex;
+  gap: 12px;
+  padding: 24px;
+  margin: 0 0 30px 0;
+}
+
+.deviceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activeSessionsSection {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 18px;
+}
+
+.logOutButton {
+  color: var(--foreground);
+  font-weight: var(--font-weight-regular);
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.activeSessionCard {
+  display: flex;
+  padding: 24px;
+  margin: 0 0 12px 0;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sessionContainer {
+  display: flex;
+  gap: 12px;
+}
+
+.session {
+  display: flex;
+  flex-direction: column;
+}
+
+.deviceName {
+  padding: 0 0 12px 0;
+}
+
+.logoutIcon {
+  padding: 0 7px 0 0;
+}
+
+.noSessionsMessage {
+  display: flex;
+  justify-content: center;
+  padding: 84px;
+}

@@ -1,5 +1,8 @@
 'use client'
 
+import { ROUTES } from '@/shared/config/routes'
+import { Button } from '@/shared/ui/Button/Button'
+import Link from 'next/link'
 import { use } from 'react'
 
 type ProfilePageProps = {
@@ -14,6 +17,9 @@ export default function ProfilePage({ params, searchParams }: ProfilePageProps) 
   return (
     <div>
       <h1>Профиль пользователя {userId}</h1>
+      <Link href={ROUTES.DYNAMIC.SETTINGS_TAB('')}>
+        <Button>Profile Settings</Button>
+      </Link>
     </div>
   )
 }

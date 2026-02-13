@@ -43,7 +43,6 @@
   color: var(--foreground);
   padding: 8px 36px 8px 12px;
   width: 100%;
-  cursor: pointer;
 
   &:focus {
     border-color: var(--accent-700);
@@ -130,7 +129,7 @@
 .next,
 .previous {
   align-items: center;
-  background-color: var(--dark-100);
+  background-color: var(--border);
   border-radius: 50%;
   display: flex;
   height: 36px;
@@ -138,7 +137,7 @@
   width: 36px;
 
   svg {
-    fill: var(--light-100);
+    fill: var(--foreground);
     height: 16px;
     width: 16px;
   }
@@ -162,13 +161,12 @@
   line-height: 24px;
 }
 
-.today,
-.weekend,
-.otherMonth,
-.day {
-  &:hover {
-    color: var(--light-100);
-    border-radius: var(--rdp-day_button-border-radius);
-    background-color: var(--accent-900);
-  }
+:global(.rdp-chevron) {
+  fill: var(--foreground);
+  cursor: pointer;
+}
+
+:global(.rdp-dropdown) {
+  fill: var(--foreground);
+  cursor: pointer;
 }

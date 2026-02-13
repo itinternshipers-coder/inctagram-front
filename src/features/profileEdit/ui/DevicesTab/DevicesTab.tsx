@@ -12,7 +12,7 @@ import {
   useTerminateAllSessionsMutation,
   useTerminateSessionMutation,
 } from '@/features/session/api/sessions-api'
-import { formatDate } from '../lib/utils/date'
+import { formatDate } from '../../lib/utils/date'
 import { useRef, useState } from 'react'
 import { Alert } from '@/shared/ui/Alert/Alert'
 

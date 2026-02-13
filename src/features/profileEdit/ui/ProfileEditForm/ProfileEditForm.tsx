@@ -3,32 +3,37 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useUpdateProfileMutation } from '@/features/profile/api/profile-api'
-import { ProfileEditFormValues, profileEditSchema } from '../lib/validation'
-import { GeneralInformationTab } from './GeneralInformationTab'
-import { DevicesTab } from './DevicesTab'
-import { AccountManagementTab } from './AccountManagementTab'
-import { MyPaymentsTab } from './MyPaymentsTab'
+import { ProfileEditFormValues, profileEditSchema } from '../../lib/validation'
+import { GeneralInformationTab } from '../GeneralInformationTab/GeneralInformationTab'
+import { DevicesTab } from '../DevicesTab/DevicesTab'
+import { AccountManagementTab } from '../AccountManagementTab/AccountManagementTab'
+import { MyPaymentsTab } from '../MyPaymentsTab/MyPaymentsTab'
 import Tabs from '@/shared/ui/Tabs/Tabs'
 import { Alert } from '@/shared/ui/Alert/Alert'
 import { useState } from 'react'
+import { useGetProfileQuery } from '@/features/profile/api/profile-api'
 
 type ProfileEditFormProps = {
   initialData: ProfileEditFormValues
+  userId: string
 }
 
-export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
+export function ProfileEditForm({ initialData, userId }: ProfileEditFormProps) {
   const [updateProfile] = useUpdateProfileMutation()
   const [alert, setAlert] = useState<{ show: boolean; text: string }>({
     show: false,
     text: '',
   })
 
+  const { refetch } = useGetProfileQuery(userId)
+
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     reset,
-    formState: { errors, isValid, isDirty },
+    formState: { errors, isValid, isDirty, isSubmitting },
   } = useForm<ProfileEditFormValues>({
     resolver: zodResolver(profileEditSchema),
     defaultValues: initialData,
@@ -39,6 +44,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
     const { avatar, ...updateData } = data
     try {
       await updateProfile(updateData).unwrap()
+      await refetch()
       setAlert({ show: true, text: 'Your settings are saved!' })
       reset(data)
       setTimeout(() => setAlert({ show: false, text: '' }), 5000)
@@ -58,6 +64,9 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
           errors={errors}
           isValid={isValid}
           isDirty={isDirty}
+          setValue={setValue}
+          initialAvatar={initialData.avatar}
+          isSubmitting={isSubmitting}
         />
       ),
     },

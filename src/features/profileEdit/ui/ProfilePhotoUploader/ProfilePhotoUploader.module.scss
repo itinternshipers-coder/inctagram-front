@@ -1,0 +1,84 @@
+.profilePhotoUploader {
+  max-width: 192px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.avatarContainer {
+  position: relative;
+  width: 192px;
+  height: 192px;
+  border-radius: 50%;
+  background-color: var(--background-element);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--muted);
+  }
+}
+
+.avatarImage {
+  border-radius: 50%;
+  object-fit: cover;
+  width: 192px;
+  height: 192px;
+}
+
+.placeholder {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fileInput {
+  display: none;
+}
+
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.errorContainer {
+  padding: 6px 24px;
+  background-color: var(--danger-900);
+  border: 1px solid var(--danger-500);
+  border-radius: 2px;
+}
+
+.errorText {
+  color: var(--light-100);
+}
+
+.deleteButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--danger-500);
+  border: 4px solid var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--hover);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}

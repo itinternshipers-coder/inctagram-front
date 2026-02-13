@@ -1,4 +1,5 @@
 export { default as BraveIcon } from './BraveIcon'
+export { default as ChromeIcon } from './ChromeIcon'
 export { default as ExplorerIcon } from './ExplorerIcon'
 export { default as FirefoxIcon } from './FirefoxIcon'
 export { default as MicrosoftEdgeIcon } from './MicrosoftEdgeIcon'

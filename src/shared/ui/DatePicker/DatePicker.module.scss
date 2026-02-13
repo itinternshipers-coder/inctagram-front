@@ -129,7 +129,7 @@
 .next,
 .previous {
   align-items: center;
-  background-color: var(--dark-100);
+  background-color: var(--border);
   border-radius: 50%;
   display: flex;
   height: 36px;
@@ -137,7 +137,7 @@
   width: 36px;
 
   svg {
-    fill: var(--light-100);
+    fill: var(--foreground);
     height: 16px;
     width: 16px;
   }
@@ -159,4 +159,31 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
+}
+
+:global(.rdp-chevron) {
+  fill: var(--foreground);
+  cursor: pointer;
+}
+
+:global(.rdp-dropdown) {
+  fill: var(--foreground);
+  color: var(--foreground);
+  background-color: var(--background);
+  cursor: pointer;
+
+  border: none;
+  outline: none;
+  box-shadow: none;
+
+  overflow: hidden;
+  height: auto;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

@@ -66,7 +66,7 @@
 }
 
 .radioCircle {
-  border: 2px solid var(--light-100);
+  border: 2px solid var(--foreground);
   border-radius: 50%;
   flex-shrink: 0;
   height: 20px;
@@ -77,7 +77,7 @@
 
   &.checked {
     background-color: transparent;
-    border-color: var(--light-100);
+    border-color: var(--foreground);
 
     &.disabled {
       border-color: var(--dark-100);
@@ -90,7 +90,7 @@
 }
 
 .radioInner {
-  background-color: var(--light-100);
+  background-color: var(--foreground);
   border-radius: 50%;
   height: 10px;
   left: 50%;
@@ -110,7 +110,7 @@
 }
 
 .radioText {
-  color: var(--light-100);
+  color: var(--foreground);
   font-size: var(--font-size-14);
   transition: color 0.2s ease;
 

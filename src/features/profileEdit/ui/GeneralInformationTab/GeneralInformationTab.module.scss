@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  gap: 29px;
+}
+
+.formSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.locationRow {
+  display: flex;
+  gap: 24px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--muted);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}

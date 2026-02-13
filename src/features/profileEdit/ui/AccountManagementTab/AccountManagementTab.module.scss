@@ -1,0 +1,44 @@
+.subscriptionCard {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 20px;
+
+  .subscriptionInfo {
+    display: flex;
+    gap: 45px;
+
+    .subscriptionField {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .label {
+        color: var(--hover);
+      }
+    }
+  }
+}
+
+.autoRenewalWrapper {
+  margin: 22px 0 30px 0;
+}
+
+.radioCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 20px;
+  margin: 0 0 30px 0;
+
+  .radioGroup {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.paymentOptions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 64px;
+}

@@ -33,7 +33,7 @@ export const DatePicker = ({
   placeholder = 'Select date',
   error,
   disabled = false,
-  format: dateFormat = 'dd/MM/yyyy',
+  format: dateFormat = 'dd.MM.yyyy',
   minDate,
   maxDate,
   fullWidth,
@@ -51,7 +51,21 @@ export const DatePicker = ({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSelect = (val: Date | DateRange | undefined) => onChange?.(val)
+  const handleSelect = (val: Date | DateRange | undefined) => {
+    onChange?.(val)
+
+    if (mode === 'single') {
+      setOpen(false)
+      return
+    }
+
+    if (mode === 'range' && val) {
+      const range = val as DateRange
+      if (range.from && range.to) {
+        setOpen(true)
+      }
+    }
+  }
 
   const formatValue = (v: Date | DateRange | undefined) => {
     if (!v) return ''
@@ -92,6 +106,7 @@ export const DatePicker = ({
       button_previous: s.previous,
       weekday: s.weekday,
       week: s.week,
+      day: s.day,
     },
   } as const
 
@@ -110,9 +125,9 @@ export const DatePicker = ({
         />
         <span className={s.icon}>
           {open ? (
-            <CalendarIcon color={error ? '#cc1439' : undefined} />
+            <CalendarIcon color={error ? 'var(--danger-500)' : undefined} />
           ) : (
-            <CalendarOutlineIcon color={error ? '#cc1439' : undefined} />
+            <CalendarOutlineIcon color={error ? 'var(--danger-500)' : undefined} />
           )}
         </span>
       </div>
@@ -132,6 +147,7 @@ export const DatePicker = ({
             <DayPicker
               {...commonProps}
               mode="single"
+              captionLayout="dropdown"
               selected={value as Date | undefined}
               onSelect={(val) => handleSelect(val as Date | undefined)}
             />

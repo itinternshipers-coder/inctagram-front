@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Meta, StoryFn } from '@storybook/nextjs-vite'
 import { DatePicker, Props as DatePickerProps } from './DatePicker'
 import { DateRange } from 'react-day-picker'

@@ -43,6 +43,7 @@
   color: var(--foreground);
   padding: 8px 36px 8px 12px;
   width: 100%;
+  cursor: pointer;
 
   &:focus {
     border-color: var(--accent-700);
@@ -159,4 +160,15 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
+}
+
+.today,
+.weekend,
+.otherMonth,
+.day {
+  &:hover {
+    color: var(--light-100);
+    border-radius: var(--rdp-day_button-border-radius);
+    background-color: var(--accent-900);
+  }
 }

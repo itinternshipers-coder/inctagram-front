@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { DayPicker } from 'react-day-picker'
-import { format, parse } from 'date-fns'
+import { DayPicker, type DateRange } from 'react-day-picker'
+import { format } from 'date-fns'
 import { CalendarIcon, CalendarOutlineIcon } from '@/shared/icons/svgComponents'
 import 'react-day-picker/dist/style.css'
 import s from './DatePicker.module.scss'
@@ -12,13 +12,12 @@ export type DatePickerMode = 'single' | 'range'
 
 export type Props = {
   mode?: DatePickerMode
-  value?: string
-  onChange?: (value: string | undefined) => void
+  value?: Date | DateRange
+  onChange?: (value: Date | DateRange | undefined) => void
   label?: string
   placeholder?: string
   error?: string
   disabled?: boolean
-  dateFormat?: string
   format?: string
   minDate?: Date
   maxDate?: Date
@@ -27,13 +26,14 @@ export type Props = {
 }
 
 export const DatePicker = ({
+  mode = 'single',
   value,
   onChange,
   label,
   placeholder = 'Select date',
   error,
   disabled = false,
-  dateFormat = 'dd.MM.yyyy',
+  format: dateFormat = 'dd.MM.yyyy',
   minDate,
   maxDate,
   fullWidth,
@@ -41,6 +41,7 @@ export const DatePicker = ({
 }: Props) => {
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const isRange = mode === 'range'
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -50,20 +51,31 @@ export const DatePicker = ({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Преобразуем входную строку в Date для календаря
-  const dateValue = value ? parse(value, dateFormat, new Date()) : undefined
+  const handleSelect = (val: Date | DateRange | undefined) => {
+    onChange?.(val)
 
-  // При выборе даты — преобразуем обратно в строку
-  const handleSelect = (val: Date | undefined) => {
-    if (val) {
-      onChange?.(format(val, dateFormat))
-    } else {
-      onChange?.(undefined)
+    if (mode === 'single') {
+      setOpen(false)
+      return
+    }
+
+    if (mode === 'range' && val) {
+      const range = val as DateRange
+      if (range.from && range.to) {
+        setOpen(true)
+      }
     }
   }
 
-  const formatDisplayValue = (v: Date | undefined) => {
-    return v ? format(v, dateFormat) : ''
+  const formatValue = (v: Date | DateRange | undefined) => {
+    if (!v) return ''
+    if (isRange) {
+      const { from, to } = v as DateRange
+      if (from && to) return `${format(from, dateFormat)} - ${format(to, dateFormat)}`
+      if (from) return format(from, dateFormat)
+      return ''
+    }
+    return v instanceof Date ? format(v, dateFormat) : ''
   }
 
   const modifiers = {
@@ -94,6 +106,7 @@ export const DatePicker = ({
       button_previous: s.previous,
       weekday: s.weekday,
       week: s.week,
+      day: s.day,
     },
   } as const
 
@@ -106,7 +119,7 @@ export const DatePicker = ({
           readOnly
           disabled={disabled}
           placeholder={placeholder}
-          value={formatDisplayValue(dateValue)}
+          value={formatValue(value)}
           className={s.input}
           onClick={() => setOpen((prev) => !prev)}
         />
@@ -123,12 +136,22 @@ export const DatePicker = ({
 
       {open && !disabled && (
         <div className={s.calendarWrapper}>
-          <DayPicker
-            {...commonProps}
-            mode="single"
-            selected={value as Date | undefined}
-            onSelect={(val) => handleSelect(val as Date | undefined)}
-          />
+          {isRange ? (
+            <DayPicker
+              {...commonProps}
+              mode="range"
+              selected={value as DateRange | undefined}
+              onSelect={(val) => handleSelect(val as DateRange | undefined)}
+            />
+          ) : (
+            <DayPicker
+              {...commonProps}
+              mode="single"
+              captionLayout="dropdown"
+              selected={value as Date | undefined}
+              onSelect={(val) => handleSelect(val as Date | undefined)}
+            />
+          )}
         </div>
       )}
     </div>

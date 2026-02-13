@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Meta, StoryFn } from '@storybook/nextjs-vite'
 import { DatePicker, Props as DatePickerProps } from './DatePicker'
+import { DateRange } from 'react-day-picker'
 import { startOfMonth, endOfMonth } from 'date-fns'
 
 export default {
@@ -19,7 +20,7 @@ export default {
 } as Meta<typeof DatePicker>
 
 const Template: StoryFn<DatePickerProps> = (args) => {
-  const [value, setValue] = useState<string | undefined>()
+  const [value, setValue] = useState<Date | DateRange | undefined>()
 
   return <DatePicker {...args} value={value} onChange={setValue} />
 }

@@ -168,5 +168,22 @@
 
 :global(.rdp-dropdown) {
   fill: var(--foreground);
+  color: var(--foreground);
+  background-color: var(--background);
   cursor: pointer;
+
+  border: none;
+  outline: none;
+  box-shadow: none;
+
+  overflow: hidden;
+  height: auto;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

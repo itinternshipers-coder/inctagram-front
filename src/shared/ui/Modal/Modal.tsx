@@ -32,6 +32,8 @@ export type ModalProps = {
 
   isCancelPrimary?: boolean // Делает левую кнопку основной (primary)
   actionsJustifyBetween?: boolean // justify-content: space-between
+
+  children?: React.ReactNode
 }
 
 export const Modal = ({
@@ -51,6 +53,7 @@ export const Modal = ({
   actionsJustifyBetween = false,
   isCancelPrimary = false,
   style,
+  children,
 }: ModalProps) => {
   const [swap, setSwap] = useState(false)
   const dynamicIsCancelPrimary = swap ? !isCancelPrimary : isCancelPrimary
@@ -94,6 +97,7 @@ export const Modal = ({
 
           <div className={s.messageContent}>
             <Dialog.Description className={s.message}>{message}</Dialog.Description>
+            {children && <div className={s.childrenContent}>{children}</div>}
           </div>
 
           {/* --- РЕЖИМ: ДВЕ КНОПКИ --- */}

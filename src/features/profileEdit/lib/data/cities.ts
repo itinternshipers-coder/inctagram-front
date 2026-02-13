@@ -20,6 +20,7 @@ export const CITIES_BY_COUNTRY: Record<string, string[]> = {
     'Nizhny Novgorod',
     'Chelyabinsk',
     'Samara',
+    'Saratov',
     'Omsk',
     'Rostov-on-Don',
   ],

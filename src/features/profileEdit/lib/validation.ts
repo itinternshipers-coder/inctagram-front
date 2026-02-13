@@ -44,7 +44,7 @@ export const profileEditSchema = z.object({
   country: z.string().optional(),
   city: z.string(),
   aboutMe: z.string().max(200, 'About me cannot exceed 200 characters').optional(),
-  avatar: z.instanceof(File).optional(),
+  avatar: z.string().url('Invalid avatar URL').optional(),
 })
 
 export type ProfileEditFormValues = z.infer<typeof profileEditSchema>

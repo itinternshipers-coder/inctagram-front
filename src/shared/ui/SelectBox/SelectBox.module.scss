@@ -1,6 +1,7 @@
 .wrapper {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .trigger {
@@ -38,7 +39,7 @@
 }
 
 .arrow {
-  color: #888;
+  color: var(--foreground);
   font-size: 12px;
   transition: transform 0.2s ease;
 }
@@ -56,6 +57,12 @@
     border-color: var(--border);
     color: var(--light-100);
   }
+}
+
+.viewport {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 4px 0;
 }
 
 .item {

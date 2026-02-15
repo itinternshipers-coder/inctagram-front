@@ -22,6 +22,7 @@ export default function Tabs({ tabs, defaultActiveIndex = 0 }: TabsProps) {
       <div className={s.tabsHeader} role="tablist">
         {tabs.map((tab, index) => (
           <button
+            type="button"
             id={`tab-${index}`}
             key={index}
             className={`${s.tabButton} ${index === activeIndex ? s.active : ''} ${tab.disabled ? s.disabled : ''}`}

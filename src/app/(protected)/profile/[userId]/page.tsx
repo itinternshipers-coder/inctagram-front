@@ -2,6 +2,9 @@ import { Post } from '@/entities/post/model'
 import { fetchProfileData } from '@/shared/lib/server/fetch-profile-data'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { ROUTES } from '@/shared/config/routes'
+import { Button } from '@/shared/ui/Button/Button'
+import Link from 'next/link'
 
 export default async function ProfilePage({ params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params
@@ -21,6 +24,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
   const avatarUrl = profile.avatar?.[0]?.url
   return (
     <div>
+      <Link href={ROUTES.DYNAMIC.SETTINGS_TAB('')}>
+        <Button>Profile Settings</Button>
+      </Link>
       <div>
         <div>
           {avatarUrl ? (

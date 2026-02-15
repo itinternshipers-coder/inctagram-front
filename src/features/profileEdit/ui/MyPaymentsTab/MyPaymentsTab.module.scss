@@ -1,0 +1,28 @@
+.paymentsCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 20px;
+  background-color: var(--background);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+
+  thead tr {
+    background-color: var(--background-element);
+  }
+
+  th,
+  td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--background-element);
+  }
+
+  tbody tr:hover {
+    background-color: var(--background-element);
+  }
+}

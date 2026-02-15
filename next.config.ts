@@ -9,6 +9,16 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.yandexcloud.net',
+        port: '',
+        pathname: '/traineegramm/**',
+      },
+    ],
+  },
 }
 
 export default nextConfig

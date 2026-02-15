@@ -12,49 +12,49 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
   }
 
   const { profile, posts } = await fetchProfileData(userId)
-
+  const postsItems = posts?.items || []
   if (!profile) {
     console.log('Profile not found for userId:', userId)
     notFound()
   }
 
+  const avatarUrl = profile.avatar?.[0]?.url
   return (
     <div>
       <div>
         <div>
-          {profile.avatarUrl ? (
-            <Image src={profile.avatarUrl} alt={profile.userName} />
+          {avatarUrl ? (
+            <Image
+              src={avatarUrl}
+              alt={profile.username || 'User avatar'}
+              width={192}
+              height={192}
+            />
           ) : (
-            <div className="avatar-placeholder">{profile.userName?.charAt(0)?.toUpperCase() || 'Photo is missing'}</div>
+            <div>
+              {profile.username?.charAt(0)?.toUpperCase() || 'Photo is missing'}
+            </div>
           )}
         </div>
 
         <div>
-          <h1>{`UserName: ${profile.username}` || 'Unknown User'}</h1>
-          <h1>{`UserID: ${profile.userId}` || 'Unknown ID'}</h1>
+          <h1>{`UserName: ${profile?.firstName } ${profile?.lastName}` || 'Unknown User'}</h1>
+          <h2>{`UserID: ${profile.userId}` || 'Unknown ID'}</h2>
 
           <div>
             <div>
-              <strong>{profile.postsCount || 0}</strong>
-              <span> posts</span>
+              <strong>{profile.country || 'country: not specified'}</strong>
             </div>
             <div>
-              <strong>{profile.followersCount || 0}</strong>
-              <span> followers</span>
-            </div>
-            <div>
-              <strong>{profile.followingCount || 0}</strong>
-              <span> following</span>
+              <strong>{profile.city || 'city: not specified'}</strong>
             </div>
           </div>
-
-          {profile.description && <p className="profile-description">{profile.description}</p>}
         </div>
       </div>
 
       <div>
-        {posts.length > 0 ? (
-          posts.map((post: Post) => (
+        {postsItems.length > 0 ? (
+          postsItems.map((post: Post) => (
             <div key={post.id}>
               {post.photos?.[0]?.url ? (
                 <img src={post.photos[0].url} alt={post.description || 'Post'} />

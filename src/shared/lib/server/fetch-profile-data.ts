@@ -1,3 +1,5 @@
+import { GetPostById } from '@/entities/post/model'
+import { Profile } from '@/features/profile/model/type'
 import { EndpointHelpers } from '@/shared/api/endpoints'
 import { normalizeError } from '@/shared/api/error-utils'
 
@@ -6,7 +8,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL
 export async function fetchProfileData(userId: string) {
   if (!userId) {
     console.warn('Invalid or missing userId provided to fetchProfileData:', userId)
-    return { profile: null, posts: [] }
+    return { profile: null, posts: null }
   }
 
   try {
@@ -27,21 +29,20 @@ export async function fetchProfileData(userId: string) {
     clearTimeout(timeoutId)
 
     if (profileRes.status === 404) {
-      return { profile: null, posts: [] }
+      return { profile: null, posts: null }
     }
 
     if (!profileRes.ok) {
       console.error(`Profile fetch failed with status: ${profileRes.status}`)
-      return { profile: null, posts: [] }
+      return { profile: null, posts: null }
     }
 
-    const profile = await profileRes.json()
+    const profile = (await profileRes.json()) as Profile['response']
 
-    let posts = []
+    let posts = null
     if (postsRes.ok) {
       try {
-        const postsData = await postsRes.json()
-        posts = postsData.items || postsData || []
+        posts = (await postsRes.json()) as GetPostById['response']
       } catch (e) {
         console.warn('Failed to parse posts response:', e)
       }
@@ -61,7 +62,7 @@ export async function fetchProfileData(userId: string) {
 
     return {
       profile: null,
-      posts: [],
+      posts: null,
     }
   }
 }

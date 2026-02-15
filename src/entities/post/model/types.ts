@@ -26,7 +26,7 @@ export type GetPosts = {
   request: {
     authorId?: string
   }
-  response: Post[]
+  response: { items: Post[], pageSize: number, totalCount: number }
   error: ErrorResponse
 }
 
@@ -35,7 +35,7 @@ export type GetPostById = {
   request: {
     id: string
   }
-  response: Post
+  response: { items: Post[], pageSize: number, totalCount: number }
   error: ErrorResponse
 }
 

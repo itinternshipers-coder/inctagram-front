@@ -1,17 +1,6 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'storage.yandexcloud.net',
-        port: '',
-        pathname: '/**',
-      },
-    ],
-  },
-
   async rewrites() {
     return [
       {
@@ -19,6 +8,16 @@ const nextConfig: NextConfig = {
         destination: 'https://gateway.traineegramm.ru/api/:path*',
       },
     ]
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.yandexcloud.net',
+        port: '',
+        pathname: '/traineegramm/**',
+      },
+    ],
   },
 }
 

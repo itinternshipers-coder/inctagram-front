@@ -13,7 +13,7 @@ export const postsApi = baseApi.injectEndpoints({
       }),
       providesTags: (result) =>
         result
-          ? [...result.map(({ id }) => ({ type: 'Post' as const, id })), { type: 'Posts', id: 'LIST' }]
+          ? [...result.items.map(({ id }) => ({ type: 'Post' as const, id })), { type: 'Posts', id: 'LIST' }]
           : [{ type: 'Posts', id: 'LIST' }],
     }),
 

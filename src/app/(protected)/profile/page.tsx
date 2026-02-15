@@ -1,14 +1,23 @@
 'use client'
 
-import { useMeQuery } from '@/features/auth/api/auth-api'
+import { AuthContext } from '@/features/auth/providers/auth-context'
 import { ROUTES } from '@/shared/config/routes'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useContext, useEffect } from 'react'
 
 export default function ProfileRedirect() {
-  const { data: profile, isLoading, isError } = useMeQuery()
+  const { user, isLoading } = useContext(AuthContext)
+  const router = useRouter()
 
-  if (isLoading) return 'Загружаем данные профиля'
-  if (isError || !profile) return <div>Не удалось загрузить профиль.</div>
+  useEffect(() => {
+    if (isLoading) return
 
-  redirect(ROUTES.DYNAMIC.PROFILE(profile.userName))
+    if (user?.userId) {
+      router.replace(ROUTES.DYNAMIC.PROFILE(user.userId))
+    } else {
+      router.replace(ROUTES.PUBLIC.SIGN_IN)
+    }
+  }, [user, isLoading, router])
+
+  return null // Или минимальный loader
 }

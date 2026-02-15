@@ -38,7 +38,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
         </div>
 
         <div>
-          <h1>{`UserName: ${profile?.firstName } ${profile?.lastName}` || 'Unknown User'}</h1>
+          <h1>{`UserName: ${profile?.firstName} ${profile?.lastName}` || 'Unknown User'}</h1>
           <h2>{`UserID: ${profile.userId}` || 'Unknown ID'}</h2>
 
           <div>

@@ -3,6 +3,7 @@
 import { useGetUserPostsQuery, useLazyGetUserPostsQuery } from '@/entities/post/api/posts-api'
 import { Post } from '@/entities/post/model'
 import { useCallback, useMemo, useState } from 'react'
+import s from './UserPostsList.module.scss'
 
 type Props = {
   userId: string
@@ -69,35 +70,35 @@ export const UserPostsList = ({ userId }: Props) => {
   }, [basePosts, cursor, fetchNextPosts, hasMore, isFetchingMore, userId])
 
   if (isLoading) {
-    return <div>Loading posts...</div>
+    return <div className={s.status}>Loading posts...</div>
   }
 
   if (isError) {
-    return <div>Error loading posts</div>
+    return <div className={s.status}>Error loading posts</div>
   }
 
   return (
-    <div>
+    <div className={s.wrapper}>
       {allPosts.length > 0 ? (
-        <div>
+        <div className={s.grid}>
           {allPosts.map((post) => (
-            <div key={post.id}>
+            <article key={post.id} className={s.card}>
               {post.photos?.[0]?.url ? (
-                <img src={post.photos[0].url} alt={post.description || 'Post'} />
+                <img className={s.image} src={post.photos[0].url} alt={post.description || 'Post'} />
               ) : (
-                <div>
+                <div className={s.empty}>
                   <span>{post.description?.substring(0, 50) || 'No description'}...</span>
                 </div>
               )}
-            </div>
+            </article>
           ))}
         </div>
       ) : (
-        <p>No posts yet</p>
+        <p className={s.status}>No posts yet</p>
       )}
 
       {hasMore && (
-        <button type="button" onClick={handleLoadMore} disabled={isFetchingMore} style={{ color: 'blue', marginTop: '10px' }}>
+        <button type="button" onClick={handleLoadMore} disabled={isFetchingMore} className={s.loadMoreBtn}>
           {isFetchingMore ? 'Loading...' : 'Load more'}
         </button>
       )}

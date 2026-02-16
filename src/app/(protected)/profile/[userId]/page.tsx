@@ -1,10 +1,10 @@
-import { Post } from '@/entities/post/model'
+import { UserPostsList } from '@/features/profile/ui/UserPostsList/UserPostsList'
 import { fetchProfileData } from '@/shared/lib/server/fetch-profile-data'
-import Image from 'next/image'
-import { notFound } from 'next/navigation'
 import { ROUTES } from '@/shared/config/routes'
 import { Button } from '@/shared/ui/Button/Button'
+import Image from 'next/image'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
 export default async function ProfilePage({ params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params
@@ -14,14 +14,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
     notFound()
   }
 
-  const { profile, posts } = await fetchProfileData(userId)
-  const postsItems = posts?.items || []
+  const { profile } = await fetchProfileData(userId)
+
   if (!profile) {
     console.log('Profile not found for userId:', userId)
     notFound()
   }
 
   const avatarUrl = profile.avatar?.[0]?.url
+
   return (
     <div>
       <Link href={ROUTES.DYNAMIC.SETTINGS_TAB('')}>
@@ -30,16 +31,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
       <div>
         <div>
           {avatarUrl ? (
-            <Image
-              src={avatarUrl}
-              alt={profile.username || 'User avatar'}
-              width={192}
-              height={192}
-            />
+            <Image src={avatarUrl} alt={profile.username || 'User avatar'} width={192} height={192} />
           ) : (
-            <div>
-              {profile.username?.charAt(0)?.toUpperCase() || 'Photo is missing'}
-            </div>
+            <div>{profile.username?.charAt(0)?.toUpperCase() || 'Photo is missing'}</div>
           )}
         </div>
 
@@ -58,23 +52,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
         </div>
       </div>
 
-      <div>
-        {postsItems.length > 0 ? (
-          postsItems.map((post: Post) => (
-            <div key={post.id}>
-              {post.photos?.[0]?.url ? (
-                <img src={post.photos[0].url} alt={post.description || 'Post'} />
-              ) : (
-                <div>
-                  <span>{post.description?.substring(0, 50) || 'No description'}...</span>
-                </div>
-              )}
-            </div>
-          ))
-        ) : (
-          <p>No posts yet</p>
-        )}
-      </div>
+      <UserPostsList userId="dd4b0337-9ffe-48c0-b10b-10fdf0263a23" />
     </div>
   )
 }

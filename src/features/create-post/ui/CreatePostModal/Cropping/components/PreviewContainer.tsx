@@ -1,5 +1,5 @@
-import { AspectRatio, PhotoType } from './types'
-import s from './Cropping.module.scss'
+import { AspectRatio, PhotoType } from '../lib/types'
+import s from '../Cropping.module.scss'
 
 type PreviewContainerProps = {
   photos: PhotoType[]

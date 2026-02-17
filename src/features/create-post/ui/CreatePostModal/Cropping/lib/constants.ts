@@ -1,4 +1,4 @@
-import { AspectRatio } from './types'
+import { AspectRatio } from '../lib/types'
 
 export const CROPPING_IMAGES_CONSTANTS = {
   ZOOM: {

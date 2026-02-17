@@ -1,4 +1,4 @@
-import { PhotoType } from '../types'
+import { PhotoType } from '../lib/types'
 import { useCallback, useRef } from 'react'
 
 type UseUploadFileReturn = {

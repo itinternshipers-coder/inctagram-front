@@ -1,4 +1,4 @@
-import { PhotoType } from '../types'
+import { PhotoType } from '../lib/types'
 import getCroppedImg from '@/shared/lib/image/canvasUtils'
 import { useCallback } from 'react'
 

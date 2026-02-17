@@ -1,5 +1,5 @@
-import { CROPPING_IMAGES_CONSTANTS } from './constants'
-import s from './Cropping.module.scss'
+import { CROPPING_IMAGES_CONSTANTS } from '../lib/constants'
+import s from '../Cropping.module.scss'
 import React, { ChangeEvent } from 'react'
 
 type ZoomControlsProps = {

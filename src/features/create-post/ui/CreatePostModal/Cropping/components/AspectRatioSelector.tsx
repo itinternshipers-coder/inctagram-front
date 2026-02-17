@@ -1,6 +1,6 @@
-import { ASPECT_RATIO_OPTIONS } from './constants'
-import { AspectRatio } from './types'
-import s from './Cropping.module.scss'
+import { ASPECT_RATIO_OPTIONS } from '../lib/constants'
+import { AspectRatio } from '../lib/types'
+import s from '../Cropping.module.scss'
 
 type AspectRatioSelectorProps = {
   selectedAspect: AspectRatio

@@ -1,6 +1,6 @@
-import { CROPPING_IMAGES_CONSTANTS } from './constants'
-import s from './Cropping.module.scss'
-import { PhotoType } from './types'
+import { CROPPING_IMAGES_CONSTANTS } from '../lib/constants'
+import s from '../Cropping.module.scss'
+import { PhotoType } from '../lib/types'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'
 import { ChangeEvent } from 'react'
 

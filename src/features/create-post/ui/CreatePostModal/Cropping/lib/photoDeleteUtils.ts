@@ -1,4 +1,4 @@
-import { PhotoType } from '../types'
+import { PhotoType } from './types'
 
 type PhotoDeleteResult = {
   newPhotos: PhotoType[]

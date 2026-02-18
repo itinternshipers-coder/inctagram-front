@@ -17,13 +17,10 @@ export const uploadAllPhotos = async (
   setUploadError(null)
 
   try {
-    // console.log(`Starting upload of ${images.length} photos...`)
-
     const uploadPromises = images.map((file, index) => uploadPhotoToServer(file, index))
 
     const uploaded = await Promise.all(uploadPromises)
 
-    // console.log('Photos uploaded successfully:', uploaded)
     setUploadedPhotos(uploaded)
     return uploaded
   } catch (error) {

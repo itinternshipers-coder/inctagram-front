@@ -31,13 +31,8 @@ export const CreatePostModal = () => {
     router.push(ROUTES.PUBLIC.HOME)
   }
 
-  // Обработчик обработанного изображения (теперь принимает массив)
-  const handleCropComplete = (images: File[]) => {
-    setImages(images)
-  }
-
-  // Обработчик применения фильтров (может принимать массив или один файл)
-  const handleFilterApply = (images: File[]) => {
+  // Обработчик обработанного изображения и применения фильтров
+  const handleCropAndFilter = (images: File[]) => {
     setImages(images)
   }
 
@@ -53,7 +48,7 @@ export const CreatePostModal = () => {
           {currentStep === 'cropping' && images.length > 0 && (
             <Cropping
               images={images} // Передаем массив
-              onCropComplete={handleCropComplete}
+              onCropComplete={handleCropAndFilter}
               currentStep={currentStep}
               onNext={goNext}
               onBack={goBack}
@@ -62,17 +57,17 @@ export const CreatePostModal = () => {
         </>
       ) : (
         <>
-          {currentStep === 'filters' && images && (
+          {currentStep === 'filters' && (
             <Filters
               images={images}
-              onFilterApply={handleFilterApply}
+              onFilterApply={handleCropAndFilter}
               currentStep={currentStep}
               onNext={goNext}
               onBack={goBack}
             />
           )}
 
-          {currentStep === 'publication' && images && (
+          {currentStep === 'publication' && (
             <Publication images={images} onBack={goBack} currentStep={currentStep} onNext={handleCloseModal} />
           )}
         </>

@@ -2,7 +2,7 @@
 
 import { useGetUserPostsQuery, useLazyGetUserPostsQuery } from '@/entities/post/api/posts-api'
 import { Post } from '@/entities/post/model'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import s from './UserPostsList.module.scss'
 
 type Props = {
@@ -21,6 +21,7 @@ export const UserPostsList = ({ userId }: Props) => {
 
   const [extraPosts, setExtraPosts] = useState<Post[]>([])
   const [fetchNextPosts, { isFetching: isFetchingMore }] = useLazyGetUserPostsQuery()
+  const sentinelRef = useRef<HTMLDivElement | null>(null)
 
   const basePosts = useMemo(() => data?.items ?? EMPTY_POSTS, [data?.items])
 
@@ -69,6 +70,31 @@ export const UserPostsList = ({ userId }: Props) => {
     }
   }, [basePosts, cursor, fetchNextPosts, hasMore, isFetchingMore, userId])
 
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0]
+        if (!firstEntry?.isIntersecting) {
+          return
+        }
+
+        void handleLoadMore()
+      },
+      { rootMargin: '200px' }
+    )
+
+    observer.observe(sentinel)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [handleLoadMore])
+
   if (isLoading) {
     return <div className={s.status}>Loading posts...</div>
   }
@@ -102,6 +128,8 @@ export const UserPostsList = ({ userId }: Props) => {
           {isFetchingMore ? 'Loading...' : 'Load more'}
         </button>
       )}
+
+      <div ref={sentinelRef} style={{ height: 1 }} />
     </div>
   )
 }

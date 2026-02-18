@@ -2,6 +2,7 @@
 
 import { useGetUserPostsQuery, useLazyGetUserPostsQuery } from '@/entities/post/api/posts-api'
 import { Post } from '@/entities/post/model'
+import { Skeleton } from '@/shared/ui/Skeleton/Skeleton'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import s from './UserPostsList.module.scss'
 
@@ -96,7 +97,13 @@ export const UserPostsList = ({ userId }: Props) => {
   }, [handleLoadMore])
 
   if (isLoading) {
-    return <div className={s.status}>Loading posts...</div>
+    return (
+      <div className={s.skeletonGrid}>
+        {Array.from({ length: Number(PAGE_SIZE) }).map((_, index) => (
+          <Skeleton key={`initial-${index}`} className={s.skeletonItem} />
+        ))}
+      </div>
+    )
   }
 
   if (isError) {
@@ -123,7 +130,13 @@ export const UserPostsList = ({ userId }: Props) => {
         <p className={s.status}>No posts yet</p>
       )}
 
-      {isFetchingMore && <div className={s.status}>Loading more...</div>}
+      {isFetchingMore && (
+        <div className={s.skeletonGrid}>
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={`more-${index}`} className={s.skeletonItem} />
+          ))}
+        </div>
+      )}
 
       <div ref={sentinelRef} style={{ height: 1 }} />
     </div>

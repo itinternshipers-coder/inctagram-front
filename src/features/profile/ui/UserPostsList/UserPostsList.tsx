@@ -123,11 +123,7 @@ export const UserPostsList = ({ userId }: Props) => {
         <p className={s.status}>No posts yet</p>
       )}
 
-      {hasMore && (
-        <button type="button" onClick={handleLoadMore} disabled={isFetchingMore} className={s.loadMoreBtn}>
-          {isFetchingMore ? 'Loading...' : 'Load more'}
-        </button>
-      )}
+      {isFetchingMore && <div className={s.status}>Loading more...</div>}
 
       <div ref={sentinelRef} style={{ height: 1 }} />
     </div>

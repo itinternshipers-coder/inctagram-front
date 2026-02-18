@@ -59,7 +59,7 @@ export const Cropping = ({
 
   // Инициализация фотографий из пропса images
   useEffect(() => {
-    const initializePhotos = async () => {
+    const initializePhotos = () => {
       // Очищаем предыдущие URL перед созданием новых
       photosRef.current.forEach((photo) => {
         try {
@@ -72,17 +72,15 @@ export const Cropping = ({
         }
       })
 
-      const newPhotos: PhotoType[] = await Promise.all(
-        images.map(async (file, index) => {
-          const url = URL.createObjectURL(file)
-          return {
-            photoId: `${Date.now()}-${index}`,
-            file,
-            originalUrl: url,
-            isEdited: false,
-          }
-        })
-      )
+      const newPhotos: PhotoType[] = images.map((file, index) => {
+        const url = URL.createObjectURL(file)
+        return {
+          photoId: `${Date.now()}-${index}`,
+          file,
+          originalUrl: url,
+          isEdited: false,
+        }
+      })
 
       photosRef.current = newPhotos
       setPhotos(newPhotos)
@@ -112,9 +110,6 @@ export const Cropping = ({
   // Обновление preview с дебаунсом
   const updateCroppedPreview = useCallback(async () => {
     const currentPhoto = photosRef.current[currentIndex]
-
-    // Явная проверка на существование фото
-    if (!currentPhoto) return
 
     if (!currentPhoto?.croppedAreaPixels || !currentPhoto.originalUrl) return
 

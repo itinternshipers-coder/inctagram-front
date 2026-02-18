@@ -52,7 +52,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
         </div>
       </div>
 
-      <UserPostsList userId="dd4b0337-9ffe-48c0-b10b-10fdf0263a23" />
+      <UserPostsList userId={userId} />
     </div>
   )
 }

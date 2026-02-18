@@ -12,6 +12,10 @@ type Props = {
 
 const PAGE_SIZE = '8'
 const EMPTY_POSTS: Post[] = []
+type ExtraPostsState = {
+  userId: string
+  items: Post[]
+}
 
 export const UserPostsList = ({ userId }: Props) => {
   const { data, isLoading, isError } = useGetUserPostsQuery({
@@ -20,11 +24,12 @@ export const UserPostsList = ({ userId }: Props) => {
     sortDirection: 'desc',
   })
 
-  const [extraPosts, setExtraPosts] = useState<Post[]>([])
+  const [extraPostsState, setExtraPostsState] = useState<ExtraPostsState>({ userId, items: EMPTY_POSTS })
   const [fetchNextPosts, { isFetching: isFetchingMore }] = useLazyGetUserPostsQuery()
   const sentinelRef = useRef<HTMLDivElement | null>(null)
 
   const basePosts = useMemo(() => data?.items ?? EMPTY_POSTS, [data?.items])
+  const extraPosts = extraPostsState.userId === userId ? extraPostsState.items : EMPTY_POSTS
 
   const allPosts = useMemo(() => {
     const seen = new Set<string>()
@@ -60,11 +65,15 @@ export const UserPostsList = ({ userId }: Props) => {
         return
       }
 
-      setExtraPosts((prev) => {
-        const existing = new Set([...basePosts, ...prev].map((post) => post.id))
+      setExtraPostsState((prevState) => {
+        const prevItems = prevState.userId === userId ? prevState.items : EMPTY_POSTS
+        const existing = new Set([...basePosts, ...prevItems].map((post) => post.id))
         const uniqueNewPosts = nextPage.items.filter((post) => !existing.has(post.id))
 
-        return [...prev, ...uniqueNewPosts]
+        return {
+          userId,
+          items: [...prevItems, ...uniqueNewPosts],
+        }
       })
     } catch (error) {
       console.error('Failed to load more posts:', error)

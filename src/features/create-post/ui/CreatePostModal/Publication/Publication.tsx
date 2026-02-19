@@ -94,18 +94,16 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
         }
       })
 
-      const convertedPhotos: PhotoType[] = await Promise.all(
-        images.map(async (file, index) => {
-          const url = URL.createObjectURL(file)
+      const convertedPhotos: PhotoType[] = images.map((file, index) => {
+        const url = URL.createObjectURL(file)
 
-          return {
-            photoId: `temp-${Date.now()}-${index}`,
-            url,
-            order: index,
-            createdAt: new Date().toISOString(),
-          }
-        })
-      )
+        return {
+          photoId: `temp-${Date.now()}-${index}`,
+          url,
+          order: index,
+          createdAt: new Date().toISOString(),
+        }
+      })
 
       photosRef.current = convertedPhotos
       setPhotos(convertedPhotos)
@@ -135,7 +133,6 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
     try {
       // Если фото еще не загружены - загружаем их
       if (photosToUse.length === 0) {
-        // console.log('No photos uploaded yet, uploading now...')
         photosToUse = await uploadAllPhotos(images, setIsUploading, setUploadError, setUploadedPhotos)
 
         if (photosToUse.length === 0) {
@@ -152,16 +149,6 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
           s3Key: photo.s3Key,
           url: photo.url,
         })),
-      }
-
-      // Проверяем, что данные соответствуют схеме
-      try {
-        CreatePostSchema.parse(postData)
-        // console.log('Post data validated successfully')
-      } catch (validationError) {
-        console.error('Schema validation error:', validationError)
-        setUploadError('Invalid post data')
-        return
       }
 
       // Отправляем запрос на создание поста

@@ -3,6 +3,7 @@
 import { useCreatePostMutation } from '@/entities/post/api/posts-api'
 import { CreatePostSchema } from '@/entities/post/model'
 import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
+import { clearUrlForUnmount } from '@/features/create-post/ui/CreatePostModal/Publication/utils/clearUrlForUnmount'
 import { ModalHeader } from '../ModalHeader/ModalHeader'
 import { uploadAllPhotos } from './lib/uploadAllPhotos'
 import s from './Publication.module.scss'
@@ -68,31 +69,15 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
   useEffect(() => {
     if (!images || images.length === 0) {
       // Очищаем предыдущие URL перед очисткой состояния
-      photosRef.current.forEach((photo) => {
-        try {
-          if (photo.url.startsWith('blob:')) {
-            URL.revokeObjectURL(photo.url)
-          }
-        } catch (e) {
-          // Игнорируем ошибки при очистке
-        }
-      })
+      clearUrlForUnmount(photosRef)
       photosRef.current = []
       setPhotos([])
       return
     }
 
-    const convertFilesToPhotos = async () => {
+    const convertFilesToPhotos = () => {
       // Очищаем предыдущие URL перед созданием новых
-      photosRef.current.forEach((photo) => {
-        try {
-          if (photo.url.startsWith('blob:')) {
-            URL.revokeObjectURL(photo.url)
-          }
-        } catch (e) {
-          // Игнорируем ошибки при очистке
-        }
-      })
+      clearUrlForUnmount(photosRef)
 
       const convertedPhotos: PhotoType[] = images.map((file, index) => {
         const url = URL.createObjectURL(file)
@@ -113,15 +98,7 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
 
     return () => {
       // Очистка URL при размонтировании или изменении images
-      photosRef.current.forEach((photo) => {
-        try {
-          if (photo.url.startsWith('blob:')) {
-            URL.revokeObjectURL(photo.url)
-          }
-        } catch (e) {
-          // Игнорируем ошибки при очистке
-        }
-      })
+      clearUrlForUnmount(photosRef)
       photosRef.current = []
     }
   }, [images])
@@ -160,15 +137,7 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
       }
 
       // Очистка временных URL
-      photosRef.current.forEach((photo) => {
-        try {
-          if (photo.url.startsWith('blob:')) {
-            URL.revokeObjectURL(photo.url)
-          }
-        } catch (e) {
-          // Игнорируем ошибки при очистке
-        }
-      })
+      clearUrlForUnmount(photosRef)
       photosRef.current = []
 
       // Очистка формы

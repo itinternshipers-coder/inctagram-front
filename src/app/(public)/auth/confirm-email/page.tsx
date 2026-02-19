@@ -2,17 +2,14 @@
 
 import { useEmailConfirmation } from '@/features/auth/lib/use-confirmation'
 import { EmailConfirmation } from '@/features/auth/ui/EmailConfirmation/EmailConfirmation'
+import Loader from '@/shared/ui/Loader/Loader'
 import { Suspense } from 'react'
 
 function EmailConfirmationContent() {
   const { email, isLoading, isSuccess, error } = useEmailConfirmation()
 
   if (isLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <div>Loading...</div>
-      </div>
-    )
+    return <Loader />
   }
 
   if (!email) {
@@ -24,13 +21,7 @@ function EmailConfirmationContent() {
 
 export default function EmailConfirmationPage() {
   return (
-    <Suspense
-      fallback={
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-          Loading...
-        </div>
-      }
-    >
+    <Suspense fallback={<Loader />}>
       <EmailConfirmationContent />
     </Suspense>
   )

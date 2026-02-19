@@ -2,17 +2,14 @@
 
 import { usePasswordRecovery } from '@/features/auth/lib/use-password-recovery'
 import { PasswordRecovery } from '@/features/auth/ui/PasswordRecovery/PasswordRecovery'
+import Loader from '@/shared/ui/Loader/Loader'
 import { Suspense } from 'react'
 
 function PasswordRecoveryContent() {
   const { recoveryCode, email, isLoading, data, error } = usePasswordRecovery()
 
   if (isLoading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <div>Loading...</div>
-      </div>
-    )
+    return <Loader />
   }
 
   if (!recoveryCode) {
@@ -28,13 +25,7 @@ function PasswordRecoveryContent() {
 
 export default function PasswordRecoveryPage() {
   return (
-    <Suspense
-      fallback={
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-          Loading...
-        </div>
-      }
-    >
+    <Suspense fallback={<Loader />}>
       <PasswordRecoveryContent />
     </Suspense>
   )

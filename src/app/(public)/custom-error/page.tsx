@@ -1,5 +1,6 @@
 'use client'
 
+import Loader from '@/shared/ui/Loader/Loader'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react' // Добавить импорт
@@ -20,11 +21,7 @@ function CustomErrorContent() {
 export default function CustomError() {
   return (
     <Suspense
-      fallback={
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-          Loading...
-        </div>
-      }
+      fallback={<Loader />}
     >
       <CustomErrorContent />
     </Suspense>

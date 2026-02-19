@@ -70,7 +70,7 @@ export const ProfileHeader = ({
 
           {!isOwner && isLoggedIn && (
             <div className={s.actionButtons}>
-              <Button variant={isFollowing ? 'secondary' : 'primary'} onClick={handleFollowClick}>
+              <Button variant={isFollowing ? 'tertiary' : 'primary'} onClick={handleFollowClick}>
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </Button>
               <Button variant="secondary" onClick={onSendMessage}>

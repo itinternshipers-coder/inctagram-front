@@ -16,6 +16,8 @@ export const ROUTES = {
   PROTECTED: {
     PROFILE: '/profile',
     SETTINGS: '/settings',
+    FOLLOWING: '/following',
+    FOLLOWERS: '/followers',
   },
 
   // Модальные роуты (если нужны)
@@ -29,5 +31,7 @@ export const ROUTES = {
     PROFILE: (userId: string) => `/profile/${userId}`,
     POST_MODAL: (postId: string) => `/post/${postId}`,
     SETTINGS_TAB: (tab: string) => `/settings?part=${tab}`,
+    FOLLOWING_MODAL: (userId: string) => `/following/${userId}`,
+    FOLLOWERS_MODAL: (userId: string) => `/followers/${userId}`,
   },
 } as const

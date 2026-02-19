@@ -1,27 +1,21 @@
 'use client'
-import React, { ReactNode, useContext } from 'react'
+import { ReactNode, useContext } from 'react'
 import { AuthContext } from '@/features/auth/providers/auth-context'
-import { Header } from '@/widgets/header/Header'
-import Sidebar from '@/widgets/Sidebar/Sidebar'
-import { Loader } from '@/shared/ui/Loader/Loader'
-import s from './AuthWrapper.module.scss'
+import { Skeleton } from '@/shared/ui/Skeleton/Skeleton'
 
-export const AuthWrapper = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn, isLoading, isFetching } = useContext(AuthContext)
+type ClientOnlyProps = {
+  children: ReactNode
+  skeleton?: ReactNode
+  skeletonWidth?: string | number
+  skeletonHeight?: string | number
+}
 
-  if (isLoading || isFetching) {
-    return <Loader />
+export const ClientOnly = ({ children, skeleton, skeletonWidth, skeletonHeight }: ClientOnlyProps) => {
+  const { isLoading } = useContext(AuthContext)
+
+  if (isLoading) {
+    return skeleton || <Skeleton width={skeletonWidth} height={skeletonHeight} />
   }
 
-  return (
-    <>
-      <Header isLoginIn={isLoggedIn} />
-      <div className={s.contentWrapper}>
-        {isLoggedIn && <Sidebar role="user" />}
-        <div className={s.contentBlock}>
-          <div className={!isLoggedIn ? s.childrenWithoutSidebar : ''}>{children}</div>
-        </div>
-      </div>
-    </>
-  )
+  return <>{children}</>
 }

@@ -1,4 +1,4 @@
-import { PhotoType } from '@/features/create-post/ui/CreatePostModal/Publication/types'
+import { PhotoType } from '../lib/types'
 import { RefObject } from 'react'
 
 export const clearUrlForUnmount = (photosRef: RefObject<PhotoType[] | null>): void => {

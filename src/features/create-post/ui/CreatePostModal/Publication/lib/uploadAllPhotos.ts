@@ -1,6 +1,6 @@
 import { uploadPhotoToServer } from '@/features/create-post/model/api/uploadPhotoToServer'
 import React from 'react'
-import { UploadedPhotoType } from '../types'
+import { UploadedPhotoType } from '../lib/types'
 
 // Загрузка всех фото на сервер
 export const uploadAllPhotos = async (

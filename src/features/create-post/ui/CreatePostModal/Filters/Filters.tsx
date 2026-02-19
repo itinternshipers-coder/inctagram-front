@@ -4,9 +4,9 @@ import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { handleApplyFilters } from './lib/handleApplyFilters'
 import s from './Filters.module.scss'
 import { applyFilterToImage } from './lib/applyFilterToImage'
-import { FiltersToImage } from './FiltersToImage'
-import { ExtendedPhotoType } from './types'
-import { SlideViewerImage } from './SlideViewerImage'
+import { FiltersToImage } from './components/FiltersToImage'
+import { ExtendedPhotoType } from './lib/types'
+import { SlideViewerImage } from './components/SlideViewerImage'
 import { ModalHeader } from '../ModalHeader/ModalHeader'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -22,89 +22,6 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isApplyingAll, setIsApplyingAll] = useState(false)
   const processedImagesRef = useRef<ExtendedPhotoType[]>([])
-
-  // Инициализация изображений
-  // useEffect(() => {
-  //   if (!images || images.length === 0) {
-  //     // Очищаем предыдущие URL перед очисткой состояния
-  //     processedImagesRef.current.forEach((img) => {
-  //       try {
-  //         if (img.url?.startsWith('blob:')) {
-  //           URL.revokeObjectURL(img.url)
-  //         }
-  //         if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
-  //           URL.revokeObjectURL(img.originalUrl)
-  //         }
-  //         if (img.filteredUrl?.startsWith('blob:')) {
-  //           URL.revokeObjectURL(img.filteredUrl)
-  //         }
-  //       } catch (e) {
-  //         // Игнорируем ошибки при очистке
-  //       }
-  //     })
-  //     processedImagesRef.current = []
-  //     setProcessedImages([])
-  //     return
-  //   }
-  //
-  //   const initializeImages = async () => {
-  //     // Очищаем предыдущие URL перед созданием новых
-  //     processedImagesRef.current.forEach((img) => {
-  //       try {
-  //         if (img.url?.startsWith('blob:')) {
-  //           URL.revokeObjectURL(img.url)
-  //         }
-  //         if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
-  //           URL.revokeObjectURL(img.originalUrl)
-  //         }
-  //         if (img.filteredUrl?.startsWith('blob:')) {
-  //           URL.revokeObjectURL(img.filteredUrl)
-  //         }
-  //       } catch (e) {
-  //         // Игнорируем ошибки при очистке
-  //       }
-  //     })
-  //
-  //     const newProcessedImages: ExtendedPhotoType[] = await Promise.all(
-  //       images.map(async (file) => {
-  //         const url = URL.createObjectURL(file)
-  //         return {
-  //           file,
-  //           url,
-  //           originalUrl: url,
-  //           selectedFilter: 'none',
-  //           isProcessing: false,
-  //         }
-  //       })
-  //     )
-  //
-  //     processedImagesRef.current = newProcessedImages
-  //     setProcessedImages(newProcessedImages)
-  //     setCurrentIndex(0)
-  //   }
-  //
-  //   initializeImages()
-  //
-  //   return () => {
-  //     // Очистка URL при размонтировании или изменении images
-  //     processedImagesRef.current.forEach((img) => {
-  //       try {
-  //         if (img.url?.startsWith('blob:')) {
-  //           URL.revokeObjectURL(img.url)
-  //         }
-  //         if (img.originalUrl?.startsWith('blob:') && img.originalUrl !== img.url) {
-  //           URL.revokeObjectURL(img.originalUrl)
-  //         }
-  //         if (img.filteredUrl?.startsWith('blob:')) {
-  //           URL.revokeObjectURL(img.filteredUrl)
-  //         }
-  //       } catch (e) {
-  //         // Игнорируем ошибки при очистке
-  //       }
-  //     })
-  //     processedImagesRef.current = []
-  //   }
-  // }, [images])
 
   useEffect(() => {
     // Функция очистки URL

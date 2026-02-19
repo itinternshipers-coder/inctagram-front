@@ -1,6 +1,6 @@
 import React from 'react'
-import s from './Filters.module.scss'
-import { ExtendedPhotoType } from './types'
+import s from '../Filters.module.scss'
+import { ExtendedPhotoType } from '../lib/types'
 import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 

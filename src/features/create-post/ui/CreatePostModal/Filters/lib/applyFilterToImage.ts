@@ -1,6 +1,6 @@
 // Применение фильтра к конкретному изображению
 import React from 'react'
-import { ExtendedPhotoType } from '../types'
+import { ExtendedPhotoType } from './types'
 import { getFilterCSS } from '../utils/getFilters'
 
 export const applyFilterToImage = async (

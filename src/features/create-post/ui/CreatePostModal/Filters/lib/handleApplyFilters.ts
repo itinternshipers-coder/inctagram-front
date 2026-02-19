@@ -1,6 +1,6 @@
 // Применение фильтров ко всем изображениям и переход дальше
 
-import { ExtendedPhotoType } from '../types'
+import { ExtendedPhotoType } from './types'
 import { getFilterCSS } from '../utils/getFilters'
 import React from 'react'
 

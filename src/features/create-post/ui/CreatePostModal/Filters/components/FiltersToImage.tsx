@@ -1,5 +1,6 @@
-import { ExtendedPhotoType } from './types'
-import s from './Filters.module.scss'
+import { clsx } from 'clsx'
+import { ExtendedPhotoType } from '../lib/types'
+import s from '../Filters.module.scss'
 
 export const FILTERS = [
   { id: 'none', name: 'Original', className: s.filterNone },
@@ -16,17 +17,13 @@ type FiltersToImageProps = {
 }
 
 export const FiltersToImage = ({ currentImage, isApplyingAll, onFilterToImage }: FiltersToImageProps) => {
-  const handleFilters = (filterId: string) => {
-    onFilterToImage(filterId)
-  }
-
   return (
     <>
       {FILTERS.map((filter) => (
         <button
           key={filter.id}
-          className={`${s.filterButton} ${currentImage?.selectedFilter === filter.id ? s.active : ''}`}
-          onClick={() => handleFilters(filter.id)}
+          className={clsx(s.filterButton, currentImage?.selectedFilter === filter.id && s.active)}
+          onClick={() => onFilterToImage(filter.id)}
           disabled={currentImage?.isProcessing || isApplyingAll}
         >
           <div className={`${s.filterPreview} ${filter.className}`}>

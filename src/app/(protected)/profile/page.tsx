@@ -6,18 +6,18 @@ import { useRouter } from 'next/navigation'
 import { useContext, useEffect } from 'react'
 
 export default function ProfileRedirect() {
-  const { user, isLoading } = useContext(AuthContext)
+  const { user, isLoading, isFetching } = useContext(AuthContext)
   const router = useRouter()
 
   useEffect(() => {
-    if (isLoading) return
+    if (isLoading || isFetching) return
 
     if (user?.userId) {
       router.replace(ROUTES.DYNAMIC.PROFILE(user.userId))
     } else {
       router.replace(ROUTES.PUBLIC.SIGN_IN)
     }
-  }, [user, isLoading, router])
+  }, [user, isLoading, isFetching, router])
 
-  return null // Или минимальный loader
+  return null
 }

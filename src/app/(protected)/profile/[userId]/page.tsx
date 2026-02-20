@@ -14,7 +14,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
     notFound()
   }
 
-  const { profile } = await fetchProfileData(userId)
+  const { profile, posts } = await fetchProfileData(userId)
 
   if (!profile) {
     console.log('Profile not found for userId:', userId)
@@ -52,7 +52,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
         </div>
       </div>
 
-      <UserPostsList userId={userId} />
+      <UserPostsList userId={userId} initialPosts={posts?.items ?? []} initialTotalCount={posts?.totalCount ?? 0} />
     </div>
   )
 }

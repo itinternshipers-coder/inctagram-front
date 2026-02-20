@@ -1,15 +1,22 @@
 'use client'
 
+import { Post } from '@/entities/post/model'
 import { Skeleton } from '@/shared/ui/Skeleton/Skeleton'
 import s from './UserPostsList.module.scss'
 import { useUserPostsInfinite } from './lib/useUserPostsInfinite'
 
 type Props = {
   userId: string
+  initialPosts: Post[]
+  initialTotalCount: number
 }
 
-export const UserPostsList = ({ userId }: Props) => {
-  const { allPosts, isLoading, isError, isFetchingMore, sentinelRef, pageSize } = useUserPostsInfinite({ userId })
+export const UserPostsList = ({ userId, initialPosts, initialTotalCount }: Props) => {
+  const { allPosts, isLoading, isError, isFetchingMore, sentinelRef, pageSize } = useUserPostsInfinite({
+    userId,
+    initialPosts,
+    initialTotalCount,
+  })
 
   if (isLoading) {
     return (

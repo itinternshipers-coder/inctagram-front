@@ -12,9 +12,11 @@ type ExtraPostsState = {
 
 type UseUserPostsInfiniteProps = {
   userId: string
+  initialPosts: Post[]
+  initialTotalCount: number
 }
 
-export const useUserPostsInfinite = ({ userId }: UseUserPostsInfiniteProps) => {
+export const useUserPostsInfinite = ({ userId, initialPosts, initialTotalCount }: UseUserPostsInfiniteProps) => {
   const { data, isLoading, isError } = useGetUserPostsQuery({
     userId,
     pageSize: PAGE_SIZE,
@@ -25,7 +27,7 @@ export const useUserPostsInfinite = ({ userId }: UseUserPostsInfiniteProps) => {
   const [fetchNextPosts, { isFetching: isFetchingMore }] = useLazyGetUserPostsQuery()
   const sentinelRef = useRef<HTMLDivElement | null>(null)
 
-  const basePosts = useMemo(() => data?.items ?? EMPTY_POSTS, [data?.items])
+  const basePosts = useMemo(() => data?.items ?? initialPosts, [data?.items, initialPosts])
   const extraPosts = extraPostsState.userId === userId ? extraPostsState.items : EMPTY_POSTS
 
   const allPosts = useMemo(() => {
@@ -43,7 +45,8 @@ export const useUserPostsInfinite = ({ userId }: UseUserPostsInfiniteProps) => {
   }, [basePosts, extraPosts])
 
   const cursor = allPosts.length > 0 ? allPosts[allPosts.length - 1].id : null
-  const hasMore = data ? data.totalCount > allPosts.length : false
+  const totalCount = data?.totalCount ?? initialTotalCount
+  const hasMore = totalCount > allPosts.length
 
   const handleLoadMore = useCallback(async () => {
     if (!hasMore || !cursor || isFetchingMore) {
@@ -104,10 +107,10 @@ export const useUserPostsInfinite = ({ userId }: UseUserPostsInfiniteProps) => {
 
   return {
     allPosts,
-    isLoading,
+    isLoading: isLoading && initialPosts.length === 0 && initialTotalCount > 0,
     isError,
     isFetchingMore,
     sentinelRef,
-    pageSize: Number(PAGE_SIZE),
+    pageSize: data?.pageSize ?? Number(PAGE_SIZE),
   }
 }

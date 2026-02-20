@@ -31,7 +31,9 @@ export const ProfileHeader = ({
                               }: Props) => {
   const avatarUrl = profile.avatar?.[0]?.url
   const userName = `${profile.firstName} ${profile.lastName}`.trim() || profile.username
-  const aboutMe = profile.aboutMe || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...'
+  const aboutMe = profile.aboutMe || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, ' +
+    'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis ' +
+    'nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 
   const handleFollowClick = () => {
     if (isFollowing) {

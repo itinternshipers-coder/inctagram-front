@@ -18,25 +18,19 @@ export const ProfilePageView = ({ profile, posts, userId }: Props) => {
   const { user, isLoggedIn } = useContext(AuthContext)
   const params = useParams()
   const userIdFromUrl = params.userId as string
+  const isOwner = isLoggedIn && user?.userId === userIdFromUrl
 
-  const [isOwner, setIsOwner] = useState(false)
   const [isFollowing, setIsFollowing] = useState(false)
 
   useEffect(() => {
-    if (isLoggedIn && user?.userId) {
-      const owner = user.userId === userIdFromUrl
-      setIsOwner(owner)
-      // Если не владелец, запрос за статусом подписки (заглушка)
-      if (!owner) {
-        // TODO: fetch following status
-        // Для примера пока false
-        setIsFollowing(false)
-      }
+    if (isLoggedIn && !isOwner) {
+      // TODO: здесь (асинхронный) запрос статуса подписки
+      // fetchFollowingStatus(userIdFromUrl).then(setIsFollowing)
     } else {
-      setIsOwner(false)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsFollowing(false)
     }
-  }, [isLoggedIn, user, userIdFromUrl])
+  }, [isLoggedIn, isOwner, userIdFromUrl])
 
   const handleFollow = () => {
     // TODO: мутация подписки

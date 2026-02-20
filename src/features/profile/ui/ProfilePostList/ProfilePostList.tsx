@@ -4,7 +4,7 @@ import { Post } from '@/entities/post/model'
 import { PostCard } from '@/entities/post/ui/PostCard/PostCard'
 import { Profile } from '@/features/profile/model/type'
 import { formatTimeAgo } from '@/shared/lib/formatTimeAgo'
-import s from 'src/features/profile/ui/ProfilePostList/ProfilePostList.module.scss'
+import s from './ProfilePostList.module.scss'
 
 type Props = {
   profile: Profile['response']

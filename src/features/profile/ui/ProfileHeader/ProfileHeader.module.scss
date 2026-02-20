@@ -1,8 +1,7 @@
 .header {
   display: flex;
-  gap: 48px;
-  margin-bottom: 48px;
-  padding: 24px 0;
+  gap: 38px;
+  padding: 36px 0;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -16,7 +15,7 @@
   height: 192px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: var(--dark-500);
+  background-color: var(--background-element);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -29,7 +28,7 @@
 
   .avatarPlaceholder {
     font-size: 64px;
-    color: var(--light-100);
+    color: var(--foreground);
     font-weight: 600;
     text-transform: uppercase;
   }
@@ -39,7 +38,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-around;
 }
 
 .nameRow {
@@ -61,7 +60,7 @@
 
 .stats {
   display: flex;
-  gap: 48px;
+  gap: 100px;
 
   @media (max-width: 480px) {
     gap: 24px;
@@ -75,16 +74,15 @@
   align-items: center;
 
   .statNumber {
-    color: var(--light-100);
+    color: var(--foreground);
     font-weight: 700;
     line-height: 1.2;
   }
 
   .statLabel {
-    color: var(--light-900);
+    color: var(--muted-foreground);
   }
 
-  /* Кнопка-ссылка внутри statItem */
   a {
     text-decoration: none;
     &:hover .statLabel {
@@ -94,13 +92,6 @@
 }
 
 .about {
-  max-width: 600px;
-  color: var(--light-100);
-}
-
-.socialIcons {
-  margin-top: 8px;
-  display: flex;
-  gap: 16px;
-  font-size: 24px;
+  max-width: 100%;
+  color: var(--foreground);
 }

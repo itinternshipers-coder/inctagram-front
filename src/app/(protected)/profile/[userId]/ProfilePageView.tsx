@@ -7,7 +7,6 @@ import { ProfilePostList } from '@/features/profile/ui/ProfilePostList/ProfilePo
 import type { Profile } from '@/features/profile/model/type'
 import type { Post } from '@/entities/post/model'
 import { useParams } from 'next/navigation'
-import s from './ProfilePage.module.scss'
 
 type Props = {
   profile: Profile['response']
@@ -52,7 +51,7 @@ export const ProfilePageView = ({ profile, posts }: Props) => {
   }
 
   return (
-    <div className={s.page}>
+    <>
       <ProfileHeader
         profile={profile}
         postsCount={posts.length}
@@ -64,6 +63,6 @@ export const ProfilePageView = ({ profile, posts }: Props) => {
         onSendMessage={handleSendMessage}
       />
       <ProfilePostList profile={profile} posts={posts} />
-    </div>
+    </>
   )
 }

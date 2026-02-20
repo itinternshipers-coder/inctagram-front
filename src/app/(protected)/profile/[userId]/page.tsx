@@ -13,6 +13,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
     <ProfilePageView
       profile={profile}
       posts={posts?.items || []}
+      userId={userId}
     />
   )
 }

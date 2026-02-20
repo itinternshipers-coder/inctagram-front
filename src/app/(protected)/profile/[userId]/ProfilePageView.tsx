@@ -1,19 +1,20 @@
 'use client'
 
-import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '@/features/auth/providers/auth-context'
-import { ProfileHeader } from '@/features/profile/ui/ProfileHeader/ProfileHeader'
-import { ProfilePostList } from '@/features/profile/ui/ProfilePostList/ProfilePostList'
-import type { Profile } from '@/features/profile/model/type'
 import type { Post } from '@/entities/post/model'
+import { AuthContext } from '@/features/auth/providers/auth-context'
+import type { Profile } from '@/features/profile/model/type'
+import { ProfileHeader } from '@/features/profile/ui/ProfileHeader/ProfileHeader'
+import { UserPostsList } from '@/features/profile/ui/UserPostsList/UserPostsList'
 import { useParams } from 'next/navigation'
+import { useContext, useEffect, useState } from 'react'
 
 type Props = {
   profile: Profile['response']
   posts: Post[]
+  userId: string
 }
 
-export const ProfilePageView = ({ profile, posts }: Props) => {
+export const ProfilePageView = ({ profile, posts, userId }: Props) => {
   const { user, isLoggedIn } = useContext(AuthContext)
   const params = useParams()
   const userIdFromUrl = params.userId as string
@@ -62,7 +63,7 @@ export const ProfilePageView = ({ profile, posts }: Props) => {
         onUnfollow={handleUnfollow}
         onSendMessage={handleSendMessage}
       />
-      <ProfilePostList profile={profile} posts={posts} />
+      <UserPostsList userId={userId} initialPosts={posts ?? []} initialTotalCount={posts.length ?? 0} />
     </>
   )
 }

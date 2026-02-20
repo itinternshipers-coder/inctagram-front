@@ -1,6 +1,6 @@
 import { baseApi } from '@/shared/api/base-api'
 import { API_ENDPOINTS, EndpointHelpers } from '@/shared/api/endpoints'
-import type { GetPosts, GetPostById, CreatePost, UpdatePost, DeletePost } from '../model/types'
+import type { GetPosts, GetPostById, CreatePost, UpdatePost, DeletePost, GetUserPosts } from '../model/types'
 
 export const postsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,6 +22,19 @@ export const postsApi = baseApi.injectEndpoints({
     getPostById: builder.query<GetPostById['response'], GetPostById['request']>({
       query: ({ id }) => EndpointHelpers.posts.byId(id),
       providesTags: (result, error, { id }) => [{ type: 'Post', id }],
+    }),
+
+    // Получить посты пользователя
+    // GET /posts/user/{userId}
+    getUserPosts: builder.query<GetUserPosts['response'], GetUserPosts['request']>({
+      query: ({ userId, ...params }) => ({
+        url: EndpointHelpers.posts.byUser(userId),
+        params,
+      }),
+      providesTags: (result, error, { userId }) =>
+        result
+          ? [...result.items.map(({ id }) => ({ type: 'Post' as const, id })), { type: 'Posts', id: `USER_${userId}` }]
+          : [{ type: 'Posts', id: `USER_${userId}` }],
     }),
 
     // Создать новый пост
@@ -70,4 +83,6 @@ export const {
   useCreatePostMutation,
   useUpdatePostMutation,
   useDeletePostMutation,
+  useGetUserPostsQuery,
+  useLazyGetUserPostsQuery,
 } = postsApi

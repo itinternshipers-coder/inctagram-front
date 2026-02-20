@@ -26,7 +26,7 @@ export type GetPosts = {
   request: {
     authorId?: string
   }
-  response: { items: Post[], pageSize: number, totalCount: number }
+  response: { items: Post[]; pageSize: number; totalCount: number }
   error: ErrorResponse
 }
 
@@ -35,7 +35,7 @@ export type GetPostById = {
   request: {
     id: string
   }
-  response: { items: Post[], pageSize: number, totalCount: number }
+  response: { items: Post[]; pageSize: number; totalCount: number }
   error: ErrorResponse
 }
 
@@ -72,4 +72,20 @@ export type DeletePost = {
   }
   response: void // 204 No Content
   error: ErrorResponse | AuthoriseError
+}
+
+// Получение постов пользователя
+export type GetUserPosts = {
+  request: {
+    userId: string
+    cursor?: string
+    pageSize?: string
+    sortDirection?: 'asc' | 'desc'
+  }
+  response: {
+    totalCount: number
+    pageSize: number
+    items: Post[]
+  }
+  error: ErrorResponse
 }

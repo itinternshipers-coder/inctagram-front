@@ -19,7 +19,9 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
       <div className={s.contentWrapper}>
         {isLoggedIn && <Sidebar role="user" />}
         <div className={s.contentBlock}>
-          <div className={!isLoggedIn ? s.childrenWithoutSidebar : ''}>{children}</div>
+          <div className={isLoggedIn ? `${s.children} ${s.childrenWithoutSidebar}` : `${s.children} ${s.childrenWithSidebar}`}>
+            {children}
+          </div>
         </div>
       </div>
     </>

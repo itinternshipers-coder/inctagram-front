@@ -5,7 +5,6 @@
 
 .contentBlock {
   flex: 1;
-  padding: 24px;
   display: flex;
   justify-content: center;
   min-width: 0;
@@ -17,7 +16,11 @@
 }
 
 .childrenWithoutSidebar {
-  padding: 0 154px;
+  padding: 36px 64px 0 24px;
+}
+
+.childrenWithSidebar {
+  padding: 36px 154px 0 154px;
 }
 
 .loader {

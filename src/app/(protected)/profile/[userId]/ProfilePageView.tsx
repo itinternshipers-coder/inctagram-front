@@ -25,10 +25,10 @@ export const ProfilePageView = ({ profile, posts }: Props) => {
     if (isLoggedIn && user?.userId) {
       const owner = user.userId === userIdFromUrl
       setIsOwner(owner)
-      // Если не владелец, запрашиваем статус подписки (заглушка)
+      // Если не владелец, запрос за статусом подписки (заглушка)
       if (!owner) {
         // TODO: fetch following status
-        // Для примера ставим false
+        // Для примера пока false
         setIsFollowing(false)
       }
     } else {

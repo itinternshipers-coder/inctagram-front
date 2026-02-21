@@ -14,7 +14,7 @@ export const ProfileLayoutDecorator = (Story: any, context: any) => {
   return (
     <StoreProvider>
       <ThemeProvider>
-        <MockAuthProvider value={{ user: mockUser, isLoggedIn, isLoading: false }}>
+        <MockAuthProvider value={{ user: mockUser, isLoggedIn, isLoading: false, isFetching: false }}>
           <div style={{ display: 'flex', minHeight: '100vh' }}>
             <Sidebar role="user" />
             <div style={{ flex: 1 }}>

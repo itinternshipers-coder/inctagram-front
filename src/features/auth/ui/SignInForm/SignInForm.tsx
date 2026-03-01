@@ -3,7 +3,7 @@
 import { ROUTES } from '@/shared/config/routes'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { GithubIcon, GoogleIcon } from '@/shared/icons/svgComponents'
+import { GithubIcon, YandexIcon } from '@/shared/icons/svgComponents'
 import { Card } from '@/shared/ui/Card/Card'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { Button } from '@/shared/ui/Button/Button'
@@ -17,6 +17,7 @@ import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { useAuth } from '@/features/auth/lib/use-auth'
 import { LoginFormData, LoginSchema } from '@/features/auth/lib/schemas/login-schema'
+import { useOAuth } from '../../hooks/use-oauth'
 
 export default function SignInForm() {
   const { login } = useAuth()
@@ -32,7 +33,7 @@ export default function SignInForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -77,6 +78,8 @@ export default function SignInForm() {
     }
   }
 
+  const { handleOAuth } = useOAuth()
+
   return (
     <Card className={s.form}>
       <Typography className={s.title} variant="h2">
@@ -84,12 +87,26 @@ export default function SignInForm() {
       </Typography>
 
       <div className={s.socialButtons}>
-        <Button as={Link} variant="link" href={ROUTES.PUBLIC.SIGN_IN} className="socialButton">
-          <GoogleIcon width={36} height={36} />
+        <Button
+          onClick={() => handleOAuth('yandex')}
+          as={Link}
+          variant="link"
+          href=""
+          disabled={isSubmitting}
+          className="socialButton"
+        >
+          <YandexIcon width={36} height={36} className={s.yandexIcon} />
         </Button>
 
-        <Button as={Link} variant="link" href={ROUTES.PUBLIC.SIGN_IN} className="socialButton">
-          <GithubIcon width={36} height={36} style={{ color: 'var(--foreground)' }} />
+        <Button
+          onClick={() => handleOAuth('github')}
+          href=""
+          as={Link}
+          variant="link"
+          disabled={isSubmitting}
+          className="socialButton"
+        >
+          <GithubIcon width={36} height={36} className={s.githubIcon} />
         </Button>
       </div>
 

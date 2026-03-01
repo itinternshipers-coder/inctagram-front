@@ -1,7 +1,7 @@
 'use client'
 
 import { ROUTES } from '@/shared/config/routes'
-import { GithubIcon, GoogleIcon } from '@/shared/icons/svgComponents'
+import { GithubIcon, YandexIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import { Card } from '@/shared/ui/Card/Card'
 import { CheckBox } from '@/shared/ui/CheckBox/CheckBox'
@@ -12,6 +12,7 @@ import { useSignUpForm } from '../../lib/use-signup-form'
 import Link from 'next/link'
 import s from './SignUpForm.module.scss'
 import Loader from '@/shared/ui/Loader/Loader'
+import { useOAuth } from '../../hooks/use-oauth'
 
 export const SignUpForm = () => {
   const {
@@ -26,6 +27,8 @@ export const SignUpForm = () => {
     onSubmit,
   } = useSignUpForm()
 
+  const { handleOAuth } = useOAuth()
+
   if (isLoading) {
     return <Loader />
   }
@@ -37,10 +40,10 @@ export const SignUpForm = () => {
           <Typography variant="h3">Sign Up</Typography>
 
           <div className={s.socialSignUp}>
-            <Button href="" as={Link} variant="link" disabled={isSubmitting}>
-              <GoogleIcon height="36px" width="36px" />
+            <Button onClick={() => handleOAuth('yandex')} href="" as={Link} variant="link" disabled={isSubmitting}>
+              <YandexIcon height="36px" width="36px" className={s.yandexIcon} />
             </Button>
-            <Button href="" as={Link} variant="link" disabled={isSubmitting}>
+            <Button onClick={() => handleOAuth('github')} href="" as={Link} variant="link" disabled={isSubmitting}>
               <GithubIcon height="36px" width="36px" className={s.githubIcon} />
             </Button>
           </div>

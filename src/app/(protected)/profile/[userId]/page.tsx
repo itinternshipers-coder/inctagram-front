@@ -9,11 +9,5 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
   const { profile, posts } = await fetchProfileData(userId)
   if (!profile) notFound()
 
-  return (
-    <ProfilePageView
-      profile={profile}
-      posts={posts?.items || []}
-      userId={userId}
-    />
-  )
+  return <ProfilePageView profile={profile} posts={posts?.items || []} userId={userId} />
 }

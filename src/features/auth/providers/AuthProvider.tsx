@@ -1,18 +1,34 @@
 'use client'
 import { ReactNode } from 'react'
+import { usePathname } from 'next/navigation'
 import { useMeQuery } from '../api/auth-api'
 import { AuthContext } from './auth-context'
+import { Loader } from '@/shared/ui/Loader/Loader'
+
+const OAUTH_CALLBACK_PATH = '/auth/oauth/'
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { data, isLoading, isFetching, error, isError } = useMeQuery(undefined, {
-    refetchOnMountOrArgChange: false,
-    refetchOnFocus: false,
-    refetchOnReconnect: false,
+  const pathname = usePathname()
+  const isOAuthCallback = pathname?.startsWith(OAUTH_CALLBACK_PATH) ?? false
+
+  const { data, isLoading, isFetching, error } = useMeQuery(undefined, {
+    skip: isOAuthCallback,
   })
 
-  const shouldShowLoading = isLoading && !isError
+  if (isOAuthCallback) {
+    return (
+      <AuthContext.Provider value={{ user: null, isLoggedIn: false, isLoading: true, isFetching: false }}>
+        {children}
+      </AuthContext.Provider>
+    )
+  }
 
-  const user = isError ? null : data || null
+  if (isLoading || isFetching) {
+    return <Loader />
+  }
+
+  const isFinalError = !!error && !isFetching
+  const user = isFinalError ? null : (data ?? null)
   const isLoggedIn = !!user
 
   return (
@@ -20,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         isLoggedIn,
-        isLoading: shouldShowLoading,
+        isLoading,
         isFetching,
       }}
     >

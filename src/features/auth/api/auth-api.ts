@@ -50,6 +50,12 @@ export const authApi = baseApi.injectEndpoints({
       query: () => API_ENDPOINTS.AUTH.ME,
       providesTags: ['Auth'],
     }),
+    getOAuthUrl: builder.mutation<{ url: string }, { provider: string }>({
+      query: ({ provider }) => ({
+        url: `/auth/oauth/${provider}`,
+        method: 'GET',
+      }),
+    }),
   }),
 })
 
@@ -61,4 +67,5 @@ export const {
   useResendConfirmMutation,
   useRefreshTokenMutation,
   useMeQuery,
+  useGetOAuthUrlMutation,
 } = authApi

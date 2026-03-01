@@ -11,13 +11,14 @@ type Props = {
 }
 
 export function PostView({ postId }: Props) {
-  const { data: post, isLoading, isError } = useGetPostByIdQuery({ id: postId })
+  const { data, isLoading, isError } = useGetPostByIdQuery({ id: postId })
+  const post = data?.item
   const { data: profile } = useGetProfileQuery(post?.authorId ?? skipToken)
-
-  if (!post) return null
   if (isLoading) {
     return <Loader />
   }
+  if (!post) return null
+
   if (isError) {
     console.log(isError)
   }

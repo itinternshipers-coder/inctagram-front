@@ -35,7 +35,7 @@ export type GetPostById = {
   request: {
     id: string
   }
-  response: { items: Post[]; pageSize: number; totalCount: number }
+  response: { item: Post; pageSize: number; totalCount: number }
   error: ErrorResponse
 }
 

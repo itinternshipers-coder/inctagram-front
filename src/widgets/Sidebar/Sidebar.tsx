@@ -132,13 +132,13 @@ const Sidebar = ({ role }: SidebarProps) => {
               onClick={() => handleClick(ROUTES.PUBLIC.HOME)}
             />
             <SidebarLinkItem
-              href={MOCK_ROUTES.plus}
+              href={ROUTES.MODALS.CREATE_POST}
               label="Create"
               ActiveIcon={<PlusSquareIcon />}
               InactiveIcon={<PlusSquareOutlineIcon />}
-              isActive={isActive(MOCK_ROUTES.plus)}
-              disabled={isDisabled(MOCK_ROUTES.plus)}
-              onClick={() => handleClick(MOCK_ROUTES.plus)}
+              isActive={isActive(ROUTES.MODALS.CREATE_POST)}
+              disabled={isDisabled(ROUTES.MODALS.CREATE_POST)}
+              onClick={() => handleClick(ROUTES.MODALS.CREATE_POST)}
             />
             <SidebarLinkItem
               href={ROUTES.PROTECTED.PROFILE}

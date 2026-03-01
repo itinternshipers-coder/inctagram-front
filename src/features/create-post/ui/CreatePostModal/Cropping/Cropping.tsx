@@ -1,0 +1,297 @@
+'use client'
+
+import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
+import { useImageUpload } from '@/features/uploadImage/useImageUpload'
+import getCroppedImg from '@/shared/lib/image/canvasUtils'
+import { Typography } from '@/shared/ui/Typography/Typography'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import Cropper, { Area } from 'react-easy-crop'
+import { ModalHeader } from '../ModalHeader/ModalHeader'
+import { AspectRatioSelector } from './components/AspectRatioSelector'
+import { ASPECT_RATIO_OPTIONS } from './lib/constants'
+import s from './Cropping.module.scss'
+import { GalleryImagesContainer } from './components/GalleryImagesContainer'
+import { useCroppingHandlers } from './hooks/useCroppingHandlers'
+import { useUploadPhotoToCropping } from './hooks/useUploadPhotoToCropping'
+import { photoDelete } from './lib/photoDeleteUtils'
+import { PreviewContainer } from './components/PreviewContainer'
+import { AspectRatio, PhotoType } from './lib/types'
+import { ZoomControls } from './components/ZoomControls'
+
+type CroppingProps = {
+  images: File[] // Массив изображений
+  onCropComplete?: (croppedImages: File[]) => void
+  onNext?: () => void
+  onBack?: () => void
+  currentStep: ModalSteps
+}
+
+export const Cropping = ({
+  images,
+  onCropComplete = () => {},
+  onNext = () => {},
+  onBack = () => {},
+  currentStep,
+}: CroppingProps) => {
+  const [photos, setPhotos] = useState<PhotoType[]>([])
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [selectedAspect, setSelectedAspect] = useState<AspectRatio>(ASPECT_RATIO_OPTIONS[0])
+  const [croppedPreviewUrl, setCroppedPreviewUrl] = useState<string | null>(null)
+  const cropDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const photosRef = useRef<PhotoType[]>([])
+
+  const { file, error, onSelectFile } = useImageUpload({
+    maxSizeMB: 10, // Ограничение 10MB
+    allowedTypes: ['image/png', 'image/jpeg'],
+  })
+  const { handleSaveCrop } = useCroppingHandlers({
+    photos,
+    onCropComplete,
+    onNext,
+  })
+  const { uploadFile } = useUploadPhotoToCropping({
+    photos,
+    setPhotos,
+    setCurrentIndex,
+  })
+
+  // Инициализация фотографий из пропса images
+  useEffect(() => {
+    const initializePhotos = () => {
+      // Очищаем предыдущие URL перед созданием новых
+      photosRef.current.forEach((photo) => {
+        try {
+          URL.revokeObjectURL(photo.originalUrl)
+          if (photo.croppedUrl) {
+            URL.revokeObjectURL(photo.croppedUrl)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке уже удаленных URL
+        }
+      })
+
+      const newPhotos: PhotoType[] = images.map((file, index) => {
+        const url = URL.createObjectURL(file)
+        return {
+          photoId: `${Date.now()}-${index}`,
+          file,
+          originalUrl: url,
+          isEdited: false,
+        }
+      })
+
+      photosRef.current = newPhotos
+      setPhotos(newPhotos)
+      if (newPhotos.length > 0) {
+        setCurrentIndex(0)
+      }
+    }
+
+    initializePhotos()
+
+    return () => {
+      // Очистка URL при размонтировании или изменении images
+      photosRef.current.forEach((photo) => {
+        try {
+          URL.revokeObjectURL(photo.originalUrl)
+          if (photo.croppedUrl) {
+            URL.revokeObjectURL(photo.croppedUrl)
+          }
+        } catch (e) {
+          // Игнорируем ошибки при очистке уже удаленных URL
+        }
+      })
+      photosRef.current = []
+    }
+  }, [images])
+
+  // Обновление preview с дебаунсом
+  const updateCroppedPreview = useCallback(async () => {
+    const currentPhoto = photosRef.current[currentIndex]
+
+    if (!currentPhoto?.croppedAreaPixels || !currentPhoto.originalUrl) return
+
+    try {
+      const croppedImageBlob = await getCroppedImg(currentPhoto.originalUrl, currentPhoto.croppedAreaPixels)
+      const previewUrl = URL.createObjectURL(croppedImageBlob)
+
+      setCroppedPreviewUrl((prev) => {
+        if (prev) {
+          try {
+            URL.revokeObjectURL(prev)
+          } catch (e) {
+            // Игнорируем ошибки при очистке
+          }
+        }
+        return previewUrl
+      })
+
+      // Обновляем фото с croppedUrl
+      setPhotos((prev) => {
+        const updated = prev.map((photo, index) =>
+          index === currentIndex ? { ...photo, croppedUrl: previewUrl } : photo
+        )
+        photosRef.current = updated
+        return updated
+      })
+    } catch (e) {
+      console.error('Error updating preview:', e)
+    }
+  }, [currentIndex])
+
+  useEffect(() => {
+    if (cropDebounceRef.current) {
+      clearTimeout(cropDebounceRef.current)
+    }
+    cropDebounceRef.current = setTimeout(() => {
+      if (photosRef.current[currentIndex]?.croppedAreaPixels) {
+        updateCroppedPreview()
+      }
+    }, 300)
+    return () => {
+      if (cropDebounceRef.current) {
+        clearTimeout(cropDebounceRef.current)
+        cropDebounceRef.current = null
+      }
+    }
+  }, [photos, currentIndex, updateCroppedPreview])
+
+  // Очистка croppedPreviewUrl при размонтировании
+  useEffect(() => {
+    return () => {
+      if (croppedPreviewUrl) {
+        try {
+          URL.revokeObjectURL(croppedPreviewUrl)
+        } catch (e) {
+          // Игнорируем ошибки при очистке
+        }
+      }
+    }
+  }, [croppedPreviewUrl])
+
+  const onCropCompleteHandler = useCallback(
+    (_: Area, croppedAreaPixels: Area) => {
+      setPhotos((prev) => {
+        const updated = prev.map((photo, index) =>
+          index === currentIndex
+            ? {
+                ...photo,
+                croppedAreaPixels,
+                isEdited: true,
+              }
+            : photo
+        )
+        photosRef.current = updated
+        return updated
+      })
+    },
+    [currentIndex]
+  )
+
+  const handleZoomChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setZoom(parseFloat(e.target.value))
+  }, [])
+
+  const handleAspectChange = useCallback(
+    (ratio: AspectRatio) => {
+      setSelectedAspect(ratio)
+      setCrop({ x: 0, y: 0 })
+
+      // Сбрасываем croppedAreaPixels для текущего фото
+      setPhotos((prev) => {
+        const updated = prev.map((photo, index) =>
+          index === currentIndex ? { ...photo, croppedAreaPixels: undefined } : photo
+        )
+        photosRef.current = updated
+        return updated
+      })
+    },
+    [currentIndex]
+  )
+  const handleSelectPhoto = useCallback((index: number) => {
+    setCurrentIndex(index)
+    // Сбрасываем состояние кропа для нового изображения
+    setCrop({ x: 0, y: 0 })
+    setZoom(1)
+  }, [])
+
+  const handleDeletePhoto = useCallback(
+    (index: number) => {
+      const { newPhotos, newCurrentIndex } = photoDelete(photos, index, currentIndex)
+      photosRef.current = newPhotos
+      setPhotos(newPhotos)
+      setCurrentIndex(newCurrentIndex)
+    },
+    [photos, currentIndex]
+  )
+
+  // Обработка нового файла
+  useEffect(() => {
+    if (file) {
+      uploadFile(file)
+    }
+  }, [file])
+
+  const currentPhoto = photos[currentIndex]
+  const canSave = photos.length > 0
+
+  return (
+    <div className={s.containerModalSquareCropping}>
+      <ModalHeader currentStep={currentStep} onBack={onBack} onNext={handleSaveCrop} disabled={!canSave} />
+      <div className={s.contentCropping}>
+        <div className={s.contentError}>
+          {error && (
+            <Typography variant={'bold_text_14'} className={s.error}>
+              {error}
+            </Typography>
+          )}
+        </div>
+        <div className={s.controlsSection}>
+          <AspectRatioSelector selectedAspect={selectedAspect} onChange={handleAspectChange} />
+          <PreviewContainer
+            photos={photos}
+            currentPhoto={currentPhoto}
+            croppedPreviewUrl={croppedPreviewUrl}
+            selectedAspect={selectedAspect}
+          />
+        </div>
+
+        <div className={s.galleryContainer}>
+          <GalleryImagesContainer
+            photos={photos}
+            currentIndex={currentIndex}
+            onChangeSelectPhoto={handleSelectPhoto}
+            onChangeDeletePhoto={handleDeletePhoto}
+            onSelectFile={onSelectFile}
+          />
+        </div>
+
+        <div className={s.zoomContent}>
+          <h3>Crop and Zoom Controls</h3>
+          <div className={s.imageSection}>
+            <div className={s.imageContainer}>
+              {currentPhoto?.originalUrl && (
+                <Cropper
+                  image={currentPhoto.originalUrl}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={selectedAspect.value}
+                  onCropChange={setCrop}
+                  onZoomChange={setZoom}
+                  onCropComplete={onCropCompleteHandler}
+                  classes={{ containerClassName: s.cropperContainer }}
+                />
+              )}
+            </div>
+
+            <div className={s.zoomControls}>
+              <ZoomControls zoomControls={zoom} setZoom={setZoom} onZoomChange={handleZoomChange} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

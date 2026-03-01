@@ -3,6 +3,7 @@
 import { useMeQuery } from '@/features/auth/api/auth-api'
 import { useGetProfileQuery } from '@/features/profile/api/profile-api'
 import { ProfileEditForm } from '@/features/profileEdit/ui/ProfileEditForm/ProfileEditForm'
+import Loader from '@/shared/ui/Loader/Loader'
 import s from './page.module.scss'
 
 export default function SettingsRedirect() {
@@ -15,7 +16,7 @@ export default function SettingsRedirect() {
     skip: !me?.userId,
   })
 
-  if (isMeLoading || isProfileLoading) return <div className={s.container}>loading settings...</div>
+  if (isMeLoading || isProfileLoading) return <Loader />
   if (isMeError || isProfileError || !me || !profile) return <div className={s.container}>Ошибка загрузки профиля.</div>
 
   const getAvatarUrl = (avatar: string | { url: string; width: number; height: number }[] | undefined): string => {
@@ -42,8 +43,8 @@ export default function SettingsRedirect() {
   }
 
   return (
-    <>
+    <div className={s.container}>
       <ProfileEditForm initialData={initialData} userId={profile.userId} />
-    </>
+    </div>
   )
 }

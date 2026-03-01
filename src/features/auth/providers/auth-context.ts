@@ -6,10 +6,12 @@ export type AuthContextType = {
   user: Me['response'] | null
   isLoggedIn: boolean
   isLoading: boolean
+  isFetching: boolean
 }
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoggedIn: false,
   isLoading: false,
+  isFetching: false
 })

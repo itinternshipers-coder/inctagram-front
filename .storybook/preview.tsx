@@ -1,13 +1,17 @@
+import { initialize, mswLoader } from 'msw-storybook-addon'
+import { handlers } from './mocks/handlers'
 import type { Preview } from '@storybook/nextjs-vite'
-import '../src/styles/globals.scss'
+import '@/styles/globals.scss'
 import React from 'react'
-
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import authSlice from '../src/features/auth/model/auth-slice'
-import { baseApi } from '../src/shared/api/base-api'
+import authSlice from '@/features/auth/model/auth-slice'
+import { baseApi } from '@/shared/api/base-api'
 
-// Создаём store для Storybook
+
+// Инициализация MSW
+initialize()
+
 const createMockStore = () => {
   return configureStore({
     reducer: {
@@ -20,6 +24,9 @@ const createMockStore = () => {
 
 const preview: Preview = {
   parameters: {
+    msw: {
+      handlers,
+    },
     nextjs: {
       appDirectory: true,
       navigation: {
@@ -37,8 +44,8 @@ const preview: Preview = {
       test: 'todo',
     },
   },
+  loaders: [mswLoader],
   decorators: [
-    // Redux Provider декоратор
     (Story) => {
       const store = createMockStore()
       return (
@@ -47,15 +54,11 @@ const preview: Preview = {
         </Provider>
       )
     },
-
     (Story, context) => {
       const theme = context.globals.theme || 'dark'
-
-      // Применяем тему к body
       if (typeof document !== 'undefined') {
         document.documentElement.setAttribute('data-theme', theme)
       }
-
       return React.createElement('div', { style: { padding: '20px', minHeight: '100vh' } }, React.createElement(Story))
     },
   ],

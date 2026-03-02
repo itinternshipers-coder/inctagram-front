@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   if (isOAuthCallback) {
     return (
-      <AuthContext.Provider value={{ user: null, isLoggedIn: false, isLoading: true, isFetching: false }}>
+      <AuthContext.Provider value={{ user: null, isLoggedIn: false, isLoading: false, isFetching: false }}>
         {children}
       </AuthContext.Provider>
     )

@@ -8,7 +8,10 @@ export type PhotoType = {
 export type UserPostType = {
   id: string
   authorId: string
-  userName?: string
+  author?: {
+    id: string
+    username: string
+  }
   description?: string
   createdAt: string
   updatedAt: string

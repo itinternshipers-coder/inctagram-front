@@ -35,7 +35,7 @@ export type GetPostById = {
   request: {
     id: string
   }
-  response: { item: Post; pageSize: number; totalCount: number }
+  response: Post & { author?: { id: string; username: string } }
   error: ErrorResponse
 }
 

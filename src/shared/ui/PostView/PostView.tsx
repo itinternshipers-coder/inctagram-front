@@ -11,8 +11,7 @@ type Props = {
 }
 
 export function PostView({ postId }: Props) {
-  const { data, isLoading, isError } = useGetPostByIdQuery({ id: postId })
-  const post = data?.item
+  const { data: post, isLoading, isError } = useGetPostByIdQuery({ id: postId })
   const { data: profile } = useGetProfileQuery(post?.authorId ?? skipToken)
   if (isLoading) {
     return <Loader />

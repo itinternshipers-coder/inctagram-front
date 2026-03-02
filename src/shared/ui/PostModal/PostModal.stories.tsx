@@ -55,7 +55,10 @@ const mockComments: CommentType[] = [
 const mockPostData: UserPostType = {
   id: 'post-uuid-123',
   authorId: mockAuthor.id,
-  userName: mockAuthor.username,
+  author: {
+    id: mockAuthor.id,
+    username: mockAuthor.username,
+  },
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Это демонстрационное описание.',
   createdAt: '2025-07-03T10:00:00.000Z',
   updatedAt: '2025-07-03T10:05:00.000Z',
@@ -117,7 +120,10 @@ LoadingEmptyState.args = {
   postData: {
     id: 'loading-id',
     authorId: '',
-    userName: 'Loading...',
+    author: {
+      id: '',
+      username: 'Loading...',
+    },
     description: '',
     createdAt: '',
     updatedAt: '',

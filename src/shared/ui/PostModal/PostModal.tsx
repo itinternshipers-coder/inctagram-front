@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import s from './PostModal.module.scss'
 import { CommentType, PostModalProps } from '@/features/post/model/type'
 import { AuthorMenuItems } from '@/shared/ui/PostModal/PostHeader/PostActionsMenu/AuthorMenuItems/AuthorMenuItems'
@@ -28,6 +29,7 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
   const { isSubscribed, handleToggleSubscribe, handleShare } = usePostActions()
   const { isLoggedIn } = useAuthContext()
   const dispatch = useAppDispatch()
+  const router = useRouter()
 
   return (
     <>
@@ -119,7 +121,7 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
           isCancelPrimary={true}
           onAction={() => {
             postModal.deletePost({ id: postData.id })
-            dispatch(closeCreateModal())
+            router.back()
           }}
           onCancel={() => dispatch(closeCreateModal())}
         />

@@ -30,8 +30,6 @@ const mockPhotos: PostPhoto[] = [
   },
 ]
 
-const mockUserImage = 'https://placehold.co/100?text=User'
-
 const meta = {
   title: 'Entities/Post/PostCard',
   component: PostCard,
@@ -44,8 +42,6 @@ type Story = StoryObj<typeof meta>
 export const SinglePhoto: Story = {
   args: {
     photos: [mockPhotos[0]],
-    userProfileImage: mockUserImage,
-    userName: 'Alex',
     timeAgo: '22 min',
     description: 'A post with a single image. Short description.',
     postId: '122011',
@@ -55,8 +51,6 @@ export const SinglePhoto: Story = {
 export const MultiplePhotos: Story = {
   args: {
     photos: mockPhotos,
-    userProfileImage: mockUserImage,
-    userName: 'Sam',
     timeAgo: '1 hour',
     description:
       'A post with multiple images. This description is long enough to trigger the "Show more" button, so you can test both collapsed and expanded states.',
@@ -67,8 +61,6 @@ export const MultiplePhotos: Story = {
 export const LongTextCollapsed: Story = {
   args: {
     photos: [mockPhotos[0]],
-    userProfileImage: mockUserImage,
-    userName: 'Taylor',
     timeAgo: '5 min',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',

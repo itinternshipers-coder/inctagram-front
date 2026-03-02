@@ -2,6 +2,7 @@
 
 import { Post } from '@/entities/post/model'
 import { Skeleton } from '@/shared/ui/Skeleton/Skeleton'
+import Link from 'next/link'
 import s from './UserPostsList.module.scss'
 import { useUserPostsInfinite } from './lib/useUserPostsInfinite'
 
@@ -38,13 +39,15 @@ export const UserPostsList = ({ userId, initialPosts, initialTotalCount }: Props
         <div className={s.grid}>
           {allPosts.map((post) => (
             <article key={post.id} className={s.card}>
-              {post.photos?.[0]?.url ? (
-                <img className={s.image} src={post.photos[0].url} alt={post.description || 'Post'} />
-              ) : (
-                <div className={s.empty}>
-                  <span>{post.description?.substring(0, 50) || 'No description'}...</span>
-                </div>
-              )}
+              <Link href={`/post/${post.id}`}>
+                {post.photos?.[0]?.url ? (
+                  <img className={s.image} src={post.photos[0].url} alt={post.description || 'Post'} />
+                ) : (
+                  <div className={s.empty}>
+                    <span>{post.description?.substring(0, 50) || 'No description'}...</span>
+                  </div>
+                )}
+              </Link>
             </article>
           ))}
         </div>

@@ -1,7 +1,6 @@
 'use client'
 
 import { useModalSteps } from '@/features/create-post/model/lib/useModalSteps'
-import { ROUTES } from '@/shared/config/routes'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { AddPhoto } from './AddPhoto/AddPhoto'
@@ -10,7 +9,6 @@ import { Filters } from './Filters/Filters'
 import { Publication } from './Publication/Publication'
 
 export const CreatePostModal = () => {
-  const [isOpen, setIsOpen] = useState(true)
   const [images, setImages] = useState<File[]>([])
 
   const { currentStep, goNext, goBack } = useModalSteps()
@@ -27,16 +25,13 @@ export const CreatePostModal = () => {
 
   // Обработчик закрытия модалки
   const handleCloseModal = () => {
-    setIsOpen(false)
-    router.push(ROUTES.PUBLIC.HOME)
+    router.back()
   }
 
   // Обработчик обработанного изображения и применения фильтров
   const handleCropAndFilter = (images: File[]) => {
     setImages(images)
   }
-
-  if (!isOpen) return null
 
   return (
     <>

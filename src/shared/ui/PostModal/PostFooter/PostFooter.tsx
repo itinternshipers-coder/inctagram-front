@@ -1,5 +1,6 @@
 import { useAuthContext } from '@/features/auth/lib/use-auth-context'
 import * as Toggle from '@radix-ui/react-toggle'
+import { useState } from 'react'
 // import * as Toggle from '@radix-ui/react-to'
 import s from '../PostModal.module.scss'
 import { Button } from '../../Button/Button'
@@ -27,9 +28,10 @@ export const PostFooter = ({
   handlePublishPost,
   author,
   displayDate,
-  setValue,
-  value,
+  // setValue,
+  // value,
 }: PostFooterProps) => {
+  const [value, setValue] = useState('')
   const onPublish = () => {
     handlePublishPost(value)
     setValue('')

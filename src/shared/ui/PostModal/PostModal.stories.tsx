@@ -2,8 +2,8 @@ import { Meta, StoryFn } from '@storybook/nextjs-vite'
 import { Provider } from 'react-redux'
 import { store } from '@/store/store'
 import React, { useState } from 'react'
-
-import PostModal, { UserPostType, CommentType, Author, PhotoType, PostModalProps } from './PostModal'
+import PostModal from './PostModal'
+import { Author, CommentType, PhotoType, PostModalProps, UserPostType } from '@/features/post/model/type'
 
 const mockAuthor: Author = {
   id: 'user-uuid-1',
@@ -55,7 +55,10 @@ const mockComments: CommentType[] = [
 const mockPostData: UserPostType = {
   id: 'post-uuid-123',
   authorId: mockAuthor.id,
-  userName: mockAuthor.username,
+  author: {
+    id: mockAuthor.id,
+    username: mockAuthor.username,
+  },
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Это демонстрационное описание.',
   createdAt: '2025-07-03T10:00:00.000Z',
   updatedAt: '2025-07-03T10:05:00.000Z',
@@ -117,7 +120,10 @@ LoadingEmptyState.args = {
   postData: {
     id: 'loading-id',
     authorId: '',
-    userName: 'Loading...',
+    author: {
+      id: '',
+      username: 'Loading...',
+    },
     description: '',
     createdAt: '',
     updatedAt: '',

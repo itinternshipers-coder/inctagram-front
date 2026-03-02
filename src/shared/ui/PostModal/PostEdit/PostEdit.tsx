@@ -1,4 +1,4 @@
-import { Author } from '../PostModal'
+import { Author } from '@/features/post/model/type'
 import * as Dialog from '@radix-ui/react-dialog'
 
 import s from '../PostModal.module.scss'
@@ -7,7 +7,7 @@ import { CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import TextArea from '../../TextArea/TextArea'
 import { useState } from 'react'
 import { useAppDispatch } from '@/shared/lib/hooks'
-import { openEditModal, Post } from '@/entities/post/model'
+import { openEditModal } from '@/entities/post/model'
 
 type PostEditHeaderProps = {
   author: Author
@@ -46,7 +46,7 @@ export const PostEditHeader = ({ author, postDataId }: PostEditHeaderProps) => {
             <div className={s.charCount}>{value.length}/500</div>
           </div>
           <div className={s.editFooter}>
-            <Button onClick={() => dispatch(openEditModal(postDataId))}>Save chage </Button>
+            <Button onClick={() => dispatch(openEditModal(postDataId))}>Save change </Button>
           </div>
         </div>
       </div>

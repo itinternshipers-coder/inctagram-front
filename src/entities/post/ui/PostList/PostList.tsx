@@ -1,4 +1,5 @@
 'use client'
+
 import { formatTimeAgo } from '@/shared/lib/formatTimeAgo'
 import { Post } from '../../model'
 import { PostCard } from '../PostCard/PostCard'
@@ -15,11 +16,9 @@ export const PostList = ({ posts }: Props) => {
         <PostCard
           key={post.id}
           photos={post.photos}
-          //пока нет profiles API slice передаём моковые данные
-          userProfileImage={'https://placehold.co/100?text=User'}
-          userName={'userName'}
           timeAgo={formatTimeAgo(post.createdAt)}
           description={post.description}
+          postId={post.id}
         />
       ))}
     </div>

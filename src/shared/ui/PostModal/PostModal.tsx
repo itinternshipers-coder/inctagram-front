@@ -1,129 +1,35 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
+import s from './PostModal.module.scss'
+import { CommentType, PostModalProps } from '@/features/post/model/type'
+import { AuthorMenuItems } from '@/shared/ui/PostModal/PostHeader/PostActionsMenu/AuthorMenuItems/AuthorMenuItems'
+import { ViewerMenuItems } from '@/shared/ui/PostModal/PostHeader/PostActionsMenu/ViewerMenuItems/ViewerMenuItems'
 import * as Dialog from '@radix-ui/react-dialog'
-import { useState } from 'react'
 import { CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '../Button/Button'
 import { ImageGallery } from './ImageGallery/ImageGallery'
 import { Comment } from './Comment/Comment'
-import { useDeletePostMutation, useUpdatePostMutation } from '@/entities/post/model'
-import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks'
+import { useAppDispatch } from '@/shared/lib/hooks'
 import { Modal } from '../Modal/Modal'
 import { PostHeader } from './PostHeader/PostHeader'
 import { PostEditHeader } from './PostEdit/PostEdit'
 import { PostFooter } from './PostFooter/PostFooter'
-import {
-  openCreateModal,
-  closeCreateModal,
-  closeEditModal,
-  selectPost,
-  toggleOptimisticLike,
-  selectSelectedPostId,
-  selectIsCreateModalOpen,
-  selectIsEditModalOpen,
-} from '@/entities/post/model/post-slice'
-import s from './PostModal.module.scss'
-
-export type PhotoType = {
-  photoId: string
-  url: string
-  order: number
-  createdAt: string
-}
-
-export type UserPostType = {
-  id: string
-  authorId: string
-  userName: string
-  description?: string
-  createdAt: string
-  updatedAt: string
-  photos?: PhotoType[]
-}
-
-export type Author = {
-  id: string
-  username: string
-  avatarUrl: string
-}
-
-export type CommentType = {
-  id: string
-  user: Author
-  text: string
-  likesCount?: number
-  time: string
-  replies?: CommentType[]
-}
-
-export type PostModalProps = {
-  postData: UserPostType
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  comments: CommentType[]
-}
+import { closeCreateModal, closeEditModal } from '@/entities/post/model/post-slice'
+import { PostActionsMenu } from './PostHeader/PostActionsMenu/PostActionsMenu'
+import { usePostModal, usePostAuthor, usePostActions } from '@/features/post/lib'
+import { useAuthContext } from '@/features/auth/lib/use-auth-context'
 
 const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) => {
   const displayDate = new Date(postData.createdAt).toLocaleDateString()
   // const comments = postData.comments || []
   const photos = postData.photos || []
-  const [value, setValue] = useState('')
-  const [localLiked, setLocalLiked] = useState(false)
-
-  const [deletePost] = useDeletePostMutation()
-  const [updatePost] = useUpdatePostMutation()
-
+  const postModal = usePostModal(postData.id, postData.description ?? '')
+  const { author, isAuthor } = usePostAuthor(postData.authorId, postData.author?.username)
+  const { isSubscribed, handleToggleSubscribe, handleShare } = usePostActions()
+  const { isLoggedIn } = useAuthContext()
   const dispatch = useAppDispatch()
-
-  const selectedPostId = useAppSelector(selectSelectedPostId)
-  const IsCreateModalOpen = useAppSelector(selectIsCreateModalOpen)
-  const isEditModalOpen = useAppSelector(selectIsEditModalOpen)
-
-  const isEditingThisPost = selectedPostId === postData.id
-
-  // Временный объект автора, если у тебя нет отдельного author в API
-  const author = {
-    id: postData.authorId,
-    username: 'NoName',
-    avatarUrl: '',
-  }
-
-  const handleToggleLike = () => {
-    dispatch(toggleOptimisticLike(postData.id))
-  }
-
-  const handleAddBookmark = () => {
-    // TODO: подключить мутацию addBookmark
-  }
-
-  const handleShare = () => {
-    // TODO: подключить мутацию sharePost
-  }
-
-  const cancelEditPost = () => {
-    dispatch(closeEditModal())
-  }
-
-  const handleEditPost = () => {
-    setValue(postData.description || '')
-    dispatch(selectPost(postData.id))
-  }
-
-  const handleSavePost = () => {
-    updatePost({ id: postData.id, body: { description: value } })
-    dispatch(closeEditModal())
-  }
-
-  const handleDeletePost = () => {
-    dispatch(openCreateModal())
-  }
-
-  const handlePublishPost = () => {
-    // TODO: подключить мутацию addComment
-    setValue('')
-  }
-
-  const handleOnChange = (username: string) => {
-    setValue(`@${username} `)
-  }
+  const router = useRouter()
 
   return (
     <>
@@ -137,10 +43,27 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
               </div>
 
               <div className={s.modalRight}>
-                {!isEditingThisPost && (
-                  <PostHeader author={author} onEdit={handleEditPost} onDelete={handleDeletePost} />
+                {!postModal.isEditingThisPost && (
+                  <PostHeader
+                    author={author}
+                    actionsMenu={
+                      isLoggedIn && (
+                        <PostActionsMenu>
+                          {isAuthor ? (
+                            <AuthorMenuItems onEdit={postModal.handleEditPost} onDelete={postModal.handleDeletePost} />
+                          ) : (
+                            <ViewerMenuItems
+                              onCopy={handleShare}
+                              onToggleSubscribe={handleToggleSubscribe}
+                              isSubscribed={isSubscribed}
+                            />
+                          )}
+                        </PostActionsMenu>
+                      )
+                    }
+                  />
                 )}
-                {isEditingThisPost ? (
+                {postModal.isEditingThisPost ? (
                   <PostEditHeader author={author} postDataId={postData.id} />
                 ) : (
                   <>
@@ -155,28 +78,28 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
                           time={c.time}
                           likesCount={c.likesCount}
                           replies={c.replies}
-                          handleOnChange={handleOnChange}
+                          handleOnChange={postModal.handleOnChange}
                         />
                       ))}
                     </div>
 
                     <PostFooter
-                      localLiked={localLiked}
-                      handleToggleLike={handleToggleLike}
+                      localLiked={postModal.localLiked}
+                      handleToggleLike={postModal.handleToggleLike}
                       handleShare={handleShare}
-                      handleAddBookmark={handleAddBookmark}
-                      handlePublishPost={handlePublishPost}
+                      handleAddBookmark={postModal.handleAddBookmark}
+                      handlePublishPost={postModal.handlePublishPost}
                       author={author}
                       displayDate={displayDate}
-                      setValue={setValue}
-                      value={value}
+                      setValue={postModal.setValue}
+                      value={postModal.value}
                     />
                   </>
                 )}
               </div>
             </Dialog.Content>
 
-            {!isEditingThisPost && (
+            {!postModal.isEditingThisPost && (
               <Dialog.Close asChild>
                 <Button variant="tertiary" className={s.closeButton}>
                   <CloseOutlineIcon />
@@ -186,7 +109,7 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
           </div>
         </Dialog.Portal>
       </Dialog.Root>
-      {IsCreateModalOpen && (
+      {postModal.isCreateModalOpen && (
         <Modal
           open={true}
           onOpenChange={() => {}}
@@ -197,13 +120,13 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
           cancelButtonText="No"
           isCancelPrimary={true}
           onAction={() => {
-            deletePost({ id: postData.id })
-            dispatch(closeCreateModal())
+            postModal.deletePost({ id: postData.id })
+            router.back()
           }}
           onCancel={() => dispatch(closeCreateModal())}
         />
       )}
-      {isEditModalOpen && (
+      {postModal.isEditModalOpen && (
         <Modal
           open={true}
           onOpenChange={() => dispatch(closeEditModal())}
@@ -213,8 +136,8 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
           buttonText="Yes"
           cancelButtonText="No"
           isCancelPrimary={false}
-          onAction={handleSavePost}
-          onCancel={cancelEditPost}
+          onAction={postModal.handleSavePost}
+          onCancel={postModal.cancelEditPost}
         />
       )}
     </>

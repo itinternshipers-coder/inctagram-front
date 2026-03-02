@@ -12,7 +12,7 @@ const inter = Inter({
   variable: '--font-family-primary',
 })
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
       <body>
@@ -20,7 +20,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ThemeProvider>
             <AuthProvider>
               <AuthWrapper>
-                <main>{children}</main>
+                <main>
+                  {children}
+                  {modal}
+                </main>
               </AuthWrapper>
             </AuthProvider>
           </ThemeProvider>

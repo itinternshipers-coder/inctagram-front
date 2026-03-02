@@ -1,4 +1,4 @@
-import { GetPostById } from '@/entities/post/model'
+import { GetPosts } from '@/entities/post/model'
 import { Profile } from '@/features/profile/model/type'
 import { EndpointHelpers } from '@/shared/api/endpoints'
 import { normalizeError } from '@/shared/api/error-utils'
@@ -42,7 +42,7 @@ export async function fetchProfileData(userId: string) {
     let posts = null
     if (postsRes.ok) {
       try {
-        posts = (await postsRes.json()) as GetPostById['response']
+        posts = (await postsRes.json()) as GetPosts['response']
       } catch (e) {
         console.warn('Failed to parse posts response:', e)
       }

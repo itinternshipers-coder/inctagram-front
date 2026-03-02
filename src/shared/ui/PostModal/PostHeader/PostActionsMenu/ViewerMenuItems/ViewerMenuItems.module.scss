@@ -1,0 +1,18 @@
+.dropdownItem {
+  padding: 12px;
+  width: 137px;
+  height: 45px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #171717;
+}
+
+.dropdownItem:hover,
+.dropdownItem:focus {
+  background-color: #555;
+}

@@ -1,0 +1,21 @@
+.container {
+  background: var(--background);
+  display: flex;
+  width: 100%;
+  height: 60px;
+  padding: 0 60px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  justify-content: space-between;
+}
+
+.superAdmin {
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-regular);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}

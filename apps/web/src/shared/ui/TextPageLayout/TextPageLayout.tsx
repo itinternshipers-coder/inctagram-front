@@ -1,0 +1,31 @@
+import { ROUTES } from '@/shared/config/routes'
+import Link from 'next/link'
+import { ArrowBackOutlineIcon } from '@inctagram/ui'
+import s from './TextPageLayout.module.scss'
+
+type TextPageLayoutProps = {
+  title: string
+  children: React.ReactNode
+  backHref?: string
+}
+
+const TextPageLayout = ({ title, children, backHref = ROUTES.PUBLIC.SIGN_UP }: TextPageLayoutProps) => {
+  return (
+    <div className={s.container}>
+      <div className={s.backBlock}>
+        <Link href={backHref} className={s.backLink} aria-label="Назад">
+          <ArrowBackOutlineIcon className={s.arrowIcon} />
+          <span> Back to Sign Up</span>
+        </Link>
+      </div>
+
+      <div className={s.titleBar}>
+        <h1 className={s.title}>{title}</h1>
+      </div>
+
+      <div className={s.content}>{children}</div>
+    </div>
+  )
+}
+
+export default TextPageLayout

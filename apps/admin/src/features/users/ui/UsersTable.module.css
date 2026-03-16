@@ -1,0 +1,66 @@
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable:hover {
+  color: var(--primary);
+}
+
+.row {
+  border-bottom: 1px solid var(--border);
+}
+
+.row:hover {
+  background-color: var(--muted);
+}
+
+.td {
+  padding: 12px 16px;
+  vertical-align: middle;
+}
+
+.userIdCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.blockIcon {
+  color: var(--foreground);
+  flex-shrink: 0;
+}
+
+:global([data-theme="light"]) .blockIcon {
+  color: var(--danger-500);
+}
+
+.moreButton {
+  background: none;
+  border: none;
+  color: var(--foreground);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.moreButton:hover {
+  color: var(--primary);
+}

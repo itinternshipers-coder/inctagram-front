@@ -1,0 +1,25 @@
+{
+  "name": "@inctagram/admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001"
+  },
+  "dependencies": {
+    "@inctagram/ui": "workspace:*",
+    "@apollo/client": "^3.13.0",
+    "graphql": "^16.10.0",
+    "next": "16.0.10",
+    "react": "19.2.1",
+    "react-dom": "19.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "sass": "^1.93.2",
+    "typescript": "^5"
+  }
+}

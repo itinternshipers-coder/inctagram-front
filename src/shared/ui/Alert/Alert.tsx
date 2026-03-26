@@ -2,18 +2,30 @@
 import { CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '@/shared/ui/Button/Button'
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import s from '@/shared/ui/Alert/Alert.module.scss'
 
 type AlertsProps = {
   status: 'success' | 'error'
   text?: string
   position: 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right'
+  autoDismiss?: number
 }
 
-export const Alert = ({ status, text, position }: AlertsProps) => {
+export const Alert = ({ status, text, position, autoDismiss }: AlertsProps) => {
   const [isVisible, setIsVisible] = useState(true)
   const [isClosing, setIsClosing] = useState(false)
+
+  useEffect(() => {
+    if (!autoDismiss) return
+
+    const timer = setTimeout(() => {
+      setIsClosing(true)
+      setTimeout(() => setIsVisible(false), 600)
+    }, autoDismiss)
+
+    return () => clearTimeout(timer)
+  }, [autoDismiss])
 
   const onClickHandler = () => {
     setIsClosing(true)

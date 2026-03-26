@@ -1,7 +1,23 @@
+.sectionTitle {
+  margin: 0 0 14px 0;
+}
+
 .subscriptionCard {
   display: flex;
   flex-direction: column;
   padding: 12px 20px;
+  margin: 0 0 12px 0;
+  gap: 10px;
+
+  .subscriptionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .subscriptionPlanName {
+      font-weight: var(--font-weight-semibold);
+    }
+  }
 
   .subscriptionInfo {
     display: flex;
@@ -10,7 +26,7 @@
     .subscriptionField {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
 
       .label {
         color: var(--hover);
@@ -19,8 +35,28 @@
   }
 }
 
+.badge {
+  font-weight: var(--font-weight-semibold);
+
+  &Active {
+    color: var(--warning-300);
+  }
+  &Queued {
+    color: var(--success-900);
+  }
+  &Cancelled {
+    color: var(--danger-500);
+  }
+  &Expired {
+    color: var(--danger-100);
+  }
+  &Pending {
+    color: var(--accent-500);
+  }
+}
+
 .autoRenewalWrapper {
-  margin: 22px 0 30px 0;
+  margin: 22px 0;
 }
 
 .radioCard {
@@ -41,4 +77,22 @@
   justify-content: flex-end;
   align-items: center;
   gap: 64px;
+}
+
+.paymentButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.loadingContainer {
+  justify-content: center;
+  padding: 84px;
+  display: flex;
 }

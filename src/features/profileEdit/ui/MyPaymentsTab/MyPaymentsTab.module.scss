@@ -26,3 +26,35 @@
     background-color: var(--background-element);
   }
 }
+
+.loadingContainer {
+  justify-content: center;
+  padding: 84px;
+  display: flex;
+}
+
+.paginationWrapper {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 0;
+  flex-wrap: wrap;
+}
+
+.pageSizeSelector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.pageSizeSelect {
+  background-color: var(--background-element);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+}

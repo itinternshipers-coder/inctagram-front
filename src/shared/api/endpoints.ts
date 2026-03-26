@@ -30,6 +30,14 @@ export const API_ENDPOINTS = {
     UPLOAD_AVATAR: '/profile/upload-avatar',
     DELETE_AVATAR: '/profile/avatar',
   },
+  SUBSCRIPTIONS: {
+    PLANS: '/subscriptions/plans',
+    CREATE: '/subscriptions/create',
+    CAPTURE: '/subscriptions/capture',
+    CURRENT: '/subscriptions/current',
+    BASE: '/subscriptions',
+    MY_PAYMENTS: '/subscriptions/my-payments',
+  },
 } as const
 
 // Хелперы для динамических путей
@@ -46,5 +54,9 @@ export const EndpointHelpers = {
   },
   profile: {
     byId: (userId: string) => `/profile/${userId}`,
+  },
+  subscriptions: {
+    capture: (orderId: string) => `/subscriptions/capture/${orderId}`,
+    autoRenewal: (subscriptionId: string) => `/subscriptions/${subscriptionId}/auto-renewal`,
   },
 }

@@ -86,6 +86,7 @@ const Pagination = ({ totalCount, itemsPerPage, currentPage, onChange, siblingCo
     <div className={s.pagination}>
       {/* Кнопка "Назад" */}
       <button
+        type="button"
         className={s.navButton}
         onClick={() => goTo(safeCurrent - 1)}
         disabled={safeCurrent === 1}
@@ -103,9 +104,11 @@ const Pagination = ({ totalCount, itemsPerPage, currentPage, onChange, siblingCo
             </span>
           ) : (
             <button
+              type="button"
               key={item}
               className={s.pageButton + (item === safeCurrent ? ` ${s.active}` : '')}
               onClick={() => goTo(item)}
+              disabled={item === safeCurrent}
               onKeyDown={(e) => {
                 if (e.key === 'ArrowLeft') goTo(safeCurrent - 1)
                 if (e.key === 'ArrowRight') goTo(safeCurrent + 1)
@@ -119,6 +122,7 @@ const Pagination = ({ totalCount, itemsPerPage, currentPage, onChange, siblingCo
       </div>
 
       <button
+        type="button"
         className={s.navButton}
         onClick={() => goTo(safeCurrent + 1)}
         disabled={safeCurrent === totalPages}

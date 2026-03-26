@@ -26,9 +26,12 @@
         color: var(--foreground);
       }
 
-      &.active {
-        background: var(--light-100);
-        color: var(--dark-900);
+      &.active,
+      &:disabled {
+        background: var(--foreground);
+        color: var(--background);
+        cursor: default;
+        opacity: 1;
       }
     }
 
@@ -62,7 +65,7 @@
 .pageContainer {
   color: var(--foreground);
   display: flex;
-  gap: 24px;
+  gap: 20px;
 }
 
 .select {
@@ -80,4 +83,6 @@
   align-items: center;
   display: flex;
   justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
 }

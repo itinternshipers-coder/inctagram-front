@@ -11,7 +11,10 @@ import { MyPaymentsTab } from '../MyPaymentsTab/MyPaymentsTab'
 import Tabs from '@/shared/ui/Tabs/Tabs'
 import { Alert } from '@/shared/ui/Alert/Alert'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useGetProfileQuery } from '@/features/profile/api/profile-api'
+
+const TAB_KEYS = ['general', 'devices', 'account-management', 'my-payments'] as const
 
 type ProfileEditFormProps = {
   initialData: ProfileEditFormValues
@@ -19,6 +22,10 @@ type ProfileEditFormProps = {
 }
 
 export function ProfileEditForm({ initialData, userId }: ProfileEditFormProps) {
+  const searchParams = useSearchParams()
+  const partParam = searchParams.get('part')
+  const defaultTabIndex = TAB_KEYS.indexOf(partParam as (typeof TAB_KEYS)[number])
+
   const [updateProfile] = useUpdateProfileMutation()
   const [alert, setAlert] = useState<{ show: boolean; text: string }>({
     show: false,
@@ -94,7 +101,7 @@ export function ProfileEditForm({ initialData, userId }: ProfileEditFormProps) {
           text={alert.text}
         />
       )}
-      <Tabs tabs={tabs} />
+      <Tabs tabs={tabs} defaultActiveIndex={defaultTabIndex >= 0 ? defaultTabIndex : 0} />
     </form>
   )
 }

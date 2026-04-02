@@ -1,9 +1,8 @@
 @use "@/styles/base/mixins";
 
-@mixin sidebar-base($justify: space-around) {
+@mixin sidebar-base($justify: normal) {
   align-items: center;
   background-color: var(--background);
-  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -13,9 +12,14 @@
   width: 240px;
 }
 
+.sidebarWrapper {
+  height: auto;
+  border-right: 1px solid var(--border);
+}
+
 .sidebar {
   // Для обычного пользователя
-  @include sidebar-base(space-around);
+  @include sidebar-base(normal);
 
   // Админ
   &.admin {

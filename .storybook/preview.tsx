@@ -4,10 +4,10 @@ import type { Preview } from '@storybook/nextjs-vite'
 import '@/styles/globals.scss'
 import React from 'react'
 import { Provider } from 'react-redux'
+import { ThemeProvider } from '@/shared/providers/ThemeProvider'
 import { configureStore } from '@reduxjs/toolkit'
 import authSlice from '@/features/auth/model/auth-slice'
 import { baseApi } from '@/shared/api/base-api'
-
 
 // Инициализация MSW
 initialize()
@@ -50,7 +50,9 @@ const preview: Preview = {
       const store = createMockStore()
       return (
         <Provider store={store}>
-          <Story />
+          <ThemeProvider>
+            <Story />
+          </ThemeProvider>
         </Provider>
       )
     },

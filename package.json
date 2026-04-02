@@ -22,7 +22,9 @@
     "pre-commit": "lint-staged",
     "icons:build": "node scripts/split-sprite-and-generate.mjs",
     "typecheck": "tsc --noEmit",
-    "typecheck:safe": "rm -rf .next/types && pnpm build && tsc --noEmit"
+    "typecheck:safe": "rm -rf .next/types && pnpm build && tsc --noEmit",
+    "test:unit": "vitest run --project unit",
+    "test:unit:watch": "vitest --project unit"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -68,6 +70,9 @@
     "@storybook/nextjs-vite": "9.1.15",
     "@svgr/cli": "^8.1.0",
     "@svgr/core": "^8.1.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

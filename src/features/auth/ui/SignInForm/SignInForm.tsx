@@ -140,7 +140,7 @@ export default function SignInForm() {
           {isLoading ? 'Вход...' : 'Sign In'}
         </Button>
 
-        {errorMessage && <Alert status="error" text={errorMessage} position="bottom-left" />}
+        {errorMessage && <Alert status="error" text={errorMessage} position="bottom-left" autoDismiss={3000} />}
 
         <div className={s.signupLink}>
           <Typography title={`Don't have an account?`}></Typography>

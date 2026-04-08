@@ -27,8 +27,12 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 
   let result = await baseQuery(args, api, extraOptions)
 
+  // Не пытаемся refresh для запроса логина — 401 там означает неверные credentials
+  const url = typeof args === 'string' ? args : args.url
+  const isLoginRequest = url === API_ENDPOINTS.AUTH.SIGN_IN
+
   // Автоматический refresh при 401 ошибке
-  if (result.error?.status === 401) {
+  if (result.error?.status === 401 && !isLoginRequest) {
     if (!mutex.isLocked()) {
       const release = await mutex.acquire()
 
@@ -48,7 +52,7 @@ const baseQueryWithReAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
         } else {
           api.dispatch(logout())
         }
-      } catch (error) {
+      } catch (_error) {
         api.dispatch(logout())
       } finally {
         release()

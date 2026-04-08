@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     )
   }
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <Loader />
   }
 

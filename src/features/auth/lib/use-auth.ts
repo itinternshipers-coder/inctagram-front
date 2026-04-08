@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import { useLoginMutation, useLogoutMutation } from '../api/auth-api'
 import { logout, setAccessToken } from '../model/auth-slice'
+import { baseApi } from '@/shared/api/base-api'
 
 export const useAuth = () => {
   const dispatch = useAppDispatch()
@@ -19,6 +20,7 @@ export const useAuth = () => {
         const result = await loginMutation(credentials).unwrap()
 
         dispatch(setAccessToken(result.accessToken))
+        dispatch(baseApi.util.invalidateTags(['Auth']))
 
         return result
       } catch (error) {
@@ -32,7 +34,7 @@ export const useAuth = () => {
   const logoutUser = useCallback(async () => {
     try {
       await logoutMutation().unwrap()
-    } catch (e) {
+    } catch (_e) {
     } finally {
       dispatch(logout())
       router.push(ROUTES.PUBLIC.SIGN_IN)

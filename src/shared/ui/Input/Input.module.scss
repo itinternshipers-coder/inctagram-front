@@ -85,6 +85,11 @@ $transition-easing: ease;
 
     &--password {
       padding-right: 40px;
+
+      &::-ms-reveal,
+      &::-ms-clear {
+        display: none;
+      }
     }
 
     &--search {

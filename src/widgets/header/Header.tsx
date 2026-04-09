@@ -36,7 +36,7 @@ export const Header = ({ isLoginIn }: HeaderProps) => {
             <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
             <div className={s.button}>
               <Button as={Link} href={ROUTES.PUBLIC.SIGN_IN} variant={'link'}>
-                Log in
+                Sign In
               </Button>
               <Button as={Link} href={ROUTES.PUBLIC.SIGN_UP} variant={'primary'}>
                 Sign up

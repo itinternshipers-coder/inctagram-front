@@ -33,7 +33,7 @@
     align-items: center;
     border-radius: 6px;
     color: var(--foreground);
-    display: inline-grid; // 👈 вместо display: grid
+    display: inline-grid;
     grid-template-columns: 40px 1fr;
     padding: 8px 12px;
     text-decoration: none;
@@ -80,6 +80,13 @@
         color: var(--primary);
       }
     }
+  }
+
+  .mainSection,
+  .additionalSection,
+  .logoutSection {
+    width: 100%;
+    padding-left: 44px;
   }
 
   .mainSection {

@@ -64,7 +64,12 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
                   />
                 )}
                 {postModal.isEditingThisPost ? (
-                  <PostEditHeader author={author} postDataId={postData.id} />
+                  <PostEditHeader
+                    author={author}
+                    postDataId={postData.id}
+                    value={postModal.value}
+                    onValueChange={postModal.setValue}
+                  />
                 ) : (
                   <>
                     <div className={s.commentsWrapper}>

@@ -5,17 +5,17 @@ import s from '../PostModal.module.scss'
 import { Button } from '../../Button/Button'
 import { CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import TextArea from '../../TextArea/TextArea'
-import { useState } from 'react'
 import { useAppDispatch } from '@/shared/lib/hooks'
 import { openEditModal } from '@/entities/post/model'
 
 type PostEditHeaderProps = {
   author: Author
   postDataId: string
+  value: string
+  onValueChange: (value: string) => void
 }
 
-export const PostEditHeader = ({ author, postDataId }: PostEditHeaderProps) => {
-  const [value, setValue] = useState('')
+export const PostEditHeader = ({ author, postDataId, value, onValueChange }: PostEditHeaderProps) => {
   const dispatch = useAppDispatch()
 
   return (
@@ -39,7 +39,7 @@ export const PostEditHeader = ({ author, postDataId }: PostEditHeaderProps) => {
           <div className={s.texareaCustom}>
             <TextArea
               value={value}
-              onChange={(e) => setValue(e.target.value)}
+              onChange={(e) => onValueChange(e.target.value)}
               className={s.texareaCustom}
               label="Add publication descriptions"
             />

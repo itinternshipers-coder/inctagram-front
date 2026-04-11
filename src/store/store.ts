@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { baseApi } from '@/shared/api/base-api'
 import authSlice from '@/features/auth/model/auth-slice'
 import postSlice from '@/entities/post/model/post-slice'
+import notificationsSlice from '@/features/notifications/model/notifications-slice'
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     // Слайсы
     [authSlice.name]: authSlice.reducer,
     [postSlice.name]: postSlice.reducer,
+    [notificationsSlice.name]: notificationsSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
 })

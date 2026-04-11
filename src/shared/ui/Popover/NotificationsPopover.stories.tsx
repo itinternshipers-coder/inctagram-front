@@ -6,21 +6,34 @@ import NotificationsPopover from './NotificationsPopover'
 const notifications = [
   {
     id: '1',
-    title: 'Новое уведомление!',
     message: 'Следующий платеж у вас спишется через 1 день',
-    date: '1 час назад',
-    isNew: true,
+    isReady: false,
+    createdAt: new Date(Date.now() - 3600000).toISOString(),
   },
   {
     id: '2',
-    title: 'Новое уведомление!',
     message: 'Ваша подписка истекает через 7 дней',
-    date: '1 день назад',
-    isNew: true,
+    isReady: false,
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
   },
-  { id: '3', title: 'Новое уведомление!', message: 'Ваша подписка истекает через 7 дней', date: '3 дня назад' },
-  { id: '4', title: 'Новое уведомление!', message: 'Ваша подписка истекает через 7 дней', date: '3 дня назад' },
-  { id: '5', title: 'Новое уведомление!', message: 'Ваша подписка истекает через 7 дней', date: '3 дня назад' },
+  {
+    id: '3',
+    message: 'Ваша подписка истекает через 7 дней',
+    isReady: true,
+    createdAt: new Date(Date.now() - 259200000).toISOString(),
+  },
+  {
+    id: '4',
+    message: 'Ваша подписка активирована и действует до 01.05.2026',
+    isReady: true,
+    createdAt: new Date(Date.now() - 432000000).toISOString(),
+  },
+  {
+    id: '5',
+    message: 'Ваша подписка истекает через 1 день',
+    isReady: true,
+    createdAt: new Date(Date.now() - 604800000).toISOString(),
+  },
 ]
 
 const meta: Meta<typeof NotificationsPopover> = {
@@ -40,10 +53,9 @@ const meta: Meta<typeof NotificationsPopover> = {
 export default meta
 type Story = StoryObj<typeof NotificationsPopover>
 
-// Базовый пример с иконкой и бейджем
 export const Default: Story = {
   args: {
-    content: <NotificationList notifications={notifications} notificationHandlerAction={() => {}} />,
+    content: <NotificationList notifications={notifications} onMarkAllAsRead={() => {}} />,
     children: (
       <button style={{ position: 'relative', background: 'none', border: 'none', cursor: 'pointer' }}>
         <OutlineBellIcon />

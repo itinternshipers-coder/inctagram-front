@@ -45,7 +45,13 @@ export const postsApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'Posts', id: 'LIST' }],
+      invalidatesTags: (result) =>
+        result
+          ? [
+              { type: 'Posts', id: 'LIST' },
+              { type: 'Posts', id: `USER_${result.authorId}` },
+            ]
+          : [{ type: 'Posts', id: 'LIST' }],
     }),
 
     // Обновить пост

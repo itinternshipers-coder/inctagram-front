@@ -38,6 +38,9 @@ export const API_ENDPOINTS = {
     BASE: '/subscriptions',
     MY_PAYMENTS: '/subscriptions/my-payments',
   },
+  NOTIFICATIONS: {
+    BASE: '/notifications',
+  },
 } as const
 
 // Хелперы для динамических путей

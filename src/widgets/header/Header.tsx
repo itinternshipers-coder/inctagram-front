@@ -1,5 +1,6 @@
 'use client'
 import { ROUTES } from '@/shared/config/routes'
+import { useNotifications } from '@/features/notifications/hooks/useNotifications'
 import { Button } from '@/shared/ui/Button/Button'
 import { NotificationBell } from '@/shared/ui/NotificationBell/NotificationBell'
 import NotificationList from '@/shared/ui/Popover/NotificationList'
@@ -17,6 +18,8 @@ type HeaderProps = {
 }
 
 export const Header = ({ isLoginIn }: HeaderProps) => {
+  const { notifications, unreadCount, markAllAsRead, hasMore, loadMore } = useNotifications(!isLoginIn)
+
   return (
     <header className={s.container}>
       <Typography as={Link} href={ROUTES.PUBLIC.HOME} variant={'large'}>
@@ -25,8 +28,13 @@ export const Header = ({ isLoginIn }: HeaderProps) => {
       <div>
         {isLoginIn ? (
           <div className={s.authorized_notifications}>
-            <NotificationsPopover content={<NotificationList />}>
-              <NotificationBell count={3} />
+            <NotificationsPopover
+              content={<NotificationList notifications={notifications} onMarkAllAsRead={markAllAsRead} />}
+              onScrollEnd={loadMore}
+              hasMore={hasMore}
+              onOpen={markAllAsRead}
+            >
+              <NotificationBell count={unreadCount} />
             </NotificationsPopover>
             <SelectBox options={SelectOption} defaultValue={'en'} width={'163px'} />
             <ThemeSwitch className={s.themeSwitch} />

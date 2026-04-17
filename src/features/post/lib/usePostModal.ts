@@ -18,13 +18,18 @@ export const usePostModal = (postId: string, postDescription: string) => {
   const isEditModalOpen = useAppSelector(selectIsEditModalOpen)
   const [value, setValue] = useState(postDescription || '')
   const [localLiked, setLocalLiked] = useState(false)
+  const [localLikesCount, setLocalLikesCount] = useState(0)
 
   const [deletePost] = useDeletePostMutation()
   const [updatePost] = useUpdatePostMutation()
 
   const isEditingThisPost = selectedPostId === postId
 
-  const handleToggleLike = () => dispatch(toggleOptimisticLike(postId))
+  const handleToggleLike = () => {
+    setLocalLiked(!localLiked)
+    setLocalLikesCount((count) => count + (localLiked ? -1 : 1))
+    dispatch(toggleOptimisticLike(postId))
+  }
   const handleEditPost = () => {
     setValue(postDescription || '')
     dispatch(selectPost(postId))
@@ -32,6 +37,7 @@ export const usePostModal = (postId: string, postDescription: string) => {
   const handleSavePost = () => {
     updatePost({ id: postId, body: { description: value } })
     dispatch(closeEditModal())
+    dispatch(selectPost(null))
   }
   const handleOnChange = (username: string) => {
     setValue(`@${username} `)
@@ -50,6 +56,7 @@ export const usePostModal = (postId: string, postDescription: string) => {
     setValue,
     localLiked,
     setLocalLiked,
+    localLikesCount,
     isEditingThisPost,
     handleToggleLike,
     handleEditPost,

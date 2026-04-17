@@ -43,7 +43,6 @@ export const postSlice = createSlice({
     },
     closeEditModal: (state) => {
       state.isEditModalOpen = false
-      state.selectedPostId = null
     },
 
     // Выбор поста

@@ -2,6 +2,7 @@ import { CROPPING_IMAGES_CONSTANTS } from '../lib/constants'
 import s from '../Cropping.module.scss'
 import { PhotoType } from '../lib/types'
 import { PlusCircleIcon } from '@/shared/icons/svgComponents'
+import Image from 'next/image'
 import { ChangeEvent } from 'react'
 
 type GalleryImagesProps = {
@@ -29,7 +30,7 @@ export const GalleryImagesContainer = ({
           className={`${s.galleryItem} ${index === currentIndex ? s.active : ''}`}
           onClick={() => onChangeSelectPhoto(index)}
         >
-          <img src={photo.originalUrl} alt={`Preview ${index + 1}`} className={s.galleryImage} />
+          <Image src={photo.originalUrl} alt={`Preview ${index + 1}`} className={s.galleryImage} fill unoptimized />
           <div className={s.galleryOverlay}>
             <div className={s.photoNumber}>{index + 1}</div>
             {photo.isEdited && <div className={s.editedBadge}>✓</div>}

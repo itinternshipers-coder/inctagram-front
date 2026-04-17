@@ -7,7 +7,7 @@ export const usePostAuthor = (authorId: string, username?: string) => {
 
   const author = {
     id: authorId,
-    username: username ?? 'NoName',
+    username: profileData?.username ?? username ?? 'NoName',
     avatarUrl: profileData?.avatar?.[1]?.url ?? '',
   }
 

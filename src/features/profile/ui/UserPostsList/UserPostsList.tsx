@@ -2,7 +2,10 @@
 
 import { Post } from '@/entities/post/model'
 import { Skeleton } from '@/shared/ui/Skeleton/Skeleton'
+import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import s from './UserPostsList.module.scss'
 import { useUserPostsInfinite } from './lib/useUserPostsInfinite'
 
@@ -18,6 +21,20 @@ export const UserPostsList = ({ userId, initialPosts, initialTotalCount }: Props
     initialPosts,
     initialTotalCount,
   })
+  const isNavigatingRef = useRef(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    isNavigatingRef.current = false
+  }, [pathname])
+
+  const handlePostClick = (e: React.MouseEvent) => {
+    if (isNavigatingRef.current) {
+      e.preventDefault()
+      return
+    }
+    isNavigatingRef.current = true
+  }
 
   if (isLoading) {
     return (
@@ -39,9 +56,9 @@ export const UserPostsList = ({ userId, initialPosts, initialTotalCount }: Props
         <div className={s.grid}>
           {allPosts.map((post) => (
             <article key={post.id} className={s.card}>
-              <Link href={`/post/${post.id}`}>
+              <Link href={`/post/${post.id}`} onClick={handlePostClick} scroll={false}>
                 {post.photos?.[0]?.url ? (
-                  <img className={s.image} src={post.photos[0].url} alt={post.description || 'Post'} />
+                  <Image className={s.image} src={post.photos[0].url} alt={post.description || 'Post'} fill />
                 ) : (
                   <div className={s.empty}>
                     <span>{post.description?.substring(0, 50) || 'No description'}...</span>

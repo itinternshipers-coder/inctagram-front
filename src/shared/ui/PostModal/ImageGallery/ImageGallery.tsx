@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import s from './ImageGalery.module.scss'
+import Image from 'next/image'
 import { Button } from '../../Button/Button'
 import { ArrowIosBackOutlineIcon, ArrowIosForwardOutlineIcon } from '@/shared/icons/svgComponents'
 import { PhotoType } from '@/features/post/model/type'
@@ -13,17 +14,19 @@ export const ImageGallery = ({ photos }: { photos: PhotoType[] }) => {
 
   const currentPhoto = photos[currentIndex]
 
-  const goToPrev = () => {
+  const goToPrev = (e: React.MouseEvent) => {
+    e.stopPropagation()
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : photos.length - 1))
   }
 
-  const goToNext = () => {
+  const goToNext = (e: React.MouseEvent) => {
+    e.stopPropagation()
     setCurrentIndex((prev) => (prev < photos.length - 1 ? prev + 1 : 0))
   }
 
   return (
     <div className={s.imageGalleryContainer}>
-      <img src={currentPhoto.url} alt="Post content" className={s.mainImage} />
+      <Image src={currentPhoto.url} alt="Post content" className={s.mainImage} fill />
 
       {photos.length > 1 && (
         <>
@@ -41,7 +44,10 @@ export const ImageGallery = ({ photos }: { photos: PhotoType[] }) => {
           <span
             key={index}
             className={`${s.dot} ${index === currentIndex ? s.active : ''}`}
-            onClick={() => setCurrentIndex(index)}
+            onClick={(e) => {
+              e.stopPropagation()
+              setCurrentIndex(index)
+            }}
           ></span>
         ))}
       </div>

@@ -6,9 +6,13 @@ import { ModalSteps } from '@/features/create-post/model/types/modalSteps'
 import { clearUrlForUnmount } from './utils/clearUrlForUnmount'
 import { ModalHeader } from '../ModalHeader/ModalHeader'
 import { uploadAllPhotos } from './lib/uploadAllPhotos'
+import { usePhotoPreview } from './lib/usePhotoPreview'
 import s from './Publication.module.scss'
-import { PhotoType, UploadedPhotoType } from './lib/types'
+import { UploadedPhotoType } from './lib/types'
 import { handleApiError } from './utils/handleApiError'
+import { useAuthContext } from '@/features/auth/lib/use-auth-context'
+import { useGetProfileQuery } from '@/features/profile/api/profile-api'
+import { revalidateHomePage } from '@/app/actions'
 import { ROUTES } from '@/shared/config/routes'
 import { Alert } from '@/shared/ui/Alert/Alert'
 import Loader from '@/shared/ui/Loader/Loader'
@@ -16,9 +20,10 @@ import { Modal } from '@/shared/ui/Modal/Modal'
 import { ImageGallery } from '@/shared/ui/PostModal/ImageGallery/ImageGallery'
 import TextArea from '@/shared/ui/TextArea/TextArea'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useRef, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 
 type PublicationProps = {
@@ -38,16 +43,17 @@ const CreatePostFormSchema = z.object({
 type CreatePostFormInput = z.infer<typeof CreatePostFormSchema>
 
 export const Publication = ({ images, onBack, onNext, currentStep }: PublicationProps) => {
-  const [photos, setPhotos] = useState<PhotoType[]>([])
+  const { photos, photosRef } = usePhotoPreview(images)
   const [uploadedPhotos, setUploadedPhotos] = useState<UploadedPhotoType[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
 
   const submitButtonRef = useRef<HTMLButtonElement>(null)
-  const photosRef = useRef<PhotoType[]>([])
 
   const [createPost, { isLoading: isCreatingPost }] = useCreatePostMutation()
+  const { user } = useAuthContext()
+  const { data: profile } = useGetProfileQuery(user?.userId ?? '')
 
   const router = useRouter()
 
@@ -57,51 +63,13 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
     handleSubmit,
     formState: { errors, isValid },
     reset,
-    watch,
+    control,
   } = useForm<CreatePostFormInput>({
     resolver: zodResolver(CreatePostFormSchema),
     mode: 'onChange',
   })
 
-  const description = watch('description')
-
-  // Преобразование File[] в PhotoType[] для предпросмотра
-  useEffect(() => {
-    if (!images || images.length === 0) {
-      // Очищаем предыдущие URL перед очисткой состояния
-      clearUrlForUnmount(photosRef)
-      photosRef.current = []
-      setPhotos([])
-      return
-    }
-
-    const convertFilesToPhotos = () => {
-      // Очищаем предыдущие URL перед созданием новых
-      clearUrlForUnmount(photosRef)
-
-      const convertedPhotos: PhotoType[] = images.map((file, index) => {
-        const url = URL.createObjectURL(file)
-
-        return {
-          photoId: `temp-${Date.now()}-${index}`,
-          url,
-          order: index,
-          createdAt: new Date().toISOString(),
-        }
-      })
-
-      photosRef.current = convertedPhotos
-      setPhotos(convertedPhotos)
-    }
-
-    convertFilesToPhotos()
-
-    return () => {
-      // Очистка URL при размонтировании или изменении images
-      clearUrlForUnmount(photosRef)
-      photosRef.current = []
-    }
-  }, [images])
+  const description = useWatch({ control, name: 'description' })
 
   // Функция создания поста
   const handleCreatePost = async (formData: CreatePostFormInput) => {
@@ -144,7 +112,10 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
       reset()
       setUploadedPhotos([])
 
-      // // Переход дальше
+      // Инвалидировать ISR-кеш и Router Cache для главной страницы
+      await revalidateHomePage()
+
+      // Переход дальше
       if (onNext) {
         onNext()
       }
@@ -160,7 +131,15 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
     submitButtonRef.current?.click()
   }
 
+  const handleDiscard = () => {
+    setShowModal(false)
+  }
+
   const handleSavePost = () => {
+    setShowModal(false)
+    if (onNext) {
+      onNext()
+    }
     router.push(ROUTES.PUBLIC.HOME)
   }
 
@@ -189,16 +168,19 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
 
           <div className={s.publicationInfo}>
             <div className={s.authorInfo}>
-              {/*{author.avatarUrl && <img src={author.avatarUrl} alt={author.username} className={s.authorAvatar} />}*/}
-              <img
-                src={'https://cs13.pikabu.ru/avatars/7246/x7246765-497572027.png'}
-                alt={'NoName'}
-                className={s.authorAvatar}
-              />
-              <strong>{'NoName'}</strong>
+              {profile?.avatar?.[0]?.url && (
+                <Image
+                  src={profile.avatar[0].url}
+                  alt={profile.username}
+                  className={s.authorAvatar}
+                  width={36}
+                  height={36}
+                />
+              )}
+              <strong>{profile?.username ?? 'NoName'}</strong>
             </div>
 
-            <form onSubmit={handleSubmit(handleCreatePost)}>
+            <form onSubmit={(e) => handleSubmit(handleCreatePost)(e)}>
               <TextArea
                 label="Add publication descriptions"
                 id="description"
@@ -224,6 +206,7 @@ export const Publication = ({ images, onBack, onNext, currentStep }: Publication
               cancelButtonText="Discard"
               isCancelPrimary={false}
               onAction={handleSavePost}
+              onCancel={handleDiscard}
             />
             {isSubmitting && <Loader>Publication in progress</Loader>}
           </div>

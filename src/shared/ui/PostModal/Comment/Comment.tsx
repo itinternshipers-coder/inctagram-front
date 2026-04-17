@@ -1,8 +1,10 @@
 import { useAuthContext } from '@/features/auth/lib/use-auth-context'
 import { useState } from 'react'
 import s from './Comment.module.scss'
-import { HeartOutlineIcon, PersonIcon } from '@/shared/icons/svgComponents'
+import { HeartIcon, HeartOutlineIcon, PersonIcon } from '@/shared/icons/svgComponents'
+import Image from 'next/image'
 import { CommentType } from '@/features/post/model/type'
+import { Button } from '../../Button/Button'
 
 type CommentProps = Omit<CommentType, 'id' | 'user'> & {
   user: CommentType['user']
@@ -28,8 +30,8 @@ export const Comment = ({ user, text, time, likesCount, replies, handleOnChange 
   const { isLoggedIn } = useAuthContext()
 
   const handleLike = () => {
-    setLikesCount((prev) => prev + 1)
-    setLocalLiked((prev) => !prev)
+    setLocalLiked(!localLiked)
+    setLikesCount((prev) => prev + (localLiked ? -1 : 1))
   }
 
   const allReplies = flattenReplies(replies)
@@ -37,7 +39,7 @@ export const Comment = ({ user, text, time, likesCount, replies, handleOnChange 
   return (
     <div className={s.commentItem}>
       {user.avatarUrl ? (
-        <img src={user.avatarUrl} alt={user.username} className={s.userAvatar} />
+        <Image src={user.avatarUrl} alt={user.username} className={s.userAvatar} width={36} height={36} />
       ) : (
         <PersonIcon className={s.userAvatar} />
       )}
@@ -48,15 +50,15 @@ export const Comment = ({ user, text, time, likesCount, replies, handleOnChange 
             <strong className={s.username}>{user.username}</strong> {text}
           </p>
           {isLoggedIn && (
-            <button className={s.likeButton} onClick={handleLike}>
-              {localLiked ? <HeartOutlineIcon color="red" /> : <HeartOutlineIcon />}
-            </button>
+            <Button variant="link" className={s.likeButton} onClick={handleLike}>
+              {localLiked ? <HeartIcon color="var(--danger-500)" /> : <HeartOutlineIcon />}
+            </Button>
           )}
         </div>
 
         <div className={s.commentMeta}>
           <span className={s.time}>{time}</span>
-          {isLoggedIn && <span className={s.likes}>{likes} likes</span>}
+          {isLoggedIn && <span className={s.likes}>Like: {likes}</span>}
           {handleOnChange && (
             <button className={s.answerButton} onClick={() => handleOnChange(user.username)}>
               Answer

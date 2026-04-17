@@ -1,15 +1,22 @@
 import { useAuthContext } from '@/features/auth/lib/use-auth-context'
-import * as Toggle from '@radix-ui/react-toggle'
 import { useState } from 'react'
-// import * as Toggle from '@radix-ui/react-to'
 import s from '../PostModal.module.scss'
 import { Button } from '../../Button/Button'
-import { BookmarkOutlineIcon, HeartOutlineIcon, PaperPlaneOutlineIcon, PersonIcon } from '@/shared/icons/svgComponents'
+import {
+  BookmarkOutlineIcon,
+  HeartIcon,
+  HeartOutlineIcon,
+  PaperPlaneOutlineIcon,
+  PersonIcon,
+} from '@/shared/icons/svgComponents'
+import Image from 'next/image'
 import { Input } from '../../Input/Input'
 import { Author } from '@/features/post/model/type'
+import { Typography } from '../../Typography/Typography'
 
 type PostFooterProps = {
   localLiked: boolean
+  localLikesCount: number
   handleToggleLike: () => void
   handleShare: () => void
   handleAddBookmark: () => void
@@ -22,14 +29,13 @@ type PostFooterProps = {
 
 export const PostFooter = ({
   localLiked,
+  localLikesCount,
   handleToggleLike,
   handleShare,
   handleAddBookmark,
   handlePublishPost,
   author,
   displayDate,
-  // setValue,
-  // value,
 }: PostFooterProps) => {
   const [value, setValue] = useState('')
   const onPublish = () => {
@@ -43,11 +49,9 @@ export const PostFooter = ({
       {isLoggedIn && (
         <div className={s.interactionRow}>
           <div className={s.likesInfo}>
-            <Toggle.Root className={s.likeButton} aria-label="Like Post">
-              <Button onClick={handleToggleLike} variant="link" className={s.iconButton}>
-                {localLiked ? <HeartOutlineIcon color="red" /> : <HeartOutlineIcon />}
-              </Button>
-            </Toggle.Root>
+            <Button variant="link" className={s.iconButton} aria-label="Like Post" onClick={handleToggleLike}>
+              {localLiked ? <HeartIcon color="var(--danger-500)" /> : <HeartOutlineIcon />}
+            </Button>
 
             <Button onClick={handleShare} variant="link" className={s.iconButton}>
               <PaperPlaneOutlineIcon />
@@ -62,11 +66,16 @@ export const PostFooter = ({
 
       <div className={s.likesInfo}>
         {author.avatarUrl ? (
-          <img src={author.avatarUrl} alt={author.username} className={s.userThumbnail} />
+          <Image src={author.avatarUrl} alt={author.username} className={s.userThumbnail} width={36} height={36} />
         ) : (
           <PersonIcon className={s.authorAvatar} />
         )}
-        <div className={s.likesCount}>0 Like</div>
+        <div className={s.likesCount}>
+          <Typography variant="regular_text_14" as="span">
+            {localLikesCount.toLocaleString('ru-RU')}
+          </Typography>{' '}
+          <Typography variant="bold_text_14" as="span">{`"Like"`}</Typography>
+        </div>
       </div>
 
       <div className={s.postDate}>{displayDate}</div>

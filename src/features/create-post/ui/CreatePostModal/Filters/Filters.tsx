@@ -8,6 +8,7 @@ import { FiltersToImage } from './components/FiltersToImage'
 import { ExtendedPhotoType } from './lib/types'
 import { SlideViewerImage } from './components/SlideViewerImage'
 import { ModalHeader } from '../ModalHeader/ModalHeader'
+import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 type FiltersProps = {
@@ -37,7 +38,7 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
           if (img.filteredUrl?.startsWith('blob:')) {
             URL.revokeObjectURL(img.filteredUrl)
           }
-        } catch (e) {
+        } catch (_e) {
           // Игнорируем ошибки при очистке
         }
       })
@@ -150,7 +151,13 @@ export const Filters = ({ images, onFilterApply, onBack, onNext, currentStep }: 
             >
               {/* Основное изображение с кнопками навигации */}
               <div className={s.previewContainer}>
-                <img src={currentImage.url} alt={`Preview ${currentIndex + 1}`} className={s.previewImage} />
+                <Image
+                  src={currentImage.url}
+                  alt={`Preview ${currentIndex + 1}`}
+                  className={s.previewImage}
+                  fill
+                  unoptimized
+                />
 
                 {/* Кнопки навигации (только если больше 1 изображения) */}
                 {processedImages.length > 1 && (

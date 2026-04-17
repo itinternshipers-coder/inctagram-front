@@ -15,13 +15,20 @@ import { Modal } from '../Modal/Modal'
 import { PostHeader } from './PostHeader/PostHeader'
 import { PostEditHeader } from './PostEdit/PostEdit'
 import { PostFooter } from './PostFooter/PostFooter'
-import { closeCreateModal, closeEditModal } from '@/entities/post/model/post-slice'
+import { closeCreateModal, closeEditModal, selectPost } from '@/entities/post/model/post-slice'
 import { PostActionsMenu } from './PostHeader/PostActionsMenu/PostActionsMenu'
 import { usePostModal, usePostAuthor, usePostActions } from '@/features/post/lib'
 import { useAuthContext } from '@/features/auth/lib/use-auth-context'
+import { formatTimeAgo } from '@/shared/lib/formatTimeAgo'
+import { Typography } from '../Typography/Typography'
 
 const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) => {
-  const displayDate = new Date(postData.createdAt).toLocaleDateString()
+  const displayDate = new Date(postData.createdAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  const relativeTime = formatTimeAgo(postData.createdAt, 'en')
   // const comments = postData.comments || []
   const photos = postData.photos || []
   const postModal = usePostModal(postData.id, postData.description ?? '')
@@ -33,91 +40,118 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
 
   return (
     <>
-      <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <Dialog.Root
+        open={open}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            dispatch(selectPost(null))
+            dispatch(closeCreateModal())
+            dispatch(closeEditModal())
+          }
+          onOpenChange(isOpen)
+        }}
+      >
         <Dialog.Portal>
           <Dialog.Overlay className={s.modalOverlay} />
           <div className={s.modalContainer}>
-            <Dialog.Content className={s.modalContent}>
-              <div className={s.modalLeft}>
-                <ImageGallery photos={photos} />
-              </div>
+            <Dialog.Content className={s.modalContent} aria-describedby={undefined}>
+              <Dialog.Title className={s.visuallyHidden}>Post</Dialog.Title>
+              {postModal.isEditingThisPost && (
+                <div className={s.postXclose}>
+                  <Typography variant="h1">Edit Post</Typography>
+                  <Button variant="tertiary" className={s.menuButton} onClick={() => dispatch(selectPost(null))}>
+                    <CloseOutlineIcon />
+                  </Button>
+                </div>
+              )}
+              <div className={s.modalBody}>
+                <div className={s.modalLeft}>
+                  <ImageGallery photos={photos} />
+                </div>
 
-              <div className={s.modalRight}>
-                {!postModal.isEditingThisPost && (
-                  <PostHeader
-                    author={author}
-                    actionsMenu={
-                      isLoggedIn && (
-                        <PostActionsMenu>
-                          {isAuthor ? (
-                            <AuthorMenuItems onEdit={postModal.handleEditPost} onDelete={postModal.handleDeletePost} />
-                          ) : (
-                            <ViewerMenuItems
-                              onCopy={handleShare}
-                              onToggleSubscribe={handleToggleSubscribe}
-                              isSubscribed={isSubscribed}
-                            />
-                          )}
-                        </PostActionsMenu>
-                      )
-                    }
-                  />
-                )}
-                {postModal.isEditingThisPost ? (
-                  <PostEditHeader
-                    author={author}
-                    postDataId={postData.id}
-                    value={postModal.value}
-                    onValueChange={postModal.setValue}
-                  />
-                ) : (
-                  <>
-                    <div className={s.commentsWrapper}>
-                      {postData.description && <Comment user={author} text={postData.description} time={displayDate} />}
-
-                      {comments.map((c: CommentType) => (
-                        <Comment
-                          key={c.id}
-                          user={c.user}
-                          text={c.text}
-                          time={c.time}
-                          likesCount={c.likesCount}
-                          replies={c.replies}
-                          handleOnChange={postModal.handleOnChange}
-                        />
-                      ))}
-                    </div>
-
-                    <PostFooter
-                      localLiked={postModal.localLiked}
-                      handleToggleLike={postModal.handleToggleLike}
-                      handleShare={handleShare}
-                      handleAddBookmark={postModal.handleAddBookmark}
-                      handlePublishPost={postModal.handlePublishPost}
+                <div className={s.modalRight}>
+                  {!postModal.isEditingThisPost && (
+                    <PostHeader
                       author={author}
-                      displayDate={displayDate}
-                      setValue={postModal.setValue}
-                      value={postModal.value}
+                      actionsMenu={
+                        isLoggedIn && (
+                          <PostActionsMenu>
+                            {isAuthor ? (
+                              <AuthorMenuItems
+                                onEdit={postModal.handleEditPost}
+                                onDelete={postModal.handleDeletePost}
+                              />
+                            ) : (
+                              <ViewerMenuItems
+                                onCopy={handleShare}
+                                onToggleSubscribe={handleToggleSubscribe}
+                                isSubscribed={isSubscribed}
+                              />
+                            )}
+                          </PostActionsMenu>
+                        )
+                      }
                     />
-                  </>
-                )}
-              </div>
-            </Dialog.Content>
+                  )}
+                  {postModal.isEditingThisPost ? (
+                    <PostEditHeader
+                      author={author}
+                      postDataId={postData.id}
+                      value={postModal.value}
+                      onValueChange={postModal.setValue}
+                    />
+                  ) : (
+                    <>
+                      <div className={s.commentsWrapper}>
+                        {postData.description && (
+                          <Comment user={author} text={postData.description} time={relativeTime} />
+                        )}
 
-            {!postModal.isEditingThisPost && (
-              <Dialog.Close asChild>
-                <Button variant="tertiary" className={s.closeButton}>
-                  <CloseOutlineIcon />
-                </Button>
-              </Dialog.Close>
-            )}
+                        {comments.map((c: CommentType) => (
+                          <Comment
+                            key={c.id}
+                            user={c.user}
+                            text={c.text}
+                            time={c.time}
+                            likesCount={c.likesCount}
+                            replies={c.replies}
+                            handleOnChange={postModal.handleOnChange}
+                          />
+                        ))}
+                      </div>
+
+                      <PostFooter
+                        localLiked={postModal.localLiked}
+                        localLikesCount={postModal.localLikesCount}
+                        handleToggleLike={postModal.handleToggleLike}
+                        handleShare={handleShare}
+                        handleAddBookmark={postModal.handleAddBookmark}
+                        handlePublishPost={postModal.handlePublishPost}
+                        author={author}
+                        displayDate={displayDate}
+                        setValue={postModal.setValue}
+                        value={postModal.value}
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {!postModal.isEditingThisPost && (
+                <Dialog.Close asChild>
+                  <Button variant="link" className={s.closeButton}>
+                    <CloseOutlineIcon />
+                  </Button>
+                </Dialog.Close>
+              )}
+            </Dialog.Content>
           </div>
         </Dialog.Portal>
       </Dialog.Root>
       {postModal.isCreateModalOpen && (
         <Modal
           open={true}
-          onOpenChange={() => {}}
+          onOpenChange={() => dispatch(closeCreateModal())}
           title="Delete post"
           message="Are you sure you want to delete this post?"
           confirmMode={true}
@@ -126,6 +160,7 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
           isCancelPrimary={true}
           onAction={() => {
             postModal.deletePost({ id: postData.id })
+            dispatch(closeCreateModal())
             router.back()
           }}
           onCancel={() => dispatch(closeCreateModal())}

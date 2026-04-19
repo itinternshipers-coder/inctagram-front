@@ -1,32 +1,41 @@
 import { useGetProfileQuery } from '@/features/profile/api/profile-api'
 import { Typography } from '@/shared/ui/Typography/Typography'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ImageGallery } from '@/shared/ui/PostModal/ImageGallery/ImageGallery'
+import Image from 'next/image'
 import clsx from 'clsx'
 import s from './PostCard.module.scss'
-import { PostPhoto, useGetPostByIdQuery } from '../../model'
-import { useRouter } from 'next/navigation'
-import { skipToken } from '@reduxjs/toolkit/query/react'
+import { PostPhoto } from '../../model'
+import { usePathname, useRouter } from 'next/navigation'
 
 export type Props = {
   photos: PostPhoto[]
   timeAgo: string
   description: string
   postId: string
+  authorId: string
 }
 
 const MAX_LENGTH = 80
 
-export const PostCard = ({ photos, timeAgo, description, postId }: Props) => {
-  const { data } = useGetPostByIdQuery(postId ? { id: postId } : skipToken)
-  const { data: author } = useGetProfileQuery(data?.author?.id ?? skipToken)
+export const PostCard = ({ photos, timeAgo, description, postId, authorId }: Props) => {
+  const { data: author } = useGetProfileQuery(authorId)
   const [showMore, setShowMore] = useState(false)
   const truncatedContent = description.length > MAX_LENGTH ? description.slice(0, MAX_LENGTH) + '...' : description
   const shouldShowGallery = !showMore && photos.length > 1
   const router = useRouter()
 
+  const isNavigatingRef = useRef(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    isNavigatingRef.current = false
+  }, [pathname])
+
   const handleClick = (postId: string) => {
-    router.push(`/post/${postId}`)
+    if (isNavigatingRef.current) return
+    isNavigatingRef.current = true
+    router.push(`/post/${postId}`, { scroll: false })
   }
   const handleShowMoreClick = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -38,15 +47,17 @@ export const PostCard = ({ photos, timeAgo, description, postId }: Props) => {
         {shouldShowGallery ? (
           <ImageGallery photos={photos} />
         ) : (
-          <img src={photos[0]?.url || ''} alt="Post" className={s.postImageImg} />
+          <Image src={photos[0]?.url || ''} alt="Post" className={s.postImageImg} fill />
         )}
       </div>
 
       <div className={s.postContent}>
         <div className={s.postHeader}>
           <div className={s.userInfo}>
-            <img src={author?.avatar?.[0]?.url} alt="User" className={s.userAvatar} />
-            <Typography variant="h3">{data?.author?.username}</Typography>
+            {author?.avatar?.[0]?.url && (
+              <Image src={author.avatar[0].url} alt="User" className={s.userAvatar} width={36} height={36} />
+            )}
+            <Typography variant="h3">{author?.username}</Typography>
           </div>
           <Typography className={s.timeAgo} variant="small_text">
             {timeAgo}

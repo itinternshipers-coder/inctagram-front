@@ -4,15 +4,15 @@
   height: 45px;
   cursor: pointer;
   font-size: 14px;
-  color: white;
+  color: var(--light-100);
   outline: none;
   display: flex;
   align-items: center;
   gap: 5px;
-  background-color: #171717;
+  background-color: var(--dark-500);
 }
 
 .dropdownItem:hover,
 .dropdownItem:focus {
-  background-color: #555;
+  background-color: var(--dark-100);
 }

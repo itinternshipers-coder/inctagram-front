@@ -19,6 +19,7 @@ export const PostList = ({ posts }: Props) => {
           timeAgo={formatTimeAgo(post.createdAt)}
           description={post.description}
           postId={post.id}
+          authorId={post.authorId}
         />
       ))}
     </div>

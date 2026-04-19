@@ -46,7 +46,7 @@ export const AddPhoto = ({ onSelectImage, onCloseModal }: AddPhotoProps) => {
               Select from Computer
             </Button>
           </label>
-          <Button className={s.button} variant="tertiary" onClick={() => alert('ЗАГЛУШКА')}>
+          <Button className={s.button} variant="tertiary" disabled>
             Open Draft
           </Button>
         </div>

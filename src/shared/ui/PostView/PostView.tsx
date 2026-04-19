@@ -3,6 +3,7 @@
 import { useGetPostByIdQuery } from '@/entities/post/model'
 import { useGetProfileQuery } from '@/features/profile/api/profile-api'
 import Loader from '@/shared/ui/Loader/Loader'
+import Image from 'next/image'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import s from './PostView.module.scss'
 
@@ -36,7 +37,7 @@ export function PostView({ postId }: Props) {
         <div className={s.gallery}>
           {sortedPhotos.map((photo) => (
             <div key={photo.id} className={s.imageWrapper}>
-              <img src={photo.url} alt="Post photo" width={350} height={200} />
+              <Image src={photo.url} alt="Post photo" width={350} height={200} />
             </div>
           ))}
         </div>

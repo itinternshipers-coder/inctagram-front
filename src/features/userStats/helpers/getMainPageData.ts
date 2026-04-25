@@ -22,7 +22,9 @@ export async function getMainPageData() {
       recentPosts: latestFourPosts,
     }
   } catch (e) {
+    // SSR-fetch на gateway.traineegramm.ru недоступен изнутри пода (hairpin egress).
+    // Возвращаем безопасный фолбэк, чтобы главная не падала с 500.
     console.error('FETCH ERROR:', e)
-    throw e
+    return { usersCount: 0, recentPosts: [] }
   }
 }

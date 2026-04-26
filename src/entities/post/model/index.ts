@@ -9,7 +9,18 @@ export {
 } from '../api/posts-api'
 
 // Types
-export type { Post, PostPhoto, GetPosts, GetPostById, CreatePost, UpdatePost, DeletePost } from '../model/types'
+export type {
+  Post,
+  PostPhoto,
+  GetPosts,
+  GetPostById,
+  CreatePost,
+  UpdatePost,
+  DeletePost,
+  GetFeed,
+  LikePost,
+  RecentLiker,
+} from '../model/types'
 
 // Schemas
 export { CreatePostSchema, UpdatePostSchema, CreatePostPhotoSchema } from '../model/schemas'

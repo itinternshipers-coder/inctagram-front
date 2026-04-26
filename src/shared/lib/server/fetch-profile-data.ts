@@ -3,7 +3,7 @@ import { Profile } from '@/features/profile/model/type'
 import { EndpointHelpers } from '@/shared/api/endpoints'
 import { normalizeError } from '@/shared/api/error-utils'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_API_URL
+const BASE_URL = process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_BASE_API_URL
 
 export async function fetchProfileData(userId: string) {
   if (!userId) {

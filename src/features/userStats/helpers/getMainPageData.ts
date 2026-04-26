@@ -1,7 +1,10 @@
+import type { Post } from '@/entities/post/model'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 
-export async function getMainPageData() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL
+export type MainPageData = { ok: true; usersCount: number; recentPosts: Post[] } | { ok: false }
+
+export async function getMainPageData(): Promise<MainPageData> {
+  const baseUrl = process.env.INTERNAL_API_URL ?? process.env.NEXT_PUBLIC_BASE_API_URL
   const endpoint = API_ENDPOINTS.POSTS.PUBLIC_STATS
 
   try {
@@ -9,22 +12,20 @@ export async function getMainPageData() {
 
     if (!res.ok) {
       const txt = await res.text()
-      console.error('ERROR RESPONSE TEXT:', txt)
-      throw new Error(`Failed to load main page data: ${res.status} ${res.statusText}`)
+      console.error(`Main page data fetch failed: ${res.status} ${res.statusText}`, txt)
+      return { ok: false }
     }
 
     const data = await res.json()
-    const recentPosts = data.recentPosts || []
-    const latestFourPosts = recentPosts.slice(0, 4)
+    const recentPosts: Post[] = (data.recentPosts || []).slice(0, 4)
 
     return {
+      ok: true,
       usersCount: data.usersCount,
-      recentPosts: latestFourPosts,
+      recentPosts,
     }
   } catch (e) {
-    // SSR-fetch на gateway.traineegramm.ru недоступен изнутри пода (hairpin egress).
-    // Возвращаем безопасный фолбэк, чтобы главная не падала с 500.
     console.error('FETCH ERROR:', e)
-    return { usersCount: 0, recentPosts: [] }
+    return { ok: false }
   }
 }

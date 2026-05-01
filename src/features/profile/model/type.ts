@@ -19,6 +19,10 @@ export type Profile = {
     city: string
     aboutMe: string
     avatar?: Avatar[]
+    followersCount?: number
+    followingCount?: number
+    postsCount?: number
+    isFollowed?: boolean
   }
   error: ErrorResponse
 }

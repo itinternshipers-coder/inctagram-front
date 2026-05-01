@@ -10,7 +10,16 @@ export type PostPhoto = {
   createdAt: string
 }
 
-// Пост
+// Краткая информация о лайкнувшем пользователе (recentLikers)
+export type RecentLiker = {
+  userId: string
+  userName: string
+  avatarUrl: string | null
+}
+
+// Пост.
+// Поля, помеченные optional (после photos), приходят в эндпоинтах, отдающих PostViewDto
+// (getFeed, getPostById), и могут отсутствовать в более ранних `getPosts`/`getUserPosts`.
 export type Post = {
   id: string
   authorId: string
@@ -19,6 +28,11 @@ export type Post = {
   updatedAt: string
   deletedAt: string | null
   photos: PostPhoto[]
+  userName?: string
+  authorAvatarUrl?: string | null
+  likesCount?: number
+  isLikedByMe?: boolean
+  recentLikers?: RecentLiker[]
 }
 
 // Получение списка постов
@@ -72,6 +86,33 @@ export type DeletePost = {
   }
   response: void // 204 No Content
   error: ErrorResponse | AuthoriseError
+}
+
+// Лента подписок (PostViewDto[]) с cursor-пагинацией
+export type GetFeed = {
+  request: {
+    cursor?: string
+    pageSize?: number
+  }
+  response: {
+    items: Post[]
+    nextCursor: string | null
+    hasMore: boolean
+  }
+  error: ErrorResponse
+}
+
+// Лайк / снятие лайка с поста — PUT/DELETE /posts/{postId}/like
+export type LikePost = {
+  request: {
+    postId: string
+  }
+  response: {
+    likesCount: number
+    isLikedByMe: boolean
+    recentLikers: RecentLiker[]
+  }
+  error: ErrorResponse
 }
 
 // Получение постов пользователя

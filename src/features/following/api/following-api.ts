@@ -124,5 +124,7 @@ export const {
   useFollowUserMutation,
   useUnfollowUserMutation,
   useGetFollowersQuery,
+  useLazyGetFollowersQuery,
   useGetFollowingQuery,
+  useLazyGetFollowingQuery,
 } = followingApi

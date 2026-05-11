@@ -36,7 +36,6 @@ type SidebarProps = {
 export const MOCK_ROUTES = {
   plus: '/plus',
   message: '/message',
-  search: '/search',
   statistics: '/statistics',
   favorites: '/favorites',
   usersList: '/userslist',
@@ -160,13 +159,13 @@ const Sidebar = ({ role }: SidebarProps) => {
                 onClick={() => handleClick(MOCK_ROUTES.message)}
               />
               <SidebarLinkItem
-                href={MOCK_ROUTES.search}
+                href={ROUTES.PROTECTED.SEARCH}
                 label="Search"
                 ActiveIcon={<SearchOutlineIcon />}
                 InactiveIcon={<SearchOutlineIcon />}
-                isActive={isActive(MOCK_ROUTES.search)}
-                disabled={isDisabled(MOCK_ROUTES.search)}
-                onClick={() => handleClick(MOCK_ROUTES.search)}
+                isActive={isActive(ROUTES.PROTECTED.SEARCH)}
+                disabled={isDisabled(ROUTES.PROTECTED.SEARCH)}
+                onClick={() => handleClick(ROUTES.PROTECTED.SEARCH)}
               />
             </div>
 

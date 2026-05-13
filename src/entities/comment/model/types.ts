@@ -9,11 +9,11 @@ import type { ErrorResponse, AuthoriseError } from '@/shared/api/types'
  */
 export type Comment = {
   id: string
-  postId: string
+  postId?: string
   content: string
   authorId: string
   userName: string
-  avatarUrl: string | null
+  avatarUrl?: string | null
   createdAt: string
   updatedAt?: string
   isMyComment: boolean

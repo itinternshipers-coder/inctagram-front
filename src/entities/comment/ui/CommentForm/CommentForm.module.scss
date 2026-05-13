@@ -3,10 +3,12 @@
   gap: 10px;
   align-items: flex-start;
   width: 100%;
+  min-width: 0;
 }
 
 .inputWrapper {
   flex: 1;
+  min-width: 0;
 }
 
 .submitButton {
@@ -15,6 +17,7 @@
   color: var(--primary);
   font-weight: 700;
   padding: 8px 0;
+  flex-shrink: 0;
 }
 
 .submitButton:disabled {

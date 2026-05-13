@@ -6,8 +6,17 @@ export default async function ProfilePage({ params }: { params: Promise<{ userId
   const { userId } = await params
   if (!userId || userId === 'undefined') notFound()
 
-  const { profile, posts } = await fetchProfileData(userId)
+  const { profile, posts, followersTotalCount, followingTotalCount } = await fetchProfileData(userId)
   if (!profile) notFound()
 
-  return <ProfilePageView profile={profile} posts={posts?.items || []} userId={userId} />
+  return (
+    <ProfilePageView
+      profile={profile}
+      posts={posts?.items || []}
+      postsTotalCount={posts?.totalCount ?? 0}
+      followersTotalCount={followersTotalCount}
+      followingTotalCount={followingTotalCount}
+      userId={userId}
+    />
+  )
 }

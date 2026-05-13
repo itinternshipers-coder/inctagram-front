@@ -11,6 +11,8 @@ import s from './ProfileHeader.module.scss'
 type Props = {
   profile: Profile['response']
   postsCount: number
+  followersCount?: number
+  followingCount?: number
   isOwner: boolean
   isLoggedIn: boolean
   isFollowActionPending?: boolean
@@ -24,6 +26,8 @@ const formatCount = (value?: number) => (value ?? 0).toLocaleString('ru-RU')
 export const ProfileHeader = ({
   profile,
   postsCount,
+  followersCount,
+  followingCount,
   isOwner,
   isLoggedIn,
   isFollowActionPending,
@@ -31,6 +35,8 @@ export const ProfileHeader = ({
   onUnfollow,
   onSendMessage,
 }: Props) => {
+  const resolvedFollowersCount = followersCount ?? profile.followersCount
+  const resolvedFollowingCount = followingCount ?? profile.followingCount
   const avatarUrl = profile.avatar?.[0]?.url
   const userName = `${profile.firstName} ${profile.lastName}`.trim() || profile.username
   const aboutMe =
@@ -87,7 +93,7 @@ export const ProfileHeader = ({
         <div className={s.stats}>
           <div className={s.statItem}>
             <Typography variant="h2" as="span" className={s.statNumber}>
-              {formatCount(profile.followingCount)}
+              {formatCount(resolvedFollowingCount)}
             </Typography>
             <Button as={Link} href={ROUTES.DYNAMIC.FOLLOWING_MODAL(profile.userId)} variant="link">
               <Typography variant="small_text" as="span" className={s.statLabel}>
@@ -97,7 +103,7 @@ export const ProfileHeader = ({
           </div>
           <div className={s.statItem}>
             <Typography variant="h2" as="span" className={s.statNumber}>
-              {formatCount(profile.followersCount)}
+              {formatCount(resolvedFollowersCount)}
             </Typography>
             <Button as={Link} href={ROUTES.DYNAMIC.FOLLOWERS_MODAL(profile.userId)} variant="link">
               <Typography variant="small_text" as="span" className={s.statLabel}>

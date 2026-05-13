@@ -18,6 +18,7 @@ export const ROUTES = {
     SETTINGS: '/settings',
     FOLLOWING: '/following',
     FOLLOWERS: '/followers',
+    SEARCH: '/search',
   },
 
   // Модальные роуты (если нужны)

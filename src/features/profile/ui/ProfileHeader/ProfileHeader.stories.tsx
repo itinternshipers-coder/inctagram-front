@@ -13,7 +13,7 @@ type Story = StoryObj<typeof ProfileHeader>
 
 export const MyProfileOwnerLoggedIn: Story = {
   args: {
-    profile: mockMyProfile,
+    profile: { ...mockMyProfile, followingCount: 2218, followersCount: 2358 },
     postsCount: 10,
     isOwner: true,
     isLoggedIn: true,
@@ -22,27 +22,25 @@ export const MyProfileOwnerLoggedIn: Story = {
 
 export const FriendProfileFollowing: Story = {
   args: {
-    profile: mockFriendProfile,
+    profile: { ...mockFriendProfile, followingCount: 152, followersCount: 903, isFollowed: true },
     postsCount: 5,
     isOwner: false,
-    isFollowing: true,
     isLoggedIn: true,
   },
 }
 
 export const FriendProfileNotFollowing: Story = {
   args: {
-    profile: mockFriendProfile,
+    profile: { ...mockFriendProfile, followingCount: 152, followersCount: 902, isFollowed: false },
     postsCount: 5,
     isOwner: false,
-    isFollowing: false,
     isLoggedIn: true,
   },
 }
 
 export const FriendProfileUnauthorized: Story = {
   args: {
-    profile: mockFriendProfile,
+    profile: { ...mockFriendProfile, followingCount: 152, followersCount: 902, isFollowed: false },
     postsCount: 5,
     isOwner: false,
     isLoggedIn: false,

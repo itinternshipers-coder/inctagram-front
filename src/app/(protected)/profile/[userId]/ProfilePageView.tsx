@@ -2,11 +2,13 @@
 
 import type { Post } from '@/entities/post/model'
 import { AuthContext } from '@/features/auth/providers/auth-context'
+import { useFollowUserMutation, useUnfollowUserMutation } from '@/features/following/api/following-api'
+import { useGetProfileQuery } from '@/features/profile/api/profile-api'
 import type { Profile } from '@/features/profile/model/type'
 import { ProfileHeader } from '@/features/profile/ui/ProfileHeader/ProfileHeader'
 import { UserPostsList } from '@/features/profile/ui/UserPostsList/UserPostsList'
-import { useParams } from 'next/navigation'
-import { useContext, useEffect, useState } from 'react'
+import { Alert } from '@/shared/ui/Alert/Alert'
+import { useContext, useState } from 'react'
 
 type Props = {
   profile: Profile['response']
@@ -16,43 +18,57 @@ type Props = {
 
 export const ProfilePageView = ({ profile, posts, userId }: Props) => {
   const { user, isLoggedIn } = useContext(AuthContext)
-  const params = useParams()
-  const userIdFromUrl = params.userId as string
-  const isOwner = isLoggedIn && user?.userId === userIdFromUrl
+  const currentUserId = user?.userId
+  const isOwner = isLoggedIn && currentUserId === userId
+  const { data: actualProfile } = useGetProfileQuery(userId)
+  const [followUser, { isLoading: isFollowing }] = useFollowUserMutation()
+  const [unfollowUser, { isLoading: isUnfollowing }] = useUnfollowUserMutation()
+  const [followError, setFollowError] = useState<string | null>(null)
 
-  const [isFollowing, setIsFollowing] = useState(false)
+  const profileData = actualProfile ?? profile
+  const isFollowActionPending = isFollowing || isUnfollowing
 
-  useEffect(() => {
-    if (isLoggedIn && !isOwner) {
-      // TODO: здесь (асинхронный) запрос статуса подписки
-      // fetchFollowingStatus(userIdFromUrl).then(setIsFollowing)
-    } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsFollowing(false)
+  const handleFollow = async () => {
+    if (!currentUserId) {
+      return
     }
-  }, [isLoggedIn, isOwner, userIdFromUrl])
 
-  const handleFollow = () => {
-    // TODO: мутация подписки
-    console.log('follow')
+    setFollowError(null)
+
+    try {
+      await followUser({ userId, currentUserId }).unwrap()
+    } catch {
+      setFollowError('Failed to follow user')
+    }
   }
-  const handleUnfollow = () => {
-    // TODO: мутация отписки
-    console.log('unfollow')
+
+  const handleUnfollow = async () => {
+    if (!currentUserId) {
+      return
+    }
+
+    setFollowError(null)
+
+    try {
+      await unfollowUser({ userId, currentUserId }).unwrap()
+    } catch {
+      setFollowError('Failed to unfollow user')
+    }
   }
+
   const handleSendMessage = () => {
-    // TODO: переход в мессенджер
     console.log('send message')
   }
 
   return (
     <>
+      {followError && <Alert status="error" text={followError} position="bottom-left" autoDismiss={3000} />}
       <ProfileHeader
-        profile={profile}
+        profile={profileData}
         postsCount={posts.length}
         isOwner={isOwner}
-        isFollowing={isFollowing}
         isLoggedIn={isLoggedIn}
+        isFollowActionPending={isFollowActionPending}
         onFollow={handleFollow}
         onUnfollow={handleUnfollow}
         onSendMessage={handleSendMessage}

@@ -12,31 +12,34 @@ type Props = {
   profile: Profile['response']
   postsCount: number
   isOwner: boolean
-  isFollowing?: boolean
   isLoggedIn: boolean
+  isFollowActionPending?: boolean
   onFollow?: () => void
   onUnfollow?: () => void
   onSendMessage?: () => void
 }
 
+const formatCount = (value?: number) => (value ?? 0).toLocaleString('ru-RU')
+
 export const ProfileHeader = ({
-                                profile,
-                                postsCount,
-                                isOwner,
-                                isFollowing,
-                                isLoggedIn,
-                                onFollow,
-                                onUnfollow,
-                                onSendMessage,
-                              }: Props) => {
+  profile,
+  postsCount,
+  isOwner,
+  isLoggedIn,
+  isFollowActionPending,
+  onFollow,
+  onUnfollow,
+  onSendMessage,
+}: Props) => {
   const avatarUrl = profile.avatar?.[0]?.url
   const userName = `${profile.firstName} ${profile.lastName}`.trim() || profile.username
-  const aboutMe = profile.aboutMe || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, ' +
-    'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis ' +
-    'nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+  const aboutMe =
+    profile.aboutMe ||
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+  const isFollowed = !!profile.isFollowed
 
   const handleFollowClick = () => {
-    if (isFollowing) {
+    if (isFollowed) {
       onUnfollow?.()
     } else {
       onFollow?.()
@@ -60,20 +63,19 @@ export const ProfileHeader = ({
           </Typography>
 
           {isOwner && isLoggedIn && (
-            <Button
-              as={Link}
-              href={ROUTES.DYNAMIC.SETTINGS_TAB('')}
-              variant="secondary"
-              className={s.settingsButton}
-            >
+            <Button as={Link} href={ROUTES.DYNAMIC.SETTINGS_TAB('')} variant="secondary" className={s.settingsButton}>
               Profile Settings
             </Button>
           )}
 
           {!isOwner && isLoggedIn && (
             <div className={s.actionButtons}>
-              <Button variant={isFollowing ? 'tertiary' : 'primary'} onClick={handleFollowClick}>
-                {isFollowing ? 'Unfollow' : 'Follow'}
+              <Button
+                variant={isFollowed ? 'tertiary' : 'primary'}
+                onClick={handleFollowClick}
+                disabled={isFollowActionPending}
+              >
+                {isFollowed ? 'Unfollow' : 'Follow'}
               </Button>
               <Button variant="secondary" onClick={onSendMessage}>
                 Send Message
@@ -85,7 +87,7 @@ export const ProfileHeader = ({
         <div className={s.stats}>
           <div className={s.statItem}>
             <Typography variant="h2" as="span" className={s.statNumber}>
-              2 218
+              {formatCount(profile.followingCount)}
             </Typography>
             <Button as={Link} href={ROUTES.DYNAMIC.FOLLOWING_MODAL(profile.userId)} variant="link">
               <Typography variant="small_text" as="span" className={s.statLabel}>
@@ -95,7 +97,7 @@ export const ProfileHeader = ({
           </div>
           <div className={s.statItem}>
             <Typography variant="h2" as="span" className={s.statNumber}>
-              2 358
+              {formatCount(profile.followersCount)}
             </Typography>
             <Button as={Link} href={ROUTES.DYNAMIC.FOLLOWERS_MODAL(profile.userId)} variant="link">
               <Typography variant="small_text" as="span" className={s.statLabel}>
@@ -105,7 +107,7 @@ export const ProfileHeader = ({
           </div>
           <div className={s.statItem}>
             <Typography variant="h2" as="span" className={s.statNumber}>
-              {postsCount}
+              {formatCount(postsCount)}
             </Typography>
             <Typography variant="small_text" as="span" className={s.statLabel}>
               Publications

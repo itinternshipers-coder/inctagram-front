@@ -39,7 +39,6 @@ const SidebarTemplateUser = ({
   enableHover?: boolean
 }) => {
   const [currentActive, setCurrentActive] = useState<string | null>(activeHref || null)
-  const [hovered, setHovered] = useState<string | null>(null)
 
   const handleClick = (href: string) => {
     setCurrentActive(href)
@@ -49,7 +48,7 @@ const SidebarTemplateUser = ({
   const getItemClass = (href: string) => {
     const isActive = currentActive === href
     const isDisabled = disabledHref === href
-    const isHovered = enableHover && hovered === href
+    const isHovered = enableHover && currentActive !== href
     return `${s.sidebarItem} ${isActive ? s.active : ''} ${isDisabled ? s.disabled : ''} ${isHovered ? s.hovered : ''}`
   }
 
@@ -109,14 +108,14 @@ const SidebarTemplateUser = ({
         </div>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href={MOCK_ROUTES.search}
+            href={ROUTES.PROTECTED.SEARCH}
             label="Search"
             ActiveIcon={<SearchOutlineIcon />}
             InactiveIcon={<SearchOutlineIcon />}
-            isActive={currentActive === MOCK_ROUTES.search}
-            disabled={disabledHref === MOCK_ROUTES.search}
-            className={getItemClass(MOCK_ROUTES.search)}
-            onClick={() => handleClick(MOCK_ROUTES.search)}
+            isActive={currentActive === ROUTES.PROTECTED.SEARCH}
+            disabled={disabledHref === ROUTES.PROTECTED.SEARCH}
+            className={getItemClass(ROUTES.PROTECTED.SEARCH)}
+            onClick={() => handleClick(ROUTES.PROTECTED.SEARCH)}
           />
         </div>
       </div>

@@ -1,0 +1,23 @@
+.form {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.inputWrapper {
+  flex: 1;
+}
+
+.submitButton {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 700;
+  padding: 8px 0;
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

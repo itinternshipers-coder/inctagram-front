@@ -5,7 +5,7 @@
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
 }
@@ -13,7 +13,7 @@
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgb(0 0 0 / 85%);
 }
 
 .modalContainer {
@@ -28,7 +28,6 @@
 
 .modalContent {
   width: 100%;
-  height: 100%;
   min-width: 972px;
   height: 562px;
   display: flex;
@@ -59,6 +58,7 @@
   min-width: 481px;
   background-color: var(--muted);
 }
+
 .closeButton {
   position: absolute;
   top: -30px;
@@ -137,6 +137,7 @@
     display: none;
   }
 }
+
 .texareaCustom label {
   background-color: var(--muted);
 }
@@ -171,12 +172,34 @@
   padding: 12px 24px;
 }
 
+.commentsState {
+  color: var(--light-900);
+  font-size: 14px;
+}
+
+.commentSkeletonRow {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.commentSkeletonText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.commentsSentinel {
+  height: 1px;
+}
+
 .postFooter {
   border-top: 1px solid var(--dark-100);
 }
 
 .interactionRow {
-  padding: 12px 24px 2px 0px;
+  padding: 12px 24px 2px 0;
   display: flex;
   justify-content: space-between;
   gap: 15px;
@@ -219,53 +242,9 @@
 }
 
 .addCommentSection {
-  display: flex;
-  gap: 10px;
   border-top: 1px solid var(--dark-100);
   padding: 10px 11px;
-  align-items: center;
-  justify-content: space-between;
   font-size: 16px;
-}
-
-.addCommentSection input {
-  flex-grow: 1;
-  border: none;
-  outline: none;
-  background-color: transparent;
-  color: var(--foreground);
-  font-size: 14px;
-}
-
-/* ✅ ВАЖНО: ЯВНО задаём цвет placeholder */
-.addCommentSection input::placeholder {
-  color: var(--light-900);
-  opacity: 1;
-}
-// .addCommentSection input {
-//   flex-grow: 1;
-//   border: none;
-//   outline: none;
-//   padding: 17px 0;
-//   background-color: transparent;
-//   color: white;
-// }
-
-// .addCommentSection input {
-//   flex-grow: 1;
-//   border: none;
-//   outline: none;
-//   padding: 17px 0;
-//   background-color: transparent;
-//   color: white;
-// }
-
-.publishCommentButton {
-  background: none;
-  border: none;
-  color: var(--primary);
-  font-weight: bold;
-  cursor: pointer;
 }
 
 .dropdownContent {

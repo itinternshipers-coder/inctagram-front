@@ -15,7 +15,7 @@ export async function fetchProfileData(userId: string) {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 10000)
 
-    const [profileRes, postsRes] = await Promise.all([
+    const [profileRes, postsRes, followersRes, followingRes] = await Promise.all([
       fetch(`${BASE_URL}${EndpointHelpers.profile.byId(userId)}`, {
         signal: controller.signal,
         next: { revalidate: 60 },
@@ -24,17 +24,25 @@ export async function fetchProfileData(userId: string) {
         signal: controller.signal,
         next: { revalidate: 60 },
       }),
+      fetch(`${BASE_URL}${EndpointHelpers.profile.followers(userId)}?page=1&pageSize=1`, {
+        signal: controller.signal,
+        next: { revalidate: 60 },
+      }),
+      fetch(`${BASE_URL}${EndpointHelpers.profile.following(userId)}?page=1&pageSize=1`, {
+        signal: controller.signal,
+        next: { revalidate: 60 },
+      }),
     ])
 
     clearTimeout(timeoutId)
 
     if (profileRes.status === 404) {
-      return { profile: null, posts: null }
+      return { profile: null, posts: null, followersTotalCount: 0, followingTotalCount: 0 }
     }
 
     if (!profileRes.ok) {
       console.error(`Profile fetch failed with status: ${profileRes.status}`)
-      return { profile: null, posts: null }
+      return { profile: null, posts: null, followersTotalCount: 0, followingTotalCount: 0 }
     }
 
     const profile = (await profileRes.json()) as Profile['response']
@@ -48,9 +56,27 @@ export async function fetchProfileData(userId: string) {
       }
     }
 
+    const readTotalCount = async (res: Response, label: string): Promise<number> => {
+      if (!res.ok) return 0
+      try {
+        const data = (await res.json()) as { totalCount?: number }
+        return data.totalCount ?? 0
+      } catch (e) {
+        console.warn(`Failed to parse ${label} response:`, e)
+        return 0
+      }
+    }
+
+    const [followersTotalCount, followingTotalCount] = await Promise.all([
+      readTotalCount(followersRes, 'followers'),
+      readTotalCount(followingRes, 'following'),
+    ])
+
     return {
       profile,
       posts,
+      followersTotalCount,
+      followingTotalCount,
     }
   } catch (error) {
     const normalizedError = normalizeError(error)
@@ -63,6 +89,8 @@ export async function fetchProfileData(userId: string) {
     return {
       profile: null,
       posts: null,
+      followersTotalCount: 0,
+      followingTotalCount: 0,
     }
   }
 }

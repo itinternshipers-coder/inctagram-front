@@ -1,6 +1,7 @@
 import { profileApi } from '@/features/profile/api/profile-api'
 import { baseApi } from '@/shared/api/base-api'
 import { API_ENDPOINTS, EndpointHelpers } from '@/shared/api/endpoints'
+import type { RootState } from '@/store/store'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import type {
   FollowMutationArg,
@@ -152,27 +153,55 @@ export const followingApi = baseApi.injectEndpoints({
         url: EndpointHelpers.users.follow(userId),
         method: 'POST',
       }),
-      onQueryStarted: async ({ userId, currentUserId }, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async ({ userId, currentUserId }, { dispatch, queryFulfilled, getState }) => {
+        const state = getState() as RootState
+
         const targetPatch = dispatch(
           profileApi.util.updateQueryData('getProfile', userId, (draft) => {
             draft.isFollowed = true
-            draft.followersCount = draft.followersCount ?? 0
+            draft.followersCount = (draft.followersCount ?? 0) + 1
           })
         )
 
         const ownPatch = currentUserId
           ? dispatch(
               profileApi.util.updateQueryData('getProfile', currentUserId, (draft) => {
-                draft.followingCount = draft.followingCount ?? 0
+                draft.followingCount = (draft.followingCount ?? 0) + 1
               })
             )
           : null
+
+        const followersListPatches = followingApi.util
+          .selectCachedArgsForQuery(state, 'getFollowers')
+          .filter((args) => args.userId === userId)
+          .map((args) =>
+            dispatch(
+              followingApi.util.updateQueryData('getFollowers', args, (draft) => {
+                draft.totalCount = (draft.totalCount ?? 0) + 1
+              })
+            )
+          )
+
+        const followingListPatches = currentUserId
+          ? followingApi.util
+              .selectCachedArgsForQuery(state, 'getFollowing')
+              .filter((args) => args.userId === currentUserId)
+              .map((args) =>
+                dispatch(
+                  followingApi.util.updateQueryData('getFollowing', args, (draft) => {
+                    draft.totalCount = (draft.totalCount ?? 0) + 1
+                  })
+                )
+              )
+          : []
 
         try {
           await queryFulfilled
         } catch {
           targetPatch.undo()
           ownPatch?.undo()
+          followersListPatches.forEach((p) => p.undo())
+          followingListPatches.forEach((p) => p.undo())
         }
       },
       invalidatesTags: (_result, _error, { userId, currentUserId }) => {
@@ -191,7 +220,9 @@ export const followingApi = baseApi.injectEndpoints({
         url: EndpointHelpers.users.follow(userId),
         method: 'DELETE',
       }),
-      onQueryStarted: async ({ userId, currentUserId }, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async ({ userId, currentUserId }, { dispatch, queryFulfilled, getState }) => {
+        const state = getState() as RootState
+
         const targetPatch = dispatch(
           profileApi.util.updateQueryData('getProfile', userId, (draft) => {
             draft.isFollowed = false
@@ -207,11 +238,37 @@ export const followingApi = baseApi.injectEndpoints({
             )
           : null
 
+        const followersListPatches = followingApi.util
+          .selectCachedArgsForQuery(state, 'getFollowers')
+          .filter((args) => args.userId === userId)
+          .map((args) =>
+            dispatch(
+              followingApi.util.updateQueryData('getFollowers', args, (draft) => {
+                draft.totalCount = Math.max(0, (draft.totalCount ?? 0) - 1)
+              })
+            )
+          )
+
+        const followingListPatches = currentUserId
+          ? followingApi.util
+              .selectCachedArgsForQuery(state, 'getFollowing')
+              .filter((args) => args.userId === currentUserId)
+              .map((args) =>
+                dispatch(
+                  followingApi.util.updateQueryData('getFollowing', args, (draft) => {
+                    draft.totalCount = Math.max(0, (draft.totalCount ?? 0) - 1)
+                  })
+                )
+              )
+          : []
+
         try {
           await queryFulfilled
         } catch {
           targetPatch.undo()
           ownPatch?.undo()
+          followersListPatches.forEach((p) => p.undo())
+          followingListPatches.forEach((p) => p.undo())
         }
       },
       invalidatesTags: (_result, _error, { userId, currentUserId }) => {

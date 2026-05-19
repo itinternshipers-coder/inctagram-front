@@ -35,7 +35,6 @@ type SidebarProps = {
 
 export const MOCK_ROUTES = {
   plus: '/plus',
-  message: '/message',
   statistics: '/statistics',
   favorites: '/favorites',
   usersList: '/userslist',
@@ -150,13 +149,13 @@ const Sidebar = ({ role }: SidebarProps) => {
                 onClick={() => handleClick(ROUTES.PROTECTED.PROFILE)}
               />
               <SidebarLinkItem
-                href={MOCK_ROUTES.message}
+                href={ROUTES.PROTECTED.MESSENGER}
                 label="Messenger"
                 ActiveIcon={<MessageCircleIcon />}
                 InactiveIcon={<MessageCircleOutlineIcon />}
-                isActive={isActive(MOCK_ROUTES.message)}
-                disabled={isDisabled(MOCK_ROUTES.message)}
-                onClick={() => handleClick(MOCK_ROUTES.message)}
+                isActive={isActive(ROUTES.PROTECTED.MESSENGER)}
+                disabled={isDisabled(ROUTES.PROTECTED.MESSENGER)}
+                onClick={() => handleClick(ROUTES.PROTECTED.MESSENGER)}
               />
               <SidebarLinkItem
                 href={ROUTES.PROTECTED.SEARCH}

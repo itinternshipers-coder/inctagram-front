@@ -19,6 +19,7 @@ export const ROUTES = {
     FOLLOWING: '/following',
     FOLLOWERS: '/followers',
     SEARCH: '/search',
+    MESSENGER: '/messenger',
   },
 
   // Модальные роуты (если нужны)

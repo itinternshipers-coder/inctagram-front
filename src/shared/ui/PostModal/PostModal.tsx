@@ -2,14 +2,14 @@
 
 import { useRouter } from 'next/navigation'
 import s from './PostModal.module.scss'
-import { CommentType, PostModalProps } from '@/features/post/model/type'
+import { PostModalProps } from '@/features/post/model/type'
 import { AuthorMenuItems } from '@/shared/ui/PostModal/PostHeader/PostActionsMenu/AuthorMenuItems/AuthorMenuItems'
 import { ViewerMenuItems } from '@/shared/ui/PostModal/PostHeader/PostActionsMenu/ViewerMenuItems/ViewerMenuItems'
 import * as Dialog from '@radix-ui/react-dialog'
 import { CloseOutlineIcon } from '@/shared/icons/svgComponents'
 import { Button } from '../Button/Button'
 import { ImageGallery } from './ImageGallery/ImageGallery'
-import { Comment } from './Comment/Comment'
+import { Comment, CommentViewModel } from './Comment/Comment'
 import { useAppDispatch } from '@/shared/lib/hooks'
 import { Modal } from '../Modal/Modal'
 import { PostHeader } from './PostHeader/PostHeader'
@@ -21,15 +21,77 @@ import { usePostModal, usePostAuthor, usePostActions } from '@/features/post/lib
 import { useAuthContext } from '@/features/auth/lib/use-auth-context'
 import { formatTimeAgo } from '@/shared/lib/formatTimeAgo'
 import { Typography } from '../Typography/Typography'
+import { useGetCommentsQuery } from '@/entities/comment/api/comments-api'
+import type { Comment as ApiComment } from '@/entities/comment/model'
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from 'react'
+import { Skeleton } from '../Skeleton/Skeleton'
 
-const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) => {
+const COMMENTS_PAGE_SIZE = 10
+
+const mapCommentsToViewModel = (items: ApiComment[], postId: string): CommentViewModel[] => {
+  const nodes = new Map<string, CommentViewModel>()
+  const roots: CommentViewModel[] = []
+
+  items.forEach((comment) => {
+    nodes.set(comment.id, {
+      id: comment.id,
+      postId,
+      user: {
+        id: comment.authorId,
+        username: comment.userName,
+        avatarUrl: comment.avatarUrl ?? null,
+      },
+      text: comment.content,
+      time: formatTimeAgo(comment.createdAt, 'en'),
+      likesCount: comment.likesCount,
+      isLikedByMe: comment.isLikedByMe,
+      replies: [],
+    })
+  })
+
+  items.forEach((comment) => {
+    const currentNode = nodes.get(comment.id)
+
+    if (!currentNode) {
+      return
+    }
+
+    if (comment.parentCommentId) {
+      const parentNode = nodes.get(comment.parentCommentId)
+
+      if (parentNode) {
+        parentNode.replies = [...(parentNode.replies ?? []), currentNode]
+        return
+      }
+    }
+
+    roots.push(currentNode)
+  })
+
+  return roots
+}
+
+const CommentsSkeleton = () => (
+  <div className={s.commentsState}>
+    {Array.from({ length: 3 }).map((_, index) => (
+      <div key={`comment-skeleton-${index}`} className={s.commentSkeletonRow}>
+        <Skeleton width={36} height={36} borderRadius="50%" />
+        <div className={s.commentSkeletonText}>
+          <Skeleton width="70%" height={14} />
+          <Skeleton width="45%" height={12} />
+        </div>
+      </div>
+    ))}
+  </div>
+)
+
+const PostModal = ({ postData, open, onOpenChange }: PostModalProps) => {
   const displayDate = new Date(postData.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   })
   const relativeTime = formatTimeAgo(postData.createdAt, 'en')
-  // const comments = postData.comments || []
   const photos = postData.photos || []
   const postModal = usePostModal(postData.id, postData.description ?? '')
   const { author, isAuthor } = usePostAuthor(postData.authorId, postData.author?.username)
@@ -37,6 +99,68 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
   const { isLoggedIn } = useAuthContext()
   const dispatch = useAppDispatch()
   const router = useRouter()
+  const [cursorMap, setCursorMap] = useState<Record<string, string | undefined>>({})
+  const sentinelRef = useRef<HTMLDivElement | null>(null)
+  const currentCursor = cursorMap[postData.id]
+
+  const {
+    data: commentsData,
+    isLoading: isCommentsLoading,
+    isFetching: isCommentsFetching,
+    isError: isCommentsError,
+  } = useGetCommentsQuery({
+    postId: postData.id,
+    limit: COMMENTS_PAGE_SIZE,
+    cursor: currentCursor,
+  })
+
+  const hasMoreComments = commentsData?.hasMore ?? false
+  const nextCommentsCursor = commentsData?.nextCursor ?? null
+
+  const handleLoadMore = useEffectEvent(() => {
+    if (!hasMoreComments || !nextCommentsCursor || isCommentsFetching) {
+      return
+    }
+
+    setCursorMap((prev) => {
+      if (prev[postData.id] === nextCommentsCursor) {
+        return prev
+      }
+
+      return {
+        ...prev,
+        [postData.id]: nextCommentsCursor,
+      }
+    })
+  })
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+
+    if (!sentinel) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          handleLoadMore()
+        }
+      },
+      {
+        rootMargin: '150px',
+      }
+    )
+
+    observer.observe(sentinel)
+
+    return () => observer.disconnect()
+  }, [hasMoreComments, isCommentsFetching, nextCommentsCursor, postData.id])
+
+  const groupedComments = useMemo(
+    () => mapCommentsToViewModel(commentsData?.items ?? [], postData.id),
+    [commentsData?.items, postData.id]
+  )
 
   return (
     <>
@@ -104,33 +228,54 @@ const PostModal = ({ postData, open, onOpenChange, comments }: PostModalProps) =
                     <>
                       <div className={s.commentsWrapper}>
                         {postData.description && (
-                          <Comment user={author} text={postData.description} time={relativeTime} />
+                          <Comment
+                            id={`post-description-${postData.id}`}
+                            postId={postData.id}
+                            user={author}
+                            text={postData.description}
+                            time={relativeTime}
+                            likesCount={0}
+                            isLikedByMe={false}
+                            canLike={false}
+                            canReply={false}
+                          />
                         )}
 
-                        {comments.map((c: CommentType) => (
-                          <Comment
-                            key={c.id}
-                            user={c.user}
-                            text={c.text}
-                            time={c.time}
-                            likesCount={c.likesCount}
-                            replies={c.replies}
-                            handleOnChange={postModal.handleOnChange}
-                          />
-                        ))}
+                        {isCommentsLoading ? (
+                          <CommentsSkeleton />
+                        ) : isCommentsError ? (
+                          <p className={s.commentsState}>Failed to load comments</p>
+                        ) : groupedComments.length === 0 ? (
+                          <p className={s.commentsState}>No comments yet</p>
+                        ) : (
+                          <>
+                            {groupedComments.map((comment) => (
+                              <Comment
+                                key={comment.id}
+                                id={comment.id}
+                                postId={comment.postId}
+                                user={comment.user}
+                                text={comment.text}
+                                time={comment.time}
+                                likesCount={comment.likesCount}
+                                isLikedByMe={comment.isLikedByMe}
+                                replies={comment.replies}
+                              />
+                            ))}
+                            <div ref={sentinelRef} className={s.commentsSentinel} aria-hidden="true" />
+                            {isCommentsFetching && <CommentsSkeleton />}
+                          </>
+                        )}
                       </div>
 
                       <PostFooter
-                        localLiked={postModal.localLiked}
-                        localLikesCount={postModal.localLikesCount}
-                        handleToggleLike={postModal.handleToggleLike}
+                        postId={postData.id}
+                        isLikedByMe={postData.isLikedByMe}
+                        likesCount={postData.likesCount}
                         handleShare={handleShare}
                         handleAddBookmark={postModal.handleAddBookmark}
-                        handlePublishPost={postModal.handlePublishPost}
                         author={author}
                         displayDate={displayDate}
-                        setValue={postModal.setValue}
-                        value={postModal.value}
                       />
                     </>
                   )}

@@ -12,5 +12,5 @@ export default function PostModalClient() {
   if (isLoading) return null
   if (error || !data) return null
 
-  return <PostModal postData={data} open={true} onOpenChange={() => router.back()} comments={[]} />
+  return <PostModal postData={data} open={true} onOpenChange={() => router.back()} />
 }

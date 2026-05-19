@@ -16,6 +16,8 @@ export type UserPostType = {
   createdAt: string
   updatedAt: string
   photos?: PhotoType[]
+  likesCount?: number
+  isLikedByMe?: boolean
 }
 
 export type Author = {
@@ -37,5 +39,4 @@ export type PostModalProps = {
   postData: UserPostType
   open: boolean
   onOpenChange: (open: boolean) => void
-  comments: CommentType[]
 }

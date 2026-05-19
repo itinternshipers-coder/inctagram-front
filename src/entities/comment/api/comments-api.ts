@@ -4,6 +4,20 @@ import type { RootState } from '@/store/store'
 import type { Comment, CreateComment, CreateReply, GetComments, LikeComment } from '../model/types'
 
 const makeOptimisticId = () => `optimistic-${Date.now()}-${Math.random().toString(36).slice(2)}`
+const prioritizeMyComments = <T extends { isMyComment: boolean }>(items: T[]) => {
+  const ownComments: T[] = []
+  const otherComments: T[] = []
+
+  items.forEach((item) => {
+    if (item.isMyComment) {
+      ownComments.push(item)
+    } else {
+      otherComments.push(item)
+    }
+  })
+
+  return [...ownComments, ...otherComments]
+}
 
 export const commentsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,6 +26,10 @@ export const commentsApi = baseApi.injectEndpoints({
       query: ({ postId, ...params }) => ({
         url: EndpointHelpers.posts.comments(postId),
         params,
+      }),
+      transformResponse: (response: GetComments['response']) => ({
+        ...response,
+        items: prioritizeMyComments(response.items),
       }),
       // Один кеш на все cursor-страницы конкретного postId (плюс limit, если задан).
       serializeQueryArgs: ({ queryArgs }) => {

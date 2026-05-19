@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { store } from '@/store/store'
 import React, { useState } from 'react'
 import PostModal from './PostModal'
-import { Author, CommentType, PhotoType, PostModalProps, UserPostType } from '@/features/post/model/type'
+import { Author, PhotoType, PostModalProps, UserPostType } from '@/features/post/model/type'
 
 const mockAuthor: Author = {
   id: 'user-uuid-1',
@@ -26,32 +26,6 @@ const mockPhotos: PhotoType[] = [
   },
 ]
 
-const mockComments: CommentType[] = [
-  {
-    id: 'comment-uuid-1',
-    user: { id: 'c1', username: 'Commenter1', avatarUrl: 'https://via.placeholder.com/30' },
-    text: 'Это комментарий с ответами!',
-    time: '2 hours ago',
-    likesCount: 21,
-    replies: [
-      {
-        id: 'reply-1',
-        user: { id: 'r1', username: 'ReplyGuy', avatarUrl: 'https://via.placeholder.com/30' },
-        text: 'Это ответ на комментарий!',
-        time: '1 hour ago',
-        likesCount: 5,
-      },
-    ],
-  },
-  {
-    id: 'comment-uuid-2',
-    user: { id: 'c2', username: 'Commenter2', avatarUrl: 'https://via.placeholder.com/30' },
-    text: 'Без ответов.',
-    time: '1 hour ago',
-    likesCount: 20,
-  },
-]
-
 const mockPostData: UserPostType = {
   id: 'post-uuid-123',
   authorId: mockAuthor.id,
@@ -70,7 +44,6 @@ const meta: Meta<PostModalProps> = {
   component: PostModal,
   args: {
     postData: mockPostData,
-    comments: mockComments,
     open: true,
   },
   parameters: {
@@ -104,14 +77,12 @@ const Template: StoryFn<PostModalProps> = (args) => {
 export const PostWithComments = Template.bind({})
 PostWithComments.args = {
   postData: mockPostData,
-  comments: mockComments,
 }
 PostWithComments.storyName = '01. Post with Comments'
 
 export const PostWithoutComments = Template.bind({})
 PostWithoutComments.args = {
   postData: mockPostData,
-  comments: [],
 }
 PostWithoutComments.storyName = '02. Post without Comments'
 
@@ -136,6 +107,5 @@ LoadingEmptyState.args = {
       },
     ],
   } as UserPostType,
-  comments: [],
 }
 LoadingEmptyState.storyName = '03. Loading/Empty State'

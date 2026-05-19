@@ -2,6 +2,8 @@
   display: flex;
   gap: 10px;
   margin-bottom: 12px;
+  position: relative;
+  min-width: 0;
 }
 
 .userAvatar {
@@ -14,17 +16,22 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0;
 }
 
 .topRow {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  min-width: 0;
 }
 
 .commentText {
   margin: 0 10px 0 0;
   font-size: 14px;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .likeButton {
@@ -51,6 +58,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
   margin-left: 24px; // общий отступ для всех ответов
 }
 
@@ -75,4 +83,9 @@
   font-size: 12px;
   cursor: pointer;
   padding: 0;
+}
+
+.replyFormWrapper {
+  margin-top: 12px;
+  min-width: 0;
 }

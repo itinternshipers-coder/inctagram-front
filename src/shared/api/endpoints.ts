@@ -52,6 +52,10 @@ export const API_ENDPOINTS = {
   NOTIFICATIONS: {
     BASE: '/notifications',
   },
+  MESSENGER: {
+    IMAGE: '/messenger/image',
+    VOICE: '/messenger/voice',
+  },
 } as const
 
 // Хелперы для динамических путей

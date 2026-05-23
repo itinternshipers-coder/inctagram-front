@@ -82,6 +82,8 @@ export const baseApi = createApi({
     'Following',
     'Feed',
     'Comments',
+    'Chats',
+    'Messages',
   ],
   endpoints: () => ({}),
 })

@@ -3,8 +3,7 @@
 }
 
 .layout {
-  background: linear-gradient(180deg, rgb(14 20 28 / 92%), rgb(9 13 18 / 98%));
-  border: 1px solid var(--dark-100);
+  border: 1px solid var(--border);
   border-radius: 18px;
   display: grid;
   grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
@@ -13,63 +12,86 @@
 }
 
 .sidebar {
-  background: rgb(15 22 31 / 96%);
-  border-right: 1px solid rgb(255 255 255 / 6%);
+  background: var(--background-element);
+  border: var(--border);
   display: flex;
   flex-direction: column;
   min-height: 100%;
 }
 
 .sidebarHeader {
-  border-bottom: 1px solid rgb(255 255 255 / 6%);
+  border-style: solid;
+  border-color: var(--border);
+  border-width: 0 1px 1px 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 24px 20px 18px;
 }
 
-.chatList {
+.sidebarBody {
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  border-right: solid 1px var(--border);
+}
+
+.chatList {
+  display: flex;
+  flex-direction: column;
   gap: 4px;
   list-style: none;
-  margin: 0;
-  overflow-y: auto;
+}
+
+.searchResults {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   padding: 10px;
+}
+
+.sectionLabel {
+  color: var(--light-900);
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  text-transform: uppercase;
+}
+
+.searchStatus {
+  color: var(--light-900);
+  padding: 8px 12px;
+}
+
+.userHint {
+  color: var(--light-900);
 }
 
 .chatRow {
   align-items: center;
   background: transparent;
-  border: 0;
-  border-radius: 14px;
-  color: inherit;
-  cursor: pointer;
   display: grid;
   gap: 12px;
   grid-template-columns: 48px minmax(0, 1fr);
   padding: 12px;
-  text-align: left;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
   width: 100%;
+  border-bottom: 1px solid var(--border);
 
   &:hover {
-    background: rgb(255 255 255 / 5%);
+    background: var(--border);
   }
 }
 
 .chatRowActive {
-  background: linear-gradient(135deg, rgb(57 103 255 / 22%), rgb(57 103 255 / 8%));
+  background: var(--border);
 }
 
 .chatContent {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 0;
+  text-align: left;
 }
 
 .chatMeta {
@@ -95,20 +117,29 @@
 .avatar,
 .avatarPlaceholder,
 .headerAvatar,
-.headerAvatarPlaceholder {
+.headerAvatarPlaceholder,
+.messageAvatar,
+.messageAvatarPlaceholder {
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 .avatarPlaceholder,
-.headerAvatarPlaceholder {
+.headerAvatarPlaceholder,
+.messageAvatarPlaceholder {
   align-items: center;
-  background: linear-gradient(135deg, rgb(57 103 255 / 45%), rgb(86 160 255 / 18%));
+  background: var(--muted);
   color: var(--foreground);
   display: flex;
   font-size: var(--font-size-16);
   font-weight: 700;
   justify-content: center;
+}
+
+.messageAvatarPlaceholder {
+  font-size: var(--font-size-14);
+  height: 36px;
+  width: 36px;
 }
 
 .avatarPlaceholder {
@@ -125,7 +156,7 @@
   align-items: center;
   background: var(--accent-500);
   border-radius: 999px;
-  color: white;
+  color: var(--light-100);
   display: inline-flex;
   flex-shrink: 0;
   font-size: 12px;
@@ -144,9 +175,8 @@
 
 .chatHeader {
   align-items: center;
-  backdrop-filter: blur(12px);
-  background: rgb(13 18 26 / 72%);
-  border-bottom: 1px solid rgb(255 255 255 / 6%);
+  background: var(--background-element);
+  border-bottom: 1px solid var(--border);
   display: flex;
   gap: 14px;
   padding: 18px 24px;
@@ -167,9 +197,7 @@
 }
 
 .messagesArea {
-  background:
-    radial-gradient(circle at top right, rgb(43 74 160 / 18%), transparent 26%),
-    linear-gradient(180deg, rgb(11 16 23 / 94%), rgb(8 12 17 / 98%));
+  background: var(--background);
   display: flex;
   flex: 1;
   min-height: 320px;
@@ -188,7 +216,9 @@
 }
 
 .messageRow {
+  align-items: flex-end;
   display: flex;
+  gap: 8px;
   justify-content: flex-start;
 }
 
@@ -197,16 +227,14 @@
 }
 
 .messageBubble {
-  background: rgb(29 36 47);
-  border: 1px solid rgb(255 255 255 / 5%);
-  border-radius: 18px 18px 18px 6px;
-  max-width: min(540px, 82%);
-  padding: 12px 14px 10px;
+  background: var(--muted);
+  border-radius: 8px;
+  padding: 12px;
 }
 
 .messageBubbleOwn {
-  background: linear-gradient(135deg, rgb(57 103 255), rgb(38 80 222));
-  border-radius: 18px 18px 6px;
+  background: var(--accent-900);
+  border-radius: 8px;
 }
 
 .messagePending {
@@ -235,8 +263,8 @@
 }
 
 .composer {
-  background: rgb(12 18 26 / 98%);
-  border-top: 1px solid rgb(255 255 255 / 6%);
+  background: var(--background-element);
+  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -317,7 +345,6 @@
 
   .sidebar {
     border-right: 0;
-    border-bottom: 1px solid rgb(255 255 255 / 6%);
     max-height: 360px;
   }
 

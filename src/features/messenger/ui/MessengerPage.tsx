@@ -8,6 +8,8 @@ import {
   useGetMessagesQuery,
   useSendMessageMutation,
 } from '@/features/messenger/api/messenger-api'
+import { useSearchUsersQuery } from '@/features/following/api/following-api'
+import type { UserSearchItem } from '@/features/following/model/types'
 import { messageSchema, type MessageFormValues } from '@/features/messenger/lib/message-schema'
 import { MESSENGER_LIMITS, type ChatItem, type Message } from '@/features/messenger/model/types'
 import { useGetProfileQuery } from '@/features/profile/api/profile-api'
@@ -28,6 +30,11 @@ import s from './MessengerPage.module.scss'
 
 const EMPTY_CHATS: ChatItem[] = []
 const EMPTY_MESSAGES: Message[] = []
+const EMPTY_SEARCH_ITEMS: UserSearchItem[] = []
+
+// Дебаунс сетевого поиска по username, чтобы не дёргать /users/search на каждый ввод.
+const SEARCH_DEBOUNCE_MS = 350
+const SEARCH_PAGE_SIZE = 20
 
 const messageTimeFormatter = new Intl.DateTimeFormat('ru-RU', {
   hour: '2-digit',
@@ -103,10 +110,19 @@ export const MessengerPage = () => {
   const currentUserId = user?.userId
 
   const [searchValue, setSearchValue] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [errorText, setErrorText] = useState<string | null>(null)
 
-  const deferredSearchValue = useDeferredValue(searchValue.trim().toLowerCase())
+  const trimmedSearch = searchValue.trim()
+  const hasSearch = trimmedSearch.length > 0
+  const deferredSearchValue = useDeferredValue(trimmedSearch.toLowerCase())
   const selectedRecipientId = searchParams.get('recipientId')?.trim() || null
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedSearch(trimmedSearch), SEARCH_DEBOUNCE_MS)
+
+    return () => window.clearTimeout(timer)
+  }, [trimmedSearch])
 
   const {
     data: chatsData,
@@ -121,13 +137,34 @@ export const MessengerPage = () => {
   const shouldLoadSelectedProfile = !!selectedRecipientId && !existingChat
 
   const {
+    data: searchData,
+    isFetching: isSearchFetching,
+    isError: isSearchError,
+  } = useSearchUsersQuery(
+    { username: debouncedSearch, pageSize: SEARCH_PAGE_SIZE },
+    { skip: debouncedSearch.length === 0 }
+  )
+
+  // В результатах оставляем только тех, с кем ещё нет чата (их и так видно выше) и кроме себя.
+  const searchUserResults = useMemo(() => {
+    const items = searchData?.items ?? EMPTY_SEARCH_ITEMS
+
+    return items.filter((item) => item.id !== currentUserId && !chats.some((chat) => chat.id === item.id))
+  }, [searchData, chats, currentUserId])
+
+  const isSearchPending = hasSearch && (debouncedSearch !== trimmedSearch || isSearchFetching)
+
+  const {
     data: selectedProfile,
     isFetching: isSelectedProfileFetching,
     isError: isSelectedProfileError,
   } = useGetProfileQuery(selectedRecipientId ?? '', { skip: !shouldLoadSelectedProfile })
 
   const syntheticChat = useMemo(() => {
-    if (!selectedRecipientId || !selectedProfile) {
+    // При переключении чатов getProfile на время фетча отдаёт профиль прежнего получателя.
+    // Берём профиль только когда он совпал с текущим recipientId, иначе synthetic-чат
+    // получит чужой id и продублирует уже существующий чат в списке.
+    if (!selectedRecipientId || !selectedProfile || selectedProfile.userId !== selectedRecipientId) {
       return null
     }
 
@@ -139,7 +176,18 @@ export const MessengerPage = () => {
   }, [selectedProfile, selectedRecipientId])
 
   const visibleChats = useMemo(() => {
-    const items = syntheticChat && !existingChat ? [syntheticChat, ...chats] : chats
+    const merged = syntheticChat && !existingChat ? [syntheticChat, ...chats] : chats
+
+    // Страховка от дублей id (ключи <li>): synthetic-чат и live newMessage могут на мгновение пересечься.
+    const seen = new Set<string>()
+    const items = merged.filter((chat) => {
+      if (seen.has(chat.id)) {
+        return false
+      }
+      seen.add(chat.id)
+
+      return true
+    })
 
     if (!deferredSearchValue) {
       return items
@@ -192,6 +240,17 @@ export const MessengerPage = () => {
       })
     },
     [pathname, router, searchParams]
+  )
+
+  // Клик по найденному пользователю: открываем переписку (synthetic-чат построится
+  // по recipientId через getProfile) и чистим строку, чтобы вернуться к списку чатов.
+  const handleSelectUser = useCallback(
+    (userId: string) => {
+      setSearchValue('')
+      setDebouncedSearch('')
+      updateRecipientInUrl(userId)
+    },
+    [updateRecipientInUrl]
   )
 
   useEffect(() => {
@@ -288,85 +347,150 @@ export const MessengerPage = () => {
             />
           </div>
 
-          {showChatsSkeleton ? (
-            <div className={s.chatSkeletons} aria-label="Loading chats">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div key={`chat-skeleton-${index}`} className={s.chatSkeletonRow}>
-                  <Skeleton width={48} height={48} borderRadius="50%" />
-                  <div className={s.chatSkeletonText}>
-                    <Skeleton width="55%" height={16} />
-                    <Skeleton width="80%" height={12} />
+          <div className={s.sidebarBody}>
+            {showChatsSkeleton ? (
+              <div className={s.chatSkeletons} aria-label="Loading chats">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={`chat-skeleton-${index}`} className={s.chatSkeletonRow}>
+                    <Skeleton width={48} height={48} borderRadius="50%" />
+                    <div className={s.chatSkeletonText}>
+                      <Skeleton width="55%" height={16} />
+                      <Skeleton width="80%" height={12} />
+                    </div>
                   </div>
+                ))}
+              </div>
+            ) : isChatsError ? (
+              <div className={s.centerState}>
+                <Typography variant="regular_text_16">Failed to load chats.</Typography>
+                <Button variant="secondary" onClick={() => refetchChats()}>
+                  Retry
+                </Button>
+              </div>
+            ) : visibleChats.length === 0 ? (
+              hasSearch ? null : (
+                <div className={s.centerState}>
+                  <Typography variant="regular_text_16">
+                    {"No chats yet - start by clicking Send Message on someone's profile"}
+                  </Typography>
                 </div>
-              ))}
-            </div>
-          ) : isChatsError ? (
-            <div className={s.centerState}>
-              <Typography variant="regular_text_16">Failed to load chats.</Typography>
-              <Button variant="secondary" onClick={() => refetchChats()}>
-                Retry
-              </Button>
-            </div>
-          ) : visibleChats.length === 0 ? (
-            <div className={s.centerState}>
-              <Typography variant="regular_text_16">
-                {deferredSearchValue
-                  ? `No chats found for "${searchValue.trim()}".`
-                  : "No chats yet - start by clicking Send Message on someone's profile"}
-              </Typography>
-            </div>
-          ) : (
-            <ul className={s.chatList}>
-              {visibleChats.map((chat) => {
-                const isActive = chat.id === selectedRecipientId
-                const avatarUrl = chat.participant.avatarUrl
+              )
+            ) : (
+              <ul className={s.chatList}>
+                {visibleChats.map((chat) => {
+                  const isActive = chat.id === selectedRecipientId
+                  const avatarUrl = chat.participant.avatarUrl
 
-                return (
-                  <li key={chat.id}>
-                    <button
-                      type="button"
-                      className={`${s.chatRow} ${isActive ? s.chatRowActive : ''}`.trim()}
-                      onClick={() => updateRecipientInUrl(chat.id)}
-                    >
-                      {avatarUrl ? (
-                        <Image
-                          src={avatarUrl}
-                          alt={chat.participant.username}
-                          width={48}
-                          height={48}
-                          className={s.avatar}
-                        />
-                      ) : (
-                        <div className={s.avatarPlaceholder} aria-hidden>
-                          {getAvatarLetter(chat.participant.username)}
-                        </div>
-                      )}
+                  return (
+                    <li key={chat.id}>
+                      <button
+                        type="button"
+                        className={`${s.chatRow} ${isActive ? s.chatRowActive : ''}`.trim()}
+                        onClick={() => updateRecipientInUrl(chat.id)}
+                      >
+                        {avatarUrl ? (
+                          <Image
+                            src={avatarUrl}
+                            alt={chat.participant.username}
+                            width={48}
+                            height={48}
+                            className={s.avatar}
+                          />
+                        ) : (
+                          <div className={s.avatarPlaceholder} aria-hidden>
+                            {getAvatarLetter(chat.participant.username)}
+                          </div>
+                        )}
 
-                      <div className={s.chatContent}>
-                        <div className={s.chatMeta}>
-                          <Typography as="span" variant="bold_text_16" className={s.chatName}>
-                            {chat.participant.username}
-                          </Typography>
-                          {chat.updatedAt && (
-                            <Typography as="span" variant="small_text" className={s.chatTime}>
-                              {formatChatTimestamp(chat.updatedAt)}
+                        <div className={s.chatContent}>
+                          <div className={s.chatMeta}>
+                            <Typography as="span" variant="bold_text_16" className={s.chatName}>
+                              {chat.participant.username}
                             </Typography>
-                          )}
-                        </div>
+                            {chat.updatedAt && (
+                              <Typography as="span" variant="small_text" className={s.chatTime}>
+                                {formatChatTimestamp(chat.updatedAt)}
+                              </Typography>
+                            )}
+                          </div>
 
-                        <div className={s.chatMeta}>
-                          <Typography as="span" variant="regular_text_14" className={s.chatPreview}>
-                            {getMessagePreview(chat.lastMessage)}
-                          </Typography>
-                          {chat.unreadCount > 0 && <span className={s.unreadBadge}>{chat.unreadCount}</span>}
+                          <div className={s.chatMeta}>
+                            <Typography as="span" variant="regular_text_14" className={s.chatPreview}>
+                              {getMessagePreview(chat.lastMessage)}
+                            </Typography>
+                            {chat.unreadCount > 0 && <span className={s.unreadBadge}>{chat.unreadCount}</span>}
+                          </div>
+                        </div>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+
+            {hasSearch && (
+              <div className={s.searchResults}>
+                <Typography as="span" variant="small_text" className={s.sectionLabel}>
+                  Users
+                </Typography>
+
+                {isSearchPending && searchUserResults.length === 0 ? (
+                  <div className={s.chatSkeletons} aria-label="Searching users">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                      <div key={`user-skeleton-${index}`} className={s.chatSkeletonRow}>
+                        <Skeleton width={48} height={48} borderRadius="50%" />
+                        <div className={s.chatSkeletonText}>
+                          <Skeleton width="55%" height={16} />
+                          <Skeleton width="35%" height={12} />
                         </div>
                       </div>
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          )}
+                    ))}
+                  </div>
+                ) : isSearchError ? (
+                  <Typography variant="regular_text_14" className={s.searchStatus}>
+                    Failed to search users.
+                  </Typography>
+                ) : searchUserResults.length === 0 ? (
+                  <Typography variant="regular_text_14" className={s.searchStatus}>
+                    {`No users found for "${trimmedSearch}".`}
+                  </Typography>
+                ) : (
+                  <ul className={s.chatList}>
+                    {searchUserResults.map((user) => (
+                      <li key={user.id}>
+                        <button type="button" className={s.chatRow} onClick={() => handleSelectUser(user.id)}>
+                          {user.avatarUrl ? (
+                            <Image
+                              src={user.avatarUrl}
+                              alt={user.username}
+                              width={48}
+                              height={48}
+                              className={s.avatar}
+                            />
+                          ) : (
+                            <div className={s.avatarPlaceholder} aria-hidden>
+                              {getAvatarLetter(user.username)}
+                            </div>
+                          )}
+
+                          <div className={s.chatContent}>
+                            <div className={s.chatMeta}>
+                              <Typography as="span" variant="bold_text_16" className={s.chatName}>
+                                {user.username}
+                              </Typography>
+                            </div>
+                            <Typography as="span" variant="regular_text_14" className={s.userHint}>
+                              Send message
+                            </Typography>
+                          </div>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
         </aside>
 
         <div className={s.chatPanel}>
@@ -450,6 +574,20 @@ export const MessengerPage = () => {
 
                         return (
                           <li key={message.id} className={`${s.messageRow} ${own ? s.messageRowOwn : ''}`.trim()}>
+                            {!own &&
+                              (selectedChat?.participant.avatarUrl ? (
+                                <Image
+                                  src={selectedChat.participant.avatarUrl}
+                                  alt={selectedChat.participant.username}
+                                  width={36}
+                                  height={36}
+                                  className={s.messageAvatar}
+                                />
+                              ) : (
+                                <div className={s.messageAvatarPlaceholder} aria-hidden>
+                                  {getAvatarLetter(selectedChat?.participant.username ?? '?')}
+                                </div>
+                              ))}
                             <div
                               className={`${s.messageBubble} ${own ? s.messageBubbleOwn : ''} ${
                                 message.status === 'pending' ? s.messagePending : ''

@@ -96,14 +96,14 @@ const SidebarTemplateUser = ({
       <div className={s.additionalSection}>
         <div className={s.itemWrapper}>
           <SidebarLinkItem
-            href={MOCK_ROUTES.message}
+            href={ROUTES.PROTECTED.MESSENGER}
             label="Messenger"
             ActiveIcon={<MessageCircleIcon />}
             InactiveIcon={<MessageCircleOutlineIcon />}
-            isActive={currentActive === MOCK_ROUTES.message}
-            disabled={disabledHref === MOCK_ROUTES.message}
-            className={getItemClass(MOCK_ROUTES.message)}
-            onClick={() => handleClick(MOCK_ROUTES.message)}
+            isActive={currentActive === ROUTES.PROTECTED.MESSENGER}
+            disabled={disabledHref === ROUTES.PROTECTED.MESSENGER}
+            className={getItemClass(ROUTES.PROTECTED.MESSENGER)}
+            onClick={() => handleClick(ROUTES.PROTECTED.MESSENGER)}
           />
         </div>
         <div className={s.itemWrapper}>

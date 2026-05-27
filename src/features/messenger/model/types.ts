@@ -65,6 +65,7 @@ export type SendMessageRequest = {
   imageUrl?: string
   voiceUrl?: string
   clientMessageId: string
+  currentUserId?: string
 }
 
 export type SendMessageAck = {

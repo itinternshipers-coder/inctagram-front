@@ -12,7 +12,9 @@ import { useGetProfileQuery } from '@/features/profile/api/profile-api'
 import type { Profile } from '@/features/profile/model/type'
 import { ProfileHeader } from '@/features/profile/ui/ProfileHeader/ProfileHeader'
 import { UserPostsList } from '@/features/profile/ui/UserPostsList/UserPostsList'
+import { ROUTES } from '@/shared/config/routes'
 import { Alert } from '@/shared/ui/Alert/Alert'
+import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
 
 type Props = {
@@ -41,6 +43,7 @@ export const ProfilePageView = ({
   const [followUser, { isLoading: isFollowing }] = useFollowUserMutation()
   const [unfollowUser, { isLoading: isUnfollowing }] = useUnfollowUserMutation()
   const [followError, setFollowError] = useState<string | null>(null)
+  const router = useRouter()
 
   const profileData = actualProfile ?? profile
   const isFollowActionPending = isFollowing || isUnfollowing
@@ -74,7 +77,7 @@ export const ProfilePageView = ({
   }
 
   const handleSendMessage = () => {
-    console.log('send message')
+    router.push(`${ROUTES.PROTECTED.MESSENGER}?recipientId=${userId}`)
   }
 
   return (

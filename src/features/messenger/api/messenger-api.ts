@@ -1,7 +1,9 @@
 import { baseApi } from '@/shared/api/base-api'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { acquireMessengerSocket, releaseMessengerSocket } from '@/features/messenger/lib/messenger-socket'
+import { profileApi } from '@/features/profile/api/profile-api'
 import {
+  ChatItem,
   GetChatsRequest,
   GetChatsResponse,
   GetMessagesRequest,
@@ -20,6 +22,86 @@ import type { AppDispatch, RootState } from '@/store/store'
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 const WS_ACK_TIMEOUT_MS = 10_000
+const EMPTY_MESSAGES_RESPONSE: GetMessagesResponse = { items: [], nextCursor: null, hasMore: false }
+
+const upsertChatPreview = (items: ChatItem[], chat: ChatItem) => {
+  const existingIndex = items.findIndex((item) => item.id === chat.id)
+
+  if (existingIndex >= 0) {
+    const existing = items[existingIndex]
+
+    items.splice(existingIndex, 1)
+    items.unshift({
+      ...existing,
+      ...chat,
+      participant: {
+        ...existing.participant,
+        ...chat.participant,
+      },
+      unreadCount: chat.unreadCount,
+    })
+
+    return
+  }
+
+  items.unshift(chat)
+}
+
+const buildFallbackChat = (senderId: string, message: Message): ChatItem => ({
+  id: senderId,
+  participant: {
+    userId: senderId,
+    username: senderId,
+    avatarUrl: null,
+  },
+  lastMessage: message,
+  unreadCount: 1,
+  updatedAt: message.createdAt,
+})
+
+const mergeMessages = (items: Message[], incoming: Message): Message[] => {
+  if (incoming.clientMessageId) {
+    const optimisticIndex = items.findIndex((item) => item.clientMessageId === incoming.clientMessageId)
+
+    if (optimisticIndex >= 0) {
+      const nextItems = items.slice()
+
+      nextItems[optimisticIndex] = { ...incoming, status: 'sent' }
+
+      return nextItems
+    }
+  }
+
+  if (items.some((item) => item.id === incoming.id)) {
+    return items
+  }
+
+  return [incoming, ...items]
+}
+
+const resolveIncomingChat = async (dispatch: AppDispatch, senderId: string, message: Message): Promise<ChatItem> => {
+  const profileRequest = dispatch(profileApi.endpoints.getProfile.initiate(senderId))
+
+  try {
+    const profile = await profileRequest.unwrap()
+
+    return {
+      id: senderId,
+      participant: {
+        userId: profile.userId,
+        username: profile.username,
+        avatarUrl: profile.avatar?.[0]?.url ?? null,
+      },
+      lastMessage: message,
+      unreadCount: 1,
+      updatedAt: message.createdAt,
+    }
+  } catch {
+    return buildFallbackChat(senderId, message)
+  } finally {
+    profileRequest.unsubscribe()
+  }
+}
 
 const unauthorizedError = (): FetchBaseQueryError => ({
   status: 'CUSTOM_ERROR',
@@ -64,9 +146,13 @@ export const messengerApi = baseApi.injectEndpoints({
       queryFn: () => ({ data: { items: [], nextCursor: null, hasMore: false } }),
       providesTags: ['Chats'],
 
-      async onCacheEntryAdded(_arg, { getState, updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
+      async onCacheEntryAdded(
+        _arg,
+        { getState, dispatch: rawDispatch, updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
         const token = (getState() as RootState).auth.accessToken
         if (!token) return
+        const dispatch = rawDispatch as AppDispatch
 
         const socket = acquireMessengerSocket(token)
 
@@ -79,14 +165,42 @@ export const messengerApi = baseApi.injectEndpoints({
           // Чат в кеше не наполняется автоматически — этим занимается код, который сам
           // обновляет кеш через util.upsertQueryData при отправке
           // первого сообщения новому получателю.
-          const onMessageNew = (msg: Message) => {
+          const onMessageNew = async (msg: Message) => {
+            const state = getState() as RootState
+            const existingMessages =
+              messengerApi.endpoints.getMessages.select({ recipientId: msg.senderId })(state).data?.items ?? []
+
+            dispatch(
+              messengerApi.util.upsertQueryData(
+                'getMessages',
+                { recipientId: msg.senderId },
+                { ...EMPTY_MESSAGES_RESPONSE, items: mergeMessages(existingMessages, msg) }
+              )
+            )
+
+            let needsBootstrap = false
+
             updateCachedData((draft) => {
               const idx = draft.items.findIndex((c) => c.id === msg.senderId)
-              if (idx === -1) return
+              if (idx === -1) {
+                needsBootstrap = true
+                return
+              }
               const [chat] = draft.items.splice(idx, 1)
               chat.lastMessage = msg
               chat.updatedAt = msg.createdAt
+              chat.unreadCount += 1
               draft.items.unshift(chat)
+            })
+
+            if (!needsBootstrap) {
+              return
+            }
+
+            const chat = await resolveIncomingChat(dispatch, msg.senderId, msg)
+
+            updateCachedData((draft) => {
+              upsertChatPreview(draft.items, chat)
             })
           }
 
@@ -163,9 +277,11 @@ export const messengerApi = baseApi.injectEndpoints({
         const token = (getState() as RootState).auth.accessToken
         if (!token) return { error: unauthorizedError() }
 
+        const currentUserId = arg.currentUserId ?? 'self'
+
         const optimisticMessage: Message = {
           id: arg.clientMessageId,
-          senderId: 'self',
+          senderId: currentUserId,
           recipientId: arg.recipientId,
           content: arg.content ?? null,
           imageUrl: arg.imageUrl ?? null,
@@ -181,10 +297,26 @@ export const messengerApi = baseApi.injectEndpoints({
           })
         )
 
+        dispatch(
+          messengerApi.util.updateQueryData('getChats', undefined, (draft) => {
+            const existingChat = draft.items.find((item) => item.id === arg.recipientId)
+
+            if (existingChat) {
+              upsertChatPreview(draft.items, {
+                ...existingChat,
+                lastMessage: optimisticMessage,
+                updatedAt: optimisticMessage.createdAt,
+                unreadCount: 0,
+              })
+            }
+          })
+        )
+
         try {
+          const { currentUserId: _currentUserId, ...payload } = arg
           const ack = await emitWithAck<SendMessageRequest, SendMessageAck>(
             MESSENGER_WS_EVENTS.MESSAGE_SEND,
-            arg,
+            payload,
             token
           )
 
@@ -208,6 +340,21 @@ export const messengerApi = baseApi.injectEndpoints({
                 draft.items[idx] = realMessage
               } else if (!draft.items.some((m) => m.id === realMessage.id)) {
                 draft.items.unshift(realMessage)
+              }
+            })
+          )
+
+          dispatch(
+            messengerApi.util.updateQueryData('getChats', undefined, (draft) => {
+              const existingChat = draft.items.find((item) => item.id === arg.recipientId)
+
+              if (existingChat) {
+                upsertChatPreview(draft.items, {
+                  ...existingChat,
+                  lastMessage: realMessage,
+                  updatedAt: realMessage.createdAt,
+                  unreadCount: 0,
+                })
               }
             })
           )

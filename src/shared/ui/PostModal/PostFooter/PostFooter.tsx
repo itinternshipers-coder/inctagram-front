@@ -18,11 +18,13 @@ import { Typography } from '../../Typography/Typography'
 import { Alert } from '../../Alert/Alert'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { SerializedError } from '@reduxjs/toolkit'
+import { RecentLiker } from '@/entities/post/model'
 
 type PostFooterProps = {
   postId: string
   isLikedByMe?: boolean
   likesCount?: number
+  recentLikers?: RecentLiker[] // <-- добавить
   handleShare: () => void
   handleAddBookmark: () => void
   author: Author
@@ -49,6 +51,7 @@ export const PostFooter = ({
   postId,
   isLikedByMe = false,
   likesCount = 0,
+  recentLikers = [],
   handleShare,
   handleAddBookmark,
   author,
@@ -116,11 +119,21 @@ export const PostFooter = ({
         </div>
       )}
 
+      {/* Блок лайков с аватарками */}
       <div className={s.likesInfo}>
-        {author.avatarUrl ? (
-          <Image src={author.avatarUrl} alt={author.username} className={s.userThumbnail} width={36} height={36} />
-        ) : (
-          <PersonIcon className={s.authorAvatar} />
+        {recentLikers.length > 0 && (
+          <div className={s.likersAvatars}>
+            {recentLikers.slice(0, 3).map((liker) => (
+              <Image
+                key={liker.userId}
+                src={liker.avatarUrl || '/default-avatar.png'}
+                alt={liker.userName}
+                width={24}
+                height={24}
+                className={s.likerAvatar}
+              />
+            ))}
+          </div>
         )}
         <div className={s.likesCount}>
           <Typography variant="regular_text_14" as="span">

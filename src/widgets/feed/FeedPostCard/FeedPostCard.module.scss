@@ -1,0 +1,116 @@
+.card {
+  background: transparent;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border); // тонкая серая линия снизу
+}
+
+.card:last-child {
+  border-bottom: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  cursor: pointer;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.noImage {
+  aspect-ratio: 1 / 1;
+  background: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-foreground);
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  padding: 8px 16px;
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--foreground);
+}
+
+.likesSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px 8px;
+}
+
+.likers {
+  display: flex;
+  gap: 4px;
+}
+
+.likerAvatar {
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.likesCount {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.description {
+  padding: 0 16px 8px;
+  font-size: 14px;
+}
+
+.commentsLink {
+  display: block;
+  padding: 4px 16px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.date {
+  padding: 4px 16px 12px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}

@@ -1,3 +1,4 @@
+import followingSlice from '@/features/following/model/following-slice'
 import { configureStore } from '@reduxjs/toolkit'
 import { baseApi } from '@/shared/api/base-api'
 import authSlice from '@/features/auth/model/auth-slice'
@@ -13,6 +14,7 @@ export const store = configureStore({
     [authSlice.name]: authSlice.reducer,
     [postSlice.name]: postSlice.reducer,
     [notificationsSlice.name]: notificationsSlice.reducer,
+    [followingSlice.name]: followingSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
 })

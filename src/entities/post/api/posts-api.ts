@@ -108,9 +108,11 @@ export const postsApi = baseApi.injectEndpoints({
       // Аккумулируем страницы при загрузке следующей.
       merge: (currentCache, newData) => {
         if (!currentCache) return newData
+        const existingIds = new Set(currentCache.items.map((p) => p.id))
+        const uniqueNewItems = newData.items.filter((p) => !existingIds.has(p.id))
         return {
           ...newData,
-          items: [...currentCache.items, ...newData.items],
+          items: [...currentCache.items, ...uniqueNewItems],
         }
       },
       // Refetch только при смене cursor (новая страница).

@@ -33,6 +33,7 @@ export type Post = {
   likesCount?: number
   isLikedByMe?: boolean
   recentLikers?: RecentLiker[]
+  commentsCount?: number
 }
 
 // Получение списка постов

@@ -1,0 +1,21 @@
+.feed {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.skeletonGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.status {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted-foreground);
+}
+
+.sentinel {
+  height: 1px;
+}

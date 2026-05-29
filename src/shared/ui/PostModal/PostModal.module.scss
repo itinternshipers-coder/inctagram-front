@@ -273,3 +273,14 @@
 .likesCount {
   padding: 12px 24px;
 }
+
+.likersAvatars {
+  display: flex;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.likerAvatar {
+  border-radius: 50%;
+  border: 2px solid var(--background-element);
+}

@@ -8,6 +8,7 @@ import { useContext, useMemo, useState } from 'react'
 import { FollowsListItem } from './FollowsListItem'
 import s from './FollowsList.module.scss'
 import { FollowsKind, useFollowsInfinite } from './lib/useFollowsInfinite'
+import { useGetFollowingQuery } from '@/features/following/api/following-api'
 
 type Props = {
   userId: string
@@ -36,23 +37,49 @@ export const FollowsList = ({ userId, kind }: Props) => {
     kind,
   })
 
-  const [searchQuery, setSearchQuery] = useState('')
+  // Загружаем список на кого я подписан (только когда смотрю своих подписчиков)
+  const { data: myFollowing, isLoading: loadingFollowing } = useGetFollowingQuery(
+    { userId: currentUserId!, page: 1, pageSize: 10 },
+    { skip: !(isOwnPage && kind === 'followers' && isLoggedIn && currentUserId) }
+  )
 
-  // Бэк не принимает search-параметр на /followers и /following — фильтруем локально
-  // по уже подгруженным элементам.
+  const followingIds = useMemo(() => {
+    if (!myFollowing?.items) return new Set<string>()
+    return new Set(myFollowing.items.map((item) => item.id))
+  }, [myFollowing])
+
+  const [searchQuery, setSearchQuery] = useState('')
   const filteredItems = useMemo(() => {
     const q = searchQuery.trim().toLowerCase()
     if (!q) return allItems
     return allItems.filter((it) => it.username.toLowerCase().includes(q))
   }, [allItems, searchQuery])
 
-  // Бэк не отдаёт isFollowed в FollowsListItem. На /following собственного профиля
-  // все элементы — это мои подписки → стартуем с true; в остальных случаях — false.
-  const initialIsFollowed = kind === 'following' && isOwnPage
-
-  // Кнопка Delete (удалить подписчика) показывается только владельцу собственного
-  // списка followers. API-эндпоинта пока нет — кнопка-заглушка, см. FollowsListItem.
   const showDelete = kind === 'followers' && isOwnPage
+
+  // Показываем скелетон только при загрузке основного списка
+  if (isLoading) {
+    return (
+      <div className={s.wrapper}>
+        <header className={s.header}>
+          <Typography variant="h1" as="h2" className={s.title}>
+            {totalCount} {TITLES[kind]}
+          </Typography>
+        </header>
+        <ul className={s.list}>
+          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+            <li key={i} className={s.skeletonRow}>
+              <Skeleton width={48} height={48} borderRadius="50%" />
+              <Skeleton width="60%" height={16} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  if (isError) return <p className={s.status}>Error loading {kind}</p>
+  if (allItems.length === 0) return <p className={s.status}>{EMPTY_TEXTS[kind]}</p>
 
   return (
     <div className={s.wrapper}>
@@ -71,40 +98,40 @@ export const FollowsList = ({ userId, kind }: Props) => {
         />
       </div>
 
-      {isLoading ? (
-        <ul className={s.list}>
-          {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-            <li key={`skeleton-${i}`} className={s.skeletonRow}>
-              <Skeleton width={48} height={48} borderRadius="50%" />
-              <Skeleton width="60%" height={16} />
-            </li>
-          ))}
-        </ul>
-      ) : isError ? (
-        <p className={s.status}>Error loading {kind}</p>
-      ) : allItems.length === 0 ? (
-        <p className={s.status}>{EMPTY_TEXTS[kind]}</p>
-      ) : filteredItems.length === 0 ? (
+      {filteredItems.length === 0 ? (
         <p className={s.status}>No matches for &laquo;{searchQuery}&raquo;</p>
       ) : (
         <ul className={s.list}>
-          {filteredItems.map((item) => (
-            <FollowsListItem
-              key={item.id}
-              item={item}
-              currentUserId={currentUserId}
-              initialIsFollowed={initialIsFollowed}
-              hideAction={!isLoggedIn || item.id === currentUserId}
-              showDelete={showDelete && item.id !== currentUserId}
-            />
-          ))}
+          {filteredItems.map((item) => {
+            // Определяем состояние подписки
+            let initialIsFollowed = false
+            if (isLoggedIn && item.id !== currentUserId) {
+              if (isOwnPage && kind === 'following') {
+                initialIsFollowed = true
+              } else if (isOwnPage && kind === 'followers') {
+                // Важно: учитываем, что myFollowing может ещё грузиться
+                initialIsFollowed = !loadingFollowing && followingIds.has(item.id)
+              }
+            }
+
+            return (
+              <FollowsListItem
+                key={item.id}
+                item={item}
+                currentUserId={currentUserId}
+                initialIsFollowed={initialIsFollowed}
+                hideAction={!isLoggedIn || item.id === currentUserId}
+                showDelete={showDelete && item.id !== currentUserId}
+              />
+            )
+          })}
         </ul>
       )}
 
       {isFetchingMore && (
         <div className={s.loadingMore}>
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={`more-${i}`} className={s.skeletonRow}>
+            <div key={i} className={s.skeletonRow}>
               <Skeleton width={48} height={48} borderRadius="50%" />
               <Skeleton width="60%" height={16} />
             </div>

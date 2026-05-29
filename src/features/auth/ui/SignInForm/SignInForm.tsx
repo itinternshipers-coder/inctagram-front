@@ -48,7 +48,7 @@ export default function SignInForm() {
 
     try {
       await login(data)
-      router.push(ROUTES.PROTECTED.PROFILE)
+      router.push(ROUTES.PUBLIC.HOME)
     } catch (err) {
       const error = err as FetchBaseQueryError | SerializedError
 
